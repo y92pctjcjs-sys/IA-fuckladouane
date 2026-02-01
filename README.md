@@ -1,2 +1,0 @@
-# IA-fuckladouane
-THIS DOENT EXIST ITS IA FLD

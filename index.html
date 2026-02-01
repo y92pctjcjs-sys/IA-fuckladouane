@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THIS GARMENT IS IA</title>
+
+<style>
+html,body{
+  margin:0;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* canvas full screen */
+canvas{
+  position:fixed;
+  inset:0;
+}
+
+/* message central */
+.center{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+
+.text{
+  color:#fff;
+  letter-spacing:.25em;
+  font-size:clamp(18px,3vw,42px);
+  text-transform:uppercase;
+  mix-blend-mode:difference;
+  opacity:.95;
+}
+</style>
+</head>
+
+<body>
+<canvas id="c"></canvas>
+
+<div class="center">
+  <div class="text">THIS GARMENT IS IA</div>
+</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+function resize(){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const letters = "01IA";
+const fontSize = 14;
+let columns;
+let drops;
+
+function init(){
+  columns = Math.floor(canvas.width / fontSize);
+  drops = Array(columns).fill(1);
+}
+init();
+
+function draw(){
+  ctx.fillStyle = "rgba(0,0,0,0.08)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle = "#ffffff";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i=0;i<drops.length;i++){
+    const text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.985){
+      drops[i] = 0;
+    }
+    drops[i]++;
+  }
+}
+
+setInterval(draw, 50);
+</script>
+</body>
+</html>
