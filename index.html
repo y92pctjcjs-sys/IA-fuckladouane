@@ -1,94 +1,327 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THIS GARMENT IS IA</title>
-
-<style>
-html,body{
-  margin:0;
-  height:100%;
-  background:#000;
-  overflow:hidden;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-
-/* canvas full screen */
-canvas{
-  position:fixed;
-  inset:0;
-}
-
-/* message central */
-.center{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-}
-
-.text{
-  color:#fff;
-  letter-spacing:.25em;
-  font-size:clamp(18px,3vw,42px);
-  text-transform:uppercase;
-  mix-blend-mode:difference;
-  opacity:.95;
-}
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>final die lit fuct — fuckladouane</title>
+<meta name="theme-color" content="#07080c" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
 </head>
-
 <body>
-<canvas id="c"></canvas>
+<div class="noise" aria-hidden="true"></div>
+<div class="grid-layer" aria-hidden="true"></div>
+<div class="beam-layer" aria-hidden="true"></div>
+<audio id="ambientLoop" src="audio/ambient-loop-22s.wav" loop preload="auto"></audio>
+<audio id="clickTone" src="audio/click-tone.wav" preload="auto"></audio>
 
-<div class="center">
-  <div class="text">THIS GARMENT IS IA</div>
-</div>
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <div class="brand-wrap">
+      <button class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <img src="assets/logo-main-true.png" alt="Logo FLD" class="brand-logo">
+    </div>
+    <nav class="main-nav">
+      <a href="#hero" class="active">ACCUEIL</a>
+      <a href="#archives">ARCHIVES</a>
+      <a href="#machines">MACHINES</a>
+      <a href="#lore">LORE</a>
+      <a href="#systeme">SYSTÈME</a>
+      <a href="#ressources">RESSOURCES</a>
+    </nav>
+    <div class="top-actions">
+      <button class="ghost-btn" id="audioBtn">Activer le son</button>
+      <button class="solid-btn" id="themeBtn">Mode état</button>
+    </div>
+  </div>
+</header>
 
+<main>
+  <section class="shell hero" id="hero">
+    <div class="hero-copy panel">
+      <p class="eyebrow">final die lit fuct / systeme complet / archive sensible</p>
+      <h1>reprenez <span>le contrôle</span><br>contre la douane.</h1>
+      <div class="ornament"></div>
+      <p class="lead">
+        Cette version pousse le portail vers un système total : boucle ambiante originale, click variable,
+        archives dramatiques, interface froide, néons rares, lore à seuils, surfaces noires et vocabulaire de retenue.
+        Le site ressemble à un dépôt vivant plutôt qu'à une simple landing page.
+      </p>
+      <div class="hero-grid">
+        <article class="card-mini">
+          <h3>fuck / lire</h3>
+          <p>Le monde n’est plus subi. Il est lu comme un document.</p>
+        </article>
+        <article class="card-mini">
+          <h3>la / classer</h3>
+          <p>Tout devient pièce, preuve, image, export, dossier froid.</p>
+        </article>
+        <article class="card-mini">
+          <h3>douane / répondre</h3>
+          <p>Le cri devient architecture. La réponse devient forme.</p>
+        </article>
+      </div>
+      <div class="cta-row">
+        <a href="#archives" class="solid-btn action">Entrer dans les archives</a>
+        <a href="#systeme" class="ghost-btn action">Voir le système</a>
+      </div>
+    </div>
+
+    <div class="hero-stage panel">
+      <img src="assets/moodboard-header.jpeg" alt="" class="moodboard">
+      <img src="assets/logo-bug-hidden.png" alt="" class="sigil bug">
+      <img src="assets/logo-r-true.png" alt="" class="sigil r">
+      <img src="assets/logo-main-true.png" alt="" class="sigil main">
+      <img src="assets/mascot-true.jpeg" alt="Mascotte FLD" class="mascot-main">
+      <img src="assets/mascot-low.png" alt="" class="mascot-low">
+      <div class="manifest-card">
+        <p>on ne subit plus.<br>on comprend.<br>on archive.<br><strong>on revient.</strong></p>
+      </div>
+      <div class="warning-card">
+        <span>accès interdit</span>
+        <strong>vos droits ?<br>refusés.</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell stats panel">
+    <article><strong data-counter="32745">0</strong><span>membres actifs</span></article>
+    <article><strong data-counter="1200">0</strong><span>en ligne</span></article>
+    <article><strong data-counter="8400">0</strong><span>sujets débattus</span></article>
+    <article><strong>22s</strong><span>ambient loop</span></article>
+  </section>
+
+  <section class="shell section-grid" id="archives">
+    <div class="sidebar panel">
+      <h2>archives dramatiques</h2>
+      <p>Le site s'organise comme un cabinet d'archives : cas, motifs, seuils, routes, inventaires, retours.</p>
+      <div class="search-shell">
+        <input id="archiveSearch" type="search" placeholder="Filtrer les cas, les motifs, les cargaisons..." />
+      </div>
+      <div class="archive-cloud">
+        <span>cactus shipment</span>
+        <span>msc gayane</span>
+        <span>gas engines</span>
+        <span>live animals</span>
+        <span>mail interceptions</span>
+        <span>creative concealment</span>
+        <span>aircraft tires</span>
+        <span>agriculture threats</span>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="case-grid">
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>Cactus Shipment / 600 Packages</h3><span class="tag">seuil / dissimulation</span></div>
+          <p>Une cargaison de cactus transformée en décor de dissimulation. L’archive sert ici comme exemple parfait du moment où l’ordinaire devient presque irréel par simple passage douanier.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>MSC Gayane / 20 Tons</h3><span class="tag">échelle industrielle</span></div>
+          <p>Le cas du navire donne au site son imaginaire d’échelle : tout à coup, la douane n’est plus seulement un guichet ou un colis, mais un théâtre logistique total.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>1134 Gas Engines</h3><span class="tag">entrée frauduleuse</span></div>
+          <p>Un cas non narcotique pour rappeler que le drame douanier n’est pas seulement spectaculaire. Parfois, la scène est mécanique, commerciale, froide, administrative.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>28 Parrots / 3 Chickens</h3><span class="tag">animal / souffle</span></div>
+          <p>Les animaux vivants déplacent la tension du côté du souffle, de la cage, du cri couvert. Le site s’en sert pour épaissir sa zone la plus étrange.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>Ordering Opioids Online</h3><span class="tag">mail / interception</span></div>
+          <p>Le courrier comme canal dramatique : petit format, grand effet. Ici, le site montre que l’archive douanière peut aussi naître d’un simple paquet postal.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>Creative Concealment</h3><span class="tag">image / absurdité</span></div>
+          <p>Les méthodes de dissimulation les plus absurdes nourrissent la galerie visuelle du portail. Pas pour imiter, mais pour montrer la théâtralité brutale de ces scènes.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>Aircraft Tires / Sanctions</h3><span class="tag">route / sanctions</span></div>
+          <p>Les routes, les pneus, l’aviation, la géopolitique. D’un coup, le site bascule du colis individuel aux réseaux de circulation mondiaux.</p>
+        </article>
+        <article class="case-card panel" data-search-item>
+          <div class="case-head"><h3>Agriculture Threats</h3><span class="tag">parasite / invisible</span></div>
+          <p>Le drame douanier peut aussi être biologique, microscopique, végétal. C’est une strate idéale pour le lore du portail : contamination, inspection, invisibilité.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell section-grid" id="machines">
+    <div class="sidebar panel">
+      <h2>machines</h2>
+      <p>Le front n’est pas juste chargé visuellement. Il réagit aussi : boucle, click, micro-ralentissement, mini-accélération, faux battement.</p>
+      <div class="quick-links">
+        <a href="#audio-machine" class="tile-link">moteur audio</a>
+        <a href="#click-machine" class="tile-link">click variable</a>
+        <a href="#archives" class="tile-link">liens vers les cas</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="grid-2">
+        <article class="stack-card panel" id="audio-machine">
+          <h2>moteur audio</h2>
+          <p>Une boucle originale de 22 secondes remplace toute piste commerciale. Elle installe la noirceur, l’échelle, le souffle. Le son devient une matière de l’interface.</p>
+        </article>
+        <article class="stack-card panel" id="click-machine">
+          <h2>click variable</h2>
+          <p>Chaque interaction produit une variation de pitch et un mini glissement de vitesse sur la boucle. Ça dure au maximum une seconde : juste assez pour faire sentir la machine.</p>
+        </article>
+      </div>
+      <article class="gallery-card panel">
+        <h2>système complet</h2>
+        <div class="tile-grid">
+          <a class="tile-link" href="#lore">lore insolvable</a>
+          <a class="tile-link" href="#archives">cabinet d’archives</a>
+          <a class="tile-link" href="#systeme">rituels de lecture</a>
+          <a class="tile-link" href="#ressources">fichiers et dépôts</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="shell section-grid" id="lore">
+    <div class="sidebar panel">
+      <h2>lore</h2>
+      <p>Ici, les cas ne sont pas seulement listés. Ils deviennent cycles, chambres, seuils, salles, retours.</p>
+    </div>
+    <div class="content">
+      <div class="grid-3">
+        <article class="article-card panel">
+          <h2>Le Portique</h2>
+          <p>Le moment où l’objet, le corps ou le paquet change de statut. Le portail donne à ce seuil un nom pour mieux en lire la violence administrative.</p>
+        </article>
+        <article class="article-card panel">
+          <h2>La Retenue</h2>
+          <p>État suspendu. Ni rendu, ni dissous. Le site transforme cette suspension en motif central de son atmosphère.</p>
+        </article>
+        <article class="article-card panel">
+          <h2>Le Retour des Pièces</h2>
+          <p>Ce qui revient sous forme de scan, de courrier, de pièce jointe ou d’inventaire revient toujours chargé d’un passé nouveau.</p>
+        </article>
+      </div>
+      <article class="callout panel">
+        <h2>comme une archive qui rêve encore</h2>
+        <p>Le lore n’invente pas un autre monde. Il épaissit celui-ci. Il donne des noms à des états de dossier, à des changements de statut, à des sensations nées du papier, du scan, du sceau, de la retenue.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="shell section-grid" id="systeme">
+    <div class="sidebar panel">
+      <h2>système</h2>
+      <p>Un simple GitHub peut porter plus qu’un front. Il peut porter une structure, des archives, des fragments, des notes et des données.</p>
+    </div>
+    <div class="content">
+      <div class="grid-2">
+        <article class="stack-card panel">
+          <h2>fichiers visibles</h2>
+          <p>Le zip inclut non seulement les pages, mais aussi des données JSON, des archives markdown, des fragments et des notes de curation.</p>
+          <div class="resource-links">
+            <a href="data/cases.json">cases.json</a>
+            <a href="data/alerts.json">alerts.json</a>
+            <a href="archives/sources-index.md">sources-index.md</a>
+            <a href="docs/notes-curation.md">notes-curation.md</a>
+          </div>
+        </article>
+        <article class="stack-card panel">
+          <h2>fichiers d’ambiance</h2>
+          <p>Le fond ne dépend pas d’une seule image. Il est fait de textures, de couches, de bruit et d’un moodboard entête inséré comme mémoire de la base.</p>
+          <div class="resource-links">
+            <a href="assets/moodboard-header.jpeg">moodboard-header.jpeg</a>
+            <a href="assets/ornament-line.svg">ornament-line.svg</a>
+            <a href="assets/paper-noise.svg">paper-noise.svg</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell section-grid" id="ressources">
+    <div class="sidebar panel">
+      <h2>ressources</h2>
+      <p>Logos, mascottes, textures, sons, fragments. Tout ce qui fait que le portail tient.</p>
+    </div>
+    <div class="content">
+      <div class="asset-wall">
+        <img src="assets/logo-main-true.png" alt="logo principal">
+        <img src="assets/logo-r-true.png" alt="logo r">
+        <img src="assets/logo-glitch-main.png" alt="logo glitch">
+        <img src="assets/logo-bug-hidden.png" alt="logo caché">
+        <img src="assets/mascot-true.jpeg" alt="mascotte propre">
+        <img src="assets/mascot-low.png" alt="mascotte sale">
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="shell footer panel">
+  <div class="footer-brand">
+    <img src="assets/logo-main-true.png" alt="Logo FLD" class="footer-logo">
+    <div>
+      <strong>FINAL DIE LIT FUCT</strong>
+      <p>Portail total, archives dramatiques, boucle sonore originale, click variable, matières froides.</p>
+    </div>
+  </div>
+  <div class="footer-actions">
+    <button class="secret-btn" id="secretBtn">Cachet interne</button>
+    <a class="solid-btn" href="#hero">Retour au seuil</a>
+  </div>
+</footer>
+
+<dialog class="modal" id="secretModal">
+  <div class="modal-head">
+    <h3>Cachet interne</h3>
+    <button class="icon-btn" id="closeSecret" aria-label="Fermer">×</button>
+  </div>
+  <p>La piste commerciale demandée n'est pas intégrée. À la place, le système embarque une boucle originale de 22 secondes et un moteur de click variable.</p>
+  <div class="secret-code">FREESHIP4LL6</div>
+</dialog>
+
+<script src="app.js"></script>
 <script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
+const ambient = document.getElementById('ambientLoop');
+const clickTone = document.getElementById('clickTone');
+const audioBtn = document.getElementById('audioBtn');
+let audioOn = false;
+let resetTimer = null;
 
-function resize(){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
-const letters = "01IA";
-const fontSize = 14;
-let columns;
-let drops;
-
-function init(){
-  columns = Math.floor(canvas.width / fontSize);
-  drops = Array(columns).fill(1);
-}
-init();
-
-function draw(){
-  ctx.fillStyle = "rgba(0,0,0,0.08)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  ctx.fillStyle = "#ffffff";
-  ctx.font = fontSize + "px monospace";
-
-  for(let i=0;i<drops.length;i++){
-    const text = letters[Math.floor(Math.random()*letters.length)];
-    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
-
-    if(drops[i]*fontSize > canvas.height && Math.random() > 0.985){
-      drops[i] = 0;
-    }
-    drops[i]++;
+async function startAudio(){
+  try{
+    ambient.volume = .42;
+    await ambient.play();
+    audioOn = true;
+    audioBtn.textContent = 'Couper le son';
+  }catch(e){
+    audioBtn.textContent = 'Son bloqué';
   }
 }
+function stopAudio(){
+  ambient.pause();
+  audioOn = false;
+  audioBtn.textContent = 'Activer le son';
+}
+audioBtn.addEventListener('click', ()=> audioOn ? stopAudio() : startAudio());
 
-setInterval(draw, 50);
+function triggerAudioVariation(){
+  const factor = 0.82 + Math.random()*0.46;
+  clickTone.pause();
+  clickTone.currentTime = 0;
+  clickTone.playbackRate = 0.85 + Math.random()*0.45;
+  clickTone.volume = 0.5;
+  clickTone.play().catch(()=>{});
+  if(audioOn){
+    ambient.playbackRate = factor;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(()=> ambient.playbackRate = 1, 950);
+  }
+}
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('click', triggerAudioVariation);
+});
 </script>
 </body>
 </html>
