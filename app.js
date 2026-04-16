@@ -1,126 +1,191 @@
-const root = document.documentElement;
-const tabButtons = [...document.querySelectorAll('.tab-btn[data-tab], .side-link[data-tab]')];
-const panels = [...document.querySelectorAll('[data-tab-panel]')];
-const themeToggle = document.getElementById('themeToggle');
-const menuToggle = document.getElementById('menuToggle');
-const menuClose = document.getElementById('menuClose');
-const drawer = document.getElementById('drawer');
-const drawerBackdrop = document.getElementById('drawerBackdrop');
-const scanTrigger = document.getElementById('scanTrigger');
-const logList = document.getElementById('logList');
+const matrixCanvas = document.getElementById("matrix");
+const matrixCtx = matrixCanvas.getContext("2d");
 
-function setTab(tab){
-  document.querySelectorAll('.tab-btn[data-tab], .side-link[data-tab]').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.tab === tab);
+const introStage = document.getElementById("introStage");
+const analysisStage = document.getElementById("analysisStage");
+const resultStage = document.getElementById("resultStage");
+
+const startBtn = document.getElementById("startBtn");
+const skipBtn = document.getElementById("skipBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+const systemStatus = document.getElementById("systemStatus");
+const progressBar = document.getElementById("progressBar");
+const progressLabel = document.getElementById("progressLabel");
+const logBox = document.getElementById("logBox");
+const swagValue = document.getElementById("swagValue");
+const humanValue = document.getElementById("humanValue");
+const swagistanValue = document.getElementById("swagistanValue");
+const probabilityText = document.getElementById("probabilityText");
+
+const phases = [
+  document.getElementById("phase0"),
+  document.getElementById("phase1"),
+  document.getElementById("phase2"),
+  document.getElementById("phase3")
+];
+
+const steps = [
+  { t: "Establishing contact with embedded marker...", p: 4, phase: 0, swag: "03.1", human: "96%", swagistan: "No signal" },
+  { t: "Scanning whole swag...", p: 9, phase: 0, swag: "08.6", human: "92%", swagistan: "Unknown" },
+  { t: "Reading thread behavior under symbolic pressure...", p: 14, phase: 0, swag: "14.4", human: "88%", swagistan: "Unknown" },
+  { t: "Detecting silhouette confidence anomalies...", p: 20, phase: 0, swag: "21.8", human: "82%", swagistan: "Unknown" },
+  { t: "Define swagability...", p: 27, phase: 1, swag: "31.5", human: "76%", swagistan: "Possible" },
+  { t: "Extracting excess intention from garment posture...", p: 35, phase: 1, swag: "43.2", human: "67%", swagistan: "Possible" },
+  { t: "Comparing garment affect against acceptable human thresholds...", p: 43, phase: 1, swag: "55.9", human: "58%", swagistan: "Likely" },
+  { t: "Measuring certified badness coefficient...", p: 51, phase: 1, swag: "63.7", human: "47%", swagistan: "Likely" },
+  { t: "Reconstructing synthetic confidence residue...", p: 60, phase: 2, swag: "72.4", human: "36%", swagistan: "Very likely" },
+  { t: "Made in swagistan? running territorial speculation...", p: 69, phase: 2, swag: "81.3", human: "25%", swagistan: "Very likely" },
+  { t: "Projecting moral implications of excessive drip...", p: 78, phase: 2, swag: "88.2", human: "14%", swagistan: "Confirmed" },
+  { t: "Stabilizing final shame vector...", p: 87, phase: 3, swag: "94.7", human: "06%", swagistan: "Confirmed" },
+  { t: "Preparing ceremonial sentence...", p: 95, phase: 3, swag: "98.8", human: "02%", swagistan: "Confirmed" },
+  { t: "Verdict sealed. symbolic innocence unavailable.", p: 100, phase: 3, swag: "99.9", human: "00%", swagistan: "Confirmed" }
+];
+
+let running = false;
+let stepIndex = 0;
+let columns = [];
+const fontSize = 16;
+const chars = "01アイウエオカキクケコサシスセソABCDEFGHIJKLMNOPQRSTUVWXYZ$#*+<>/{}[]";
+
+function setStage(stage) {
+  [introStage, analysisStage, resultStage].forEach(s => s.classList.remove("show"));
+  stage.classList.add("show");
+}
+
+function setPhase(index) {
+  phases.forEach((phase, i) => {
+    phase.classList.toggle("active", i === index);
   });
-  panels.forEach(panel => panel.classList.toggle('active', panel.dataset.tabPanel === tab));
-  history.replaceState(null, '', `#${tab}`);
-  closeDrawer();
 }
 
-for (const btn of tabButtons) btn.addEventListener('click', () => setTab(btn.dataset.tab));
-document.querySelectorAll('[data-jump]').forEach(btn => btn.addEventListener('click', () => setTab(btn.dataset.jump)));
-
-const hash = location.hash.replace('#','');
-if (hash && panels.some(panel => panel.dataset.tabPanel === hash)) setTab(hash);
-
-function openDrawer(){
-  drawer.classList.add('open');
-  drawer.setAttribute('aria-hidden','false');
-  drawerBackdrop.hidden = false;
-  menuToggle?.setAttribute('aria-expanded','true');
+function setProgress(value) {
+  progressBar.style.width = value + "%";
+  progressLabel.textContent = value + "%";
 }
-function closeDrawer(){
-  drawer.classList.remove('open');
-  drawer.setAttribute('aria-hidden','true');
-  drawerBackdrop.hidden = true;
-  menuToggle?.setAttribute('aria-expanded','false');
-}
-menuToggle?.addEventListener('click', () => drawer.classList.contains('open') ? closeDrawer() : openDrawer());
-menuClose?.addEventListener('click', closeDrawer);
-drawerBackdrop?.addEventListener('click', closeDrawer);
 
-function syncThemeLabel(){
-  themeToggle.textContent = root.getAttribute('data-mode') === 'state' ? 'Mode sombre' : 'Mode état';
+function addLog(text, status = "OK") {
+  const line = document.createElement("div");
+  line.className = "log-line";
+  line.innerHTML = `<span>&gt; ${text}</span><span class="log-status">${status}</span>`;
+  logBox.appendChild(line);
+  logBox.scrollTop = logBox.scrollHeight;
 }
-if (localStorage.getItem('laww-v6-theme') === 'state') root.setAttribute('data-mode','state');
-syncThemeLabel();
-themeToggle?.addEventListener('click', () => {
-  if (root.getAttribute('data-mode') === 'state') {
-    root.removeAttribute('data-mode');
-    localStorage.setItem('laww-v6-theme', 'dark');
-  } else {
-    root.setAttribute('data-mode','state');
-    localStorage.setItem('laww-v6-theme', 'state');
+
+function resetUI() {
+  running = false;
+  stepIndex = 0;
+  setStage(introStage);
+  setPhase(0);
+  setProgress(0);
+  systemStatus.textContent = "Dormant";
+  logBox.innerHTML = "";
+  swagValue.textContent = "00.0";
+  humanValue.textContent = "100%";
+  swagistanValue.textContent = "Pending";
+  probabilityText.textContent = "99.8%";
+  restartBtn.classList.add("hidden");
+}
+
+function finishAnalysis() {
+  systemStatus.textContent = "Sentence Ready";
+  setStage(resultStage);
+  restartBtn.classList.remove("hidden");
+  running = false;
+}
+
+function runStep() {
+  if (stepIndex >= steps.length) {
+    setTimeout(finishAnalysis, 900);
+    return;
   }
-  syncThemeLabel();
-});
 
-function getDailyRage(){
-  const now = new Date();
-  const hour = now.getHours();
-  const minute = now.getMinutes();
-  const curve = Math.sin((hour + minute / 60) / 24 * Math.PI) * 42 + 38;
-  const noise = Math.cos((hour + minute / 60) / 24 * Math.PI * 3) * 8;
-  return Math.max(8, Math.min(96, Math.round(curve + noise)));
+  const step = steps[stepIndex];
+  setPhase(step.phase);
+  setProgress(step.p);
+  swagValue.textContent = step.swag;
+  humanValue.textContent = step.human;
+  swagistanValue.textContent = step.swagistan;
+
+  let status = "OK";
+  if (step.p >= 60 && step.p < 95) status = "WARN";
+  if (step.p >= 95) status = "LOCKED";
+
+  addLog(step.t, status);
+
+  stepIndex += 1;
+  setTimeout(runStep, 950);
 }
 
-function updateRage(){
-  const rage = getDailyRage();
-  const fill = document.getElementById('rageFill');
-  const pct = document.getElementById('ragePercent');
-  const state = document.getElementById('rageState');
-  const hint = document.getElementById('rageHint');
-  fill.style.width = `${rage}%`;
-  pct.textContent = `${rage}%`;
-  if (rage < 30) {
-    state.textContent = 'Stable';
-    hint.textContent = 'Calme relatif.';
-  } else if (rage < 65) {
-    state.textContent = 'Tension';
-    hint.textContent = 'Pression administrative modérée.';
-  } else {
-    state.textContent = 'Critique';
-    hint.textContent = 'Charge émotionnelle élevée.';
+function startAnalysis(skip = false) {
+  if (running) return;
+  running = true;
+
+  logBox.innerHTML = "";
+  setProgress(0);
+  setPhase(0);
+  setStage(analysisStage);
+
+  if (skip) {
+    systemStatus.textContent = "Immediate Verdict";
+    addLog("Bypassing interpretive dignity checks...", "OK");
+    addLog("Suppressing uncertainty...", "WARN");
+    addLog("Final sentence assembled without consent...", "LOCKED");
+    swagValue.textContent = "99.9";
+    humanValue.textContent = "00%";
+    swagistanValue.textContent = "Confirmed";
+    setProgress(100);
+    setPhase(3);
+    setTimeout(finishAnalysis, 800);
+    return;
   }
+
+  systemStatus.textContent = "Reading";
+  stepIndex = 0;
+  setTimeout(runStep, 700);
 }
 
-function randomFrom(list){ return list[Math.floor(Math.random() * list.length)]; }
-function runScan(){
-  const friction = 48 + Math.floor(Math.random() * 45);
-  const recours = 22 + Math.floor(Math.random() * 67);
-  const statuses = ['exploitable', 'instable', 'sous lecture', 'archivé partiel'];
-  document.getElementById('scanFriction').textContent = `${friction}%`;
-  document.getElementById('scanRecours').textContent = `${recours}%`;
-  document.getElementById('scanStatus').textContent = randomFrom(statuses);
-  document.getElementById('anomalyState').textContent = randomFrom(['détection partielle','incohérence détectée','signal faible']);
-  document.getElementById('readState').textContent = randomFrom(['ouverte','verrouillée','surveillée']);
-  document.getElementById('exitState').textContent = randomFrom(['protocole disponible','en attente','sortie différée']);
-  pushLog(`analyse relancée — friction ${friction}%`);
+startBtn.addEventListener("click", () => startAnalysis(false));
+skipBtn.addEventListener("click", () => startAnalysis(true));
+restartBtn.addEventListener("click", resetUI);
+
+function resizeCanvas() {
+  matrixCanvas.width = window.innerWidth * devicePixelRatio;
+  matrixCanvas.height = window.innerHeight * devicePixelRatio;
+  matrixCanvas.style.width = window.innerWidth + "px";
+  matrixCanvas.style.height = window.innerHeight + "px";
+  matrixCtx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  setupMatrix();
 }
 
-function pushLog(text){
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  const li = document.createElement('li');
-  li.textContent = `${hh}:${mm} — ${text}`;
-  logList.prepend(li);
-  while (logList.children.length > 5) logList.removeChild(logList.lastChild);
+function setupMatrix() {
+  const count = Math.floor(window.innerWidth / fontSize);
+  columns = Array.from({ length: count }, () => Math.random() * window.innerHeight / fontSize);
 }
 
-scanTrigger?.addEventListener('click', runScan);
+function drawMatrix() {
+  matrixCtx.fillStyle = "rgba(2, 1, 3, 0.1)";
+  matrixCtx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  matrixCtx.font = fontSize + "px monospace";
+  matrixCtx.fillStyle = "rgba(197, 134, 255, 0.78)";
 
-updateRage();
-runScan();
-pushLog('couche principale chargée');
-pushLog('mascotte authentique initialisée');
-pushLog('logo buggé caché armé');
-setInterval(updateRage, 60000);
-setInterval(() => pushLog(randomFrom([
-  'activité enregistrée',
-  'lecture d’archives actualisée',
-  'surcouche bug surveillée',
-  'signature R revalidée',
-  'état du portail stabilisé'
-])), 9000);
+  columns.forEach((y, i) => {
+    const text = chars[Math.floor(Math.random() * chars.length)];
+    const x = i * fontSize;
+    matrixCtx.fillText(text, x, y * fontSize);
+
+    if (y * fontSize > window.innerHeight && Math.random() > 0.985) {
+      columns[i] = 0;
+    } else {
+      columns[i] = y + 0.92;
+    }
+  });
+
+  requestAnimationFrame(drawMatrix);
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+resizeCanvas();
+drawMatrix();
+resetUI();
