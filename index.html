@@ -1,327 +1,316 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>final die lit fuct — fuckladouane</title>
-<meta name="theme-color" content="#07080c" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>laww.fuckladouane.com — V6</title>
+  <meta name="description" content="Interface V6 pour laww.fuckladouane.com avec logos FLD, mascotte, scanner, jauge et navigation responsive." />
+  <meta name="theme-color" content="#07080c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="noise" aria-hidden="true"></div>
-<div class="grid-layer" aria-hidden="true"></div>
-<div class="beam-layer" aria-hidden="true"></div>
-<audio id="ambientLoop" src="audio/ambient-loop-22s.wav" loop preload="auto"></audio>
-<audio id="clickTone" src="audio/click-tone.wav" preload="auto"></audio>
+  <div class="noise" aria-hidden="true"></div>
+  <a class="skip-link" href="#main">Aller au contenu</a>
 
-<header class="topbar">
-  <div class="shell topbar-inner">
-    <div class="brand-wrap">
-      <button class="menu-btn" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-      <img src="assets/logo-main-true.png" alt="Logo FLD" class="brand-logo">
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand-lockup">
+        <button class="icon-btn mobile-only" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="brand-logo-wrap">
+          <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="brand-logo" />
+        </div>
+        <div class="brand-copy">
+          <p class="micro">Portail V6</p>
+          <strong>laww.fuckladouane.com</strong>
+        </div>
+      </div>
+
+      <nav class="main-tabs desktop-only" aria-label="Navigation principale">
+        <button class="tab-btn active" data-tab="accueil">Accueil</button>
+        <button class="tab-btn" data-tab="scanner">Scanner</button>
+        <button class="tab-btn" data-tab="dossiers">Dossiers</button>
+        <button class="tab-btn" data-tab="identite">Identité</button>
+        <button class="tab-btn" data-tab="archives">Archives</button>
+      </nav>
+
+      <div class="top-actions">
+        <button class="ghost-btn" id="themeToggle">Mode état</button>
+        <button class="solid-btn" data-jump="scanner">Je suis en conflit</button>
+      </div>
     </div>
-    <nav class="main-nav">
-      <a href="#hero" class="active">ACCUEIL</a>
-      <a href="#archives">ARCHIVES</a>
-      <a href="#machines">MACHINES</a>
-      <a href="#lore">LORE</a>
-      <a href="#systeme">SYSTÈME</a>
-      <a href="#ressources">RESSOURCES</a>
+  </header>
+
+  <aside class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-head">
+      <strong>laww.fuckladouane.com</strong>
+      <button class="icon-btn" id="menuClose" aria-label="Fermer le menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <nav class="drawer-nav" aria-label="Navigation mobile">
+      <button class="tab-btn active" data-tab="accueil">Accueil</button>
+      <button class="tab-btn" data-tab="scanner">Scanner</button>
+      <button class="tab-btn" data-tab="dossiers">Dossiers</button>
+      <button class="tab-btn" data-tab="identite">Identité</button>
+      <button class="tab-btn" data-tab="archives">Archives</button>
     </nav>
-    <div class="top-actions">
-      <button class="ghost-btn" id="audioBtn">Activer le son</button>
-      <button class="solid-btn" id="themeBtn">Mode état</button>
-    </div>
-  </div>
-</header>
+  </aside>
+  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
 
-<main>
-  <section class="shell hero" id="hero">
-    <div class="hero-copy panel">
-      <p class="eyebrow">final die lit fuct / systeme complet / archive sensible</p>
-      <h1>reprenez <span>le contrôle</span><br>contre la douane.</h1>
-      <div class="ornament"></div>
-      <p class="lead">
-        Cette version pousse le portail vers un système total : boucle ambiante originale, click variable,
-        archives dramatiques, interface froide, néons rares, lore à seuils, surfaces noires et vocabulaire de retenue.
-        Le site ressemble à un dépôt vivant plutôt qu'à une simple landing page.
-      </p>
-      <div class="hero-grid">
-        <article class="card-mini">
-          <h3>fuck / lire</h3>
-          <p>Le monde n’est plus subi. Il est lu comme un document.</p>
-        </article>
-        <article class="card-mini">
-          <h3>la / classer</h3>
-          <p>Tout devient pièce, preuve, image, export, dossier froid.</p>
-        </article>
-        <article class="card-mini">
-          <h3>douane / répondre</h3>
-          <p>Le cri devient architecture. La réponse devient forme.</p>
-        </article>
-      </div>
-      <div class="cta-row">
-        <a href="#archives" class="solid-btn action">Entrer dans les archives</a>
-        <a href="#systeme" class="ghost-btn action">Voir le système</a>
-      </div>
-    </div>
+  <main id="main">
+    <section class="shell hero-grid">
+      <article class="panel hero-copy">
+        <p class="eyebrow">V6 • responsive • logos FLD intégrés</p>
+        <h1>La vraie mascotte. Le vrai sceau. Le logo buggé caché.</h1>
+        <p class="lead">
+          Cette version pour <strong>laww.fuckladouane.com</strong> intègre les signes que tu voulais garder au centre :
+          le logo principal FLD, le <em>buggé caché</em>, le badge R, la vraie mascotte propre et sa version sale.
+          L’interface reste froide, structurée, presque officielle, mais entièrement marquée par ton univers.
+        </p>
+        <div class="hero-actions">
+          <button class="solid-btn" data-jump="identite">Voir les logos</button>
+          <button class="ghost-btn" data-jump="archives">Explorer les couches cachées</button>
+        </div>
 
-    <div class="hero-stage panel">
-      <img src="assets/moodboard-header.jpeg" alt="" class="moodboard">
-      <img src="assets/logo-bug-hidden.png" alt="" class="sigil bug">
-      <img src="assets/logo-r-true.png" alt="" class="sigil r">
-      <img src="assets/logo-main-true.png" alt="" class="sigil main">
-      <img src="assets/mascot-true.jpeg" alt="Mascotte FLD" class="mascot-main">
-      <img src="assets/mascot-low.png" alt="" class="mascot-low">
-      <div class="manifest-card">
-        <p>on ne subit plus.<br>on comprend.<br>on archive.<br><strong>on revient.</strong></p>
-      </div>
-      <div class="warning-card">
-        <span>accès interdit</span>
-        <strong>vos droits ?<br>refusés.</strong>
-      </div>
-    </div>
-  </section>
-
-  <section class="shell stats panel">
-    <article><strong data-counter="32745">0</strong><span>membres actifs</span></article>
-    <article><strong data-counter="1200">0</strong><span>en ligne</span></article>
-    <article><strong data-counter="8400">0</strong><span>sujets débattus</span></article>
-    <article><strong>22s</strong><span>ambient loop</span></article>
-  </section>
-
-  <section class="shell section-grid" id="archives">
-    <div class="sidebar panel">
-      <h2>archives dramatiques</h2>
-      <p>Le site s'organise comme un cabinet d'archives : cas, motifs, seuils, routes, inventaires, retours.</p>
-      <div class="search-shell">
-        <input id="archiveSearch" type="search" placeholder="Filtrer les cas, les motifs, les cargaisons..." />
-      </div>
-      <div class="archive-cloud">
-        <span>cactus shipment</span>
-        <span>msc gayane</span>
-        <span>gas engines</span>
-        <span>live animals</span>
-        <span>mail interceptions</span>
-        <span>creative concealment</span>
-        <span>aircraft tires</span>
-        <span>agriculture threats</span>
-      </div>
-    </div>
-
-    <div class="content">
-      <div class="case-grid">
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>Cactus Shipment / 600 Packages</h3><span class="tag">seuil / dissimulation</span></div>
-          <p>Une cargaison de cactus transformée en décor de dissimulation. L’archive sert ici comme exemple parfait du moment où l’ordinaire devient presque irréel par simple passage douanier.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>MSC Gayane / 20 Tons</h3><span class="tag">échelle industrielle</span></div>
-          <p>Le cas du navire donne au site son imaginaire d’échelle : tout à coup, la douane n’est plus seulement un guichet ou un colis, mais un théâtre logistique total.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>1134 Gas Engines</h3><span class="tag">entrée frauduleuse</span></div>
-          <p>Un cas non narcotique pour rappeler que le drame douanier n’est pas seulement spectaculaire. Parfois, la scène est mécanique, commerciale, froide, administrative.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>28 Parrots / 3 Chickens</h3><span class="tag">animal / souffle</span></div>
-          <p>Les animaux vivants déplacent la tension du côté du souffle, de la cage, du cri couvert. Le site s’en sert pour épaissir sa zone la plus étrange.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>Ordering Opioids Online</h3><span class="tag">mail / interception</span></div>
-          <p>Le courrier comme canal dramatique : petit format, grand effet. Ici, le site montre que l’archive douanière peut aussi naître d’un simple paquet postal.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>Creative Concealment</h3><span class="tag">image / absurdité</span></div>
-          <p>Les méthodes de dissimulation les plus absurdes nourrissent la galerie visuelle du portail. Pas pour imiter, mais pour montrer la théâtralité brutale de ces scènes.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>Aircraft Tires / Sanctions</h3><span class="tag">route / sanctions</span></div>
-          <p>Les routes, les pneus, l’aviation, la géopolitique. D’un coup, le site bascule du colis individuel aux réseaux de circulation mondiaux.</p>
-        </article>
-        <article class="case-card panel" data-search-item>
-          <div class="case-head"><h3>Agriculture Threats</h3><span class="tag">parasite / invisible</span></div>
-          <p>Le drame douanier peut aussi être biologique, microscopique, végétal. C’est une strate idéale pour le lore du portail : contamination, inspection, invisibilité.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="shell section-grid" id="machines">
-    <div class="sidebar panel">
-      <h2>machines</h2>
-      <p>Le front n’est pas juste chargé visuellement. Il réagit aussi : boucle, click, micro-ralentissement, mini-accélération, faux battement.</p>
-      <div class="quick-links">
-        <a href="#audio-machine" class="tile-link">moteur audio</a>
-        <a href="#click-machine" class="tile-link">click variable</a>
-        <a href="#archives" class="tile-link">liens vers les cas</a>
-      </div>
-    </div>
-    <div class="content">
-      <div class="grid-2">
-        <article class="stack-card panel" id="audio-machine">
-          <h2>moteur audio</h2>
-          <p>Une boucle originale de 22 secondes remplace toute piste commerciale. Elle installe la noirceur, l’échelle, le souffle. Le son devient une matière de l’interface.</p>
-        </article>
-        <article class="stack-card panel" id="click-machine">
-          <h2>click variable</h2>
-          <p>Chaque interaction produit une variation de pitch et un mini glissement de vitesse sur la boucle. Ça dure au maximum une seconde : juste assez pour faire sentir la machine.</p>
-        </article>
-      </div>
-      <article class="gallery-card panel">
-        <h2>système complet</h2>
-        <div class="tile-grid">
-          <a class="tile-link" href="#lore">lore insolvable</a>
-          <a class="tile-link" href="#archives">cabinet d’archives</a>
-          <a class="tile-link" href="#systeme">rituels de lecture</a>
-          <a class="tile-link" href="#ressources">fichiers et dépôts</a>
+        <div class="mini-stats">
+          <article><span>Sceau</span><strong>principal</strong></article>
+          <article><span>Mascotte</span><strong>authentique</strong></article>
+          <article><span>Bug</span><strong>dissimulé</strong></article>
         </div>
       </article>
-    </div>
-  </section>
 
-  <section class="shell section-grid" id="lore">
-    <div class="sidebar panel">
-      <h2>lore</h2>
-      <p>Ici, les cas ne sont pas seulement listés. Ils deviennent cycles, chambres, seuils, salles, retours.</p>
-    </div>
-    <div class="content">
-      <div class="grid-3">
-        <article class="article-card panel">
-          <h2>Le Portique</h2>
-          <p>Le moment où l’objet, le corps ou le paquet change de statut. Le portail donne à ce seuil un nom pour mieux en lire la violence administrative.</p>
-        </article>
-        <article class="article-card panel">
-          <h2>La Retenue</h2>
-          <p>État suspendu. Ni rendu, ni dissous. Le site transforme cette suspension en motif central de son atmosphère.</p>
-        </article>
-        <article class="article-card panel">
-          <h2>Le Retour des Pièces</h2>
-          <p>Ce qui revient sous forme de scan, de courrier, de pièce jointe ou d’inventaire revient toujours chargé d’un passé nouveau.</p>
-        </article>
-      </div>
-      <article class="callout panel">
-        <h2>comme une archive qui rêve encore</h2>
-        <p>Le lore n’invente pas un autre monde. Il épaissit celui-ci. Il donne des noms à des états de dossier, à des changements de statut, à des sensations nées du papier, du scan, du sceau, de la retenue.</p>
+      <article class="panel hero-stage">
+        <div class="stage-inner">
+          <img src="assets/mascot-clean.jpeg" alt="Mascotte FLD propre" class="mascot-clean" />
+          <img src="assets/mascot-low.png" alt="Mascotte FLD version sale" class="mascot-low" />
+          <img src="assets/logo-main-white.png" alt="" class="floating-logo main-seal" />
+          <img src="assets/logo-r.png" alt="" class="floating-logo r-seal" />
+          <img src="assets/logo-bug-hidden.png" alt="" class="floating-logo hidden-bug" />
+        </div>
       </article>
-    </div>
-  </section>
+    </section>
 
-  <section class="shell section-grid" id="systeme">
-    <div class="sidebar panel">
-      <h2>système</h2>
-      <p>Un simple GitHub peut porter plus qu’un front. Il peut porter une structure, des archives, des fragments, des notes et des données.</p>
-    </div>
-    <div class="content">
-      <div class="grid-2">
-        <article class="stack-card panel">
-          <h2>fichiers visibles</h2>
-          <p>Le zip inclut non seulement les pages, mais aussi des données JSON, des archives markdown, des fragments et des notes de curation.</p>
-          <div class="resource-links">
-            <a href="data/cases.json">cases.json</a>
-            <a href="data/alerts.json">alerts.json</a>
-            <a href="archives/sources-index.md">sources-index.md</a>
-            <a href="docs/notes-curation.md">notes-curation.md</a>
+    <section class="shell control-grid">
+      <article class="panel rage-panel">
+        <div class="section-top">
+          <div>
+            <p class="micro">Jauge de colère</p>
+            <strong id="rageState">Stable</strong>
           </div>
-        </article>
-        <article class="stack-card panel">
-          <h2>fichiers d’ambiance</h2>
-          <p>Le fond ne dépend pas d’une seule image. Il est fait de textures, de couches, de bruit et d’un moodboard entête inséré comme mémoire de la base.</p>
-          <div class="resource-links">
-            <a href="assets/moodboard-header.jpeg">moodboard-header.jpeg</a>
-            <a href="assets/ornament-line.svg">ornament-line.svg</a>
-            <a href="assets/paper-noise.svg">paper-noise.svg</a>
+          <span id="ragePercent">0%</span>
+        </div>
+        <div class="rage-bar"><div id="rageFill"></div></div>
+        <p class="muted" id="rageHint">Calme relatif.</p>
+      </article>
+
+      <article class="panel scanner-panel">
+        <div class="section-top">
+          <div>
+            <p class="micro">Scanner</p>
+            <strong>Analyse simulée</strong>
           </div>
-        </article>
+          <button class="ghost-btn small" id="scanTrigger">Relancer</button>
+        </div>
+        <div class="scan-metrics">
+          <div><span>Indice de friction</span><strong id="scanFriction">--</strong></div>
+          <div><span>Potentiel de recours</span><strong id="scanRecours">--</strong></div>
+          <div><span>État</span><strong id="scanStatus">--</strong></div>
+        </div>
+      </article>
+
+      <article class="panel logs-panel">
+        <div class="section-top">
+          <div>
+            <p class="micro">Logs</p>
+            <strong>Flux interne</strong>
+          </div>
+        </div>
+        <ul class="logs" id="logList">
+          <li>initialisation…</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="shell layout-grid">
+      <aside class="panel sidebar desktop-only">
+        <div class="sidebar-block">
+          <p class="micro">Navigation</p>
+          <button class="side-link active" data-tab="accueil">Vue d’ensemble</button>
+          <button class="side-link" data-tab="scanner">Scanner</button>
+          <button class="side-link" data-tab="dossiers">Dossiers</button>
+          <button class="side-link" data-tab="identite">Identité FLD</button>
+          <button class="side-link" data-tab="archives">Archives cachées</button>
+        </div>
+        <div class="sidebar-block">
+          <p class="micro">Système visuel</p>
+          <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="sidebar-logo" />
+          <p class="muted">Le principal reste partout. Le buggé caché apparaît comme couche secondaire. Le badge R valide. La mascotte incarne.</p>
+        </div>
+      </aside>
+
+      <section class="panel workspace">
+        <section class="tab-panel active" data-tab-panel="accueil">
+          <div class="section-head">
+            <p class="eyebrow">Accueil</p>
+            <h2>La V6 pour laww.fuckladouane.com</h2>
+            <p>Une base plus profonde, avec les vrais assets intégrés comme repères centraux du site.</p>
+          </div>
+
+          <div class="cards three-col">
+            <article class="card">
+              <span class="badge">Principal</span>
+              <h3>Logo FLD blanc</h3>
+              <p>Le vrai sceau principal. Header, footer, filigranes, signatures de sections, zones fortes.</p>
+            </article>
+            <article class="card">
+              <span class="badge accent">Caché</span>
+              <h3>Bugged hidden</h3>
+              <p>À utiliser comme couche secrète, apparition faible, hover, écran d’attente ou archive interne.</p>
+            </article>
+            <article class="card">
+              <span class="badge">Mascotte</span>
+              <h3>Version propre + version sale</h3>
+              <p>La propre tient l’interface. La sale nourrit l’underground. Les deux restent liées au même univers.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="scanner">
+          <div class="section-head">
+            <p class="eyebrow">Scanner</p>
+            <h2>Lecture froide. Résultat immédiat.</h2>
+            <p>Le site simule une machine qui classe, détecte et stabilise.</p>
+          </div>
+
+          <div class="cards two-col">
+            <article class="card scan-card">
+              <span class="badge">Analyse</span>
+              <h3>Classification en cours</h3>
+              <div class="scan-display">
+                <div><span>anomalie</span><strong id="anomalyState">détection partielle</strong></div>
+                <div><span>lecture</span><strong id="readState">ouverte</strong></div>
+                <div><span>sortie</span><strong id="exitState">protocole disponible</strong></div>
+              </div>
+            </article>
+            <article class="card mascot-card">
+              <span class="badge accent">Agent</span>
+              <h3>Mascotte opératoire</h3>
+              <img src="assets/mascot-clean.jpeg" alt="Mascotte propre" class="card-mascot">
+            </article>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="dossiers">
+          <div class="section-head">
+            <p class="eyebrow">Dossiers</p>
+            <h2>Structure, preuve, duplication, contrôle.</h2>
+          </div>
+          <div class="cards three-col">
+            <article class="card">
+              <span class="badge">Bloc 01</span>
+              <h3>Ouverture</h3>
+              <p>Créer l’entrée, nommer les pièces, poser l’ID, créer la chronologie.</p>
+            </article>
+            <article class="card">
+              <span class="badge">Bloc 02</span>
+              <h3>Stabilisation</h3>
+              <p>Dupliquer, dater, lier les scans, classer les captures et verrouiller la version de travail.</p>
+            </article>
+            <article class="card">
+              <span class="badge accent">Bloc 03</span>
+              <h3>Marquage</h3>
+              <p>Appliquer le R comme signe de validation. Réserver le bugged hidden aux couches secondaires.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="identite">
+          <div class="section-head">
+            <p class="eyebrow">Identité</p>
+            <h2>Les logos principaux, le buggé caché et la véritable mascotte.</h2>
+          </div>
+
+          <div class="cards two-col identity-grid">
+            <article class="card">
+              <span class="badge">Logo principal</span>
+              <img src="assets/logo-main-white.png" alt="Logo principal blanc" class="asset-preview">
+              <p>Base du système. Toujours propre, fort, direct.</p>
+            </article>
+            <article class="card">
+              <span class="badge accent">Logo buggé caché</span>
+              <img src="assets/logo-bug-hidden.png" alt="Logo buggé caché" class="asset-preview">
+              <p>Couche secrète. Il doit apparaître comme un artefact, pas comme le logo principal.</p>
+            </article>
+            <article class="card">
+              <span class="badge">Glitch vert</span>
+              <img src="assets/logo-glitch-green.png" alt="Logo glitch vert" class="asset-preview">
+              <p>Version de rupture. Pour splash, écran de transition, carte rare.</p>
+            </article>
+            <article class="card">
+              <span class="badge accent">Badge R</span>
+              <img src="assets/logo-r.png" alt="Logo R" class="asset-preview small">
+              <p>Micro-validation, coin d’interface, état, repère court.</p>
+            </article>
+            <article class="card full-span">
+              <span class="badge">Vraie mascotte</span>
+              <div class="mascot-grid">
+                <img src="assets/mascot-clean.jpeg" alt="Mascotte clean" class="asset-preview">
+                <img src="assets/mascot-low.png" alt="Mascotte sale" class="asset-preview">
+              </div>
+              <p>La clean tient le site. La sale rappelle l’origine. Les deux doivent vivre ensemble dans le système V6.</p>
+            </article>
+            <article class="card full-span">
+              <span class="badge accent">Chaos logo</span>
+              <img src="assets/logo-chaos.jpeg" alt="Logo chaos" class="asset-preview chaos">
+              <p>Archive extrême. À réserver aux zones secrètes, easter eggs ou pages profondes.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="tab-panel" data-tab-panel="archives">
+          <div class="section-head">
+            <p class="eyebrow">Archives</p>
+            <h2>La couche secrète du système.</h2>
+            <p>Zone réservée aux dérives, aux assets occultes, aux apparitions faibles du buggé caché.</p>
+          </div>
+          <div class="cards two-col">
+            <article class="card archive-card">
+              <span class="badge accent">Archive 01</span>
+              <h3>Bug latent</h3>
+              <p>Le buggé caché doit apparaître en transparence, au hover, sur des écrans isolés ou dans les transitions longues.</p>
+              <img src="assets/logo-bug-hidden.png" alt="Bug latent" class="ghost-preview">
+            </article>
+            <article class="card archive-card">
+              <span class="badge">Archive 02</span>
+              <h3>Source chaotique</h3>
+              <p>Le chaos coloré n’est pas la base du site. C’est la mémoire corrompue derrière le portail.</p>
+              <img src="assets/logo-chaos.jpeg" alt="Source chaotique" class="ghost-preview chaos">
+            </article>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <footer class="shell footer panel">
+    <div class="footer-left">
+      <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="footer-logo">
+      <div>
+        <p class="micro">V6 / laww.fuckladouane.com</p>
+        <strong>FLD system build</strong>
       </div>
     </div>
-  </section>
-
-  <section class="shell section-grid" id="ressources">
-    <div class="sidebar panel">
-      <h2>ressources</h2>
-      <p>Logos, mascottes, textures, sons, fragments. Tout ce qui fait que le portail tient.</p>
+    <div class="footer-right">
+      <img src="assets/logo-r.png" alt="Logo R" class="footer-r">
+      <button class="ghost-btn" data-jump="accueil">Retour accueil</button>
     </div>
-    <div class="content">
-      <div class="asset-wall">
-        <img src="assets/logo-main-true.png" alt="logo principal">
-        <img src="assets/logo-r-true.png" alt="logo r">
-        <img src="assets/logo-glitch-main.png" alt="logo glitch">
-        <img src="assets/logo-bug-hidden.png" alt="logo caché">
-        <img src="assets/mascot-true.jpeg" alt="mascotte propre">
-        <img src="assets/mascot-low.png" alt="mascotte sale">
-      </div>
-    </div>
-  </section>
-</main>
+  </footer>
 
-<footer class="shell footer panel">
-  <div class="footer-brand">
-    <img src="assets/logo-main-true.png" alt="Logo FLD" class="footer-logo">
-    <div>
-      <strong>FINAL DIE LIT FUCT</strong>
-      <p>Portail total, archives dramatiques, boucle sonore originale, click variable, matières froides.</p>
-    </div>
-  </div>
-  <div class="footer-actions">
-    <button class="secret-btn" id="secretBtn">Cachet interne</button>
-    <a class="solid-btn" href="#hero">Retour au seuil</a>
-  </div>
-</footer>
-
-<dialog class="modal" id="secretModal">
-  <div class="modal-head">
-    <h3>Cachet interne</h3>
-    <button class="icon-btn" id="closeSecret" aria-label="Fermer">×</button>
-  </div>
-  <p>La piste commerciale demandée n'est pas intégrée. À la place, le système embarque une boucle originale de 22 secondes et un moteur de click variable.</p>
-  <div class="secret-code">FREESHIP4LL6</div>
-</dialog>
-
-<script src="app.js"></script>
-<script>
-const ambient = document.getElementById('ambientLoop');
-const clickTone = document.getElementById('clickTone');
-const audioBtn = document.getElementById('audioBtn');
-let audioOn = false;
-let resetTimer = null;
-
-async function startAudio(){
-  try{
-    ambient.volume = .42;
-    await ambient.play();
-    audioOn = true;
-    audioBtn.textContent = 'Couper le son';
-  }catch(e){
-    audioBtn.textContent = 'Son bloqué';
-  }
-}
-function stopAudio(){
-  ambient.pause();
-  audioOn = false;
-  audioBtn.textContent = 'Activer le son';
-}
-audioBtn.addEventListener('click', ()=> audioOn ? stopAudio() : startAudio());
-
-function triggerAudioVariation(){
-  const factor = 0.82 + Math.random()*0.46;
-  clickTone.pause();
-  clickTone.currentTime = 0;
-  clickTone.playbackRate = 0.85 + Math.random()*0.45;
-  clickTone.volume = 0.5;
-  clickTone.play().catch(()=>{});
-  if(audioOn){
-    ambient.playbackRate = factor;
-    clearTimeout(resetTimer);
-    resetTimer = setTimeout(()=> ambient.playbackRate = 1, 950);
-  }
-}
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('click', triggerAudioVariation);
-});
-</script>
+  <script src="app.js"></script>
 </body>
 </html>
