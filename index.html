@@ -2,315 +2,236 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>laww.fuckladouane.com — V6</title>
-  <meta name="description" content="Interface V6 pour laww.fuckladouane.com avec logos FLD, mascotte, scanner, jauge et navigation responsive." />
-  <meta name="theme-color" content="#07080c" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FuckLaDouane.com — Plateforme citoyenne</title>
+  <meta name="description" content="Plateforme d'information, d'orientation et de défense face aux procédures douanières." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="noise" aria-hidden="true"></div>
-  <a class="skip-link" href="#main">Aller au contenu</a>
-
-  <header class="topbar">
-    <div class="shell topbar-inner">
+  <div class="page-shell">
+    <header class="topbar">
       <div class="brand-lockup">
-        <button class="icon-btn mobile-only" id="menuToggle" aria-label="Ouvrir le menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-        <div class="brand-logo-wrap">
-          <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="brand-logo" />
-        </div>
-        <div class="brand-copy">
-          <p class="micro">Portail V6</p>
-          <strong>laww.fuckladouane.com</strong>
+        <img src="assets/logo-main.jpeg" alt="Logo principal" class="brand-mark" />
+        <div>
+          <div class="eyebrow">Plateforme citoyenne indépendante</div>
+          <div class="brand-name">FuckLaDouane.com</div>
         </div>
       </div>
 
-      <nav class="main-tabs desktop-only" aria-label="Navigation principale">
-        <button class="tab-btn active" data-tab="accueil">Accueil</button>
-        <button class="tab-btn" data-tab="scanner">Scanner</button>
-        <button class="tab-btn" data-tab="dossiers">Dossiers</button>
-        <button class="tab-btn" data-tab="identite">Identité</button>
-        <button class="tab-btn" data-tab="archives">Archives</button>
+      <nav class="nav">
+        <a href="#mission">Mission</a>
+        <a href="#ressources">Ressources</a>
+        <a href="#procedures">Procédures</a>
+        <a href="#communaute">Communauté</a>
+        <a href="#alertes">Alertes</a>
       </nav>
 
-      <div class="top-actions">
-        <button class="ghost-btn" id="themeToggle">Mode état</button>
-        <button class="solid-btn" data-jump="scanner">Je suis en conflit</button>
+      <div class="nav-actions">
+        <a href="#connexion" class="btn btn-ghost">Connexion</a>
+        <a href="#rejoindre" class="btn btn-solid">Rejoindre</a>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <aside class="drawer" id="drawer" aria-hidden="true">
-    <div class="drawer-head">
-      <strong>laww.fuckladouane.com</strong>
-      <button class="icon-btn" id="menuClose" aria-label="Fermer le menu">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6 18 18M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    <nav class="drawer-nav" aria-label="Navigation mobile">
-      <button class="tab-btn active" data-tab="accueil">Accueil</button>
-      <button class="tab-btn" data-tab="scanner">Scanner</button>
-      <button class="tab-btn" data-tab="dossiers">Dossiers</button>
-      <button class="tab-btn" data-tab="identite">Identité</button>
-      <button class="tab-btn" data-tab="archives">Archives</button>
-    </nav>
-  </aside>
-  <div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+    <main>
+      <section class="hero" id="mission">
+        <div class="hero-copy">
+          <div class="hero-kicker">Information — Orientation — Défense</div>
+          <h1>Reprenez le contrôle face aux procédures douanières.</h1>
+          <p class="hero-text">
+            Une interface pensée comme un site institutionnel, mais conçue pour redonner de la lisibilité,
+            des recours concrets et des outils utiles aux personnes confrontées à des contrôles, saisies,
+            blocages ou incompréhensions administratives.
+          </p>
 
-  <main id="main">
-    <section class="shell hero-grid">
-      <article class="panel hero-copy">
-        <p class="eyebrow">V6 • responsive • logos FLD intégrés</p>
-        <h1>La vraie mascotte. Le vrai sceau. Le logo buggé caché.</h1>
-        <p class="lead">
-          Cette version pour <strong>laww.fuckladouane.com</strong> intègre les signes que tu voulais garder au centre :
-          le logo principal FLD, le <em>buggé caché</em>, le badge R, la vraie mascotte propre et sa version sale.
-          L’interface reste froide, structurée, presque officielle, mais entièrement marquée par ton univers.
-        </p>
-        <div class="hero-actions">
-          <button class="solid-btn" data-jump="identite">Voir les logos</button>
-          <button class="ghost-btn" data-jump="archives">Explorer les couches cachées</button>
-        </div>
-
-        <div class="mini-stats">
-          <article><span>Sceau</span><strong>principal</strong></article>
-          <article><span>Mascotte</span><strong>authentique</strong></article>
-          <article><span>Bug</span><strong>dissimulé</strong></article>
-        </div>
-      </article>
-
-      <article class="panel hero-stage">
-        <div class="stage-inner">
-          <img src="assets/mascot-clean.jpeg" alt="Mascotte FLD propre" class="mascot-clean" />
-          <img src="assets/mascot-low.png" alt="Mascotte FLD version sale" class="mascot-low" />
-          <img src="assets/logo-main-white.png" alt="" class="floating-logo main-seal" />
-          <img src="assets/logo-r.png" alt="" class="floating-logo r-seal" />
-          <img src="assets/logo-bug-hidden.png" alt="" class="floating-logo hidden-bug" />
-        </div>
-      </article>
-    </section>
-
-    <section class="shell control-grid">
-      <article class="panel rage-panel">
-        <div class="section-top">
-          <div>
-            <p class="micro">Jauge de colère</p>
-            <strong id="rageState">Stable</strong>
+          <div class="hero-actions">
+            <a href="#ressources" class="btn btn-solid">Accéder aux ressources</a>
+            <a href="#procedures" class="btn btn-ghost">Voir les procédures</a>
           </div>
-          <span id="ragePercent">0%</span>
-        </div>
-        <div class="rage-bar"><div id="rageFill"></div></div>
-        <p class="muted" id="rageHint">Calme relatif.</p>
-      </article>
 
-      <article class="panel scanner-panel">
-        <div class="section-top">
-          <div>
-            <p class="micro">Scanner</p>
-            <strong>Analyse simulée</strong>
-          </div>
-          <button class="ghost-btn small" id="scanTrigger">Relancer</button>
-        </div>
-        <div class="scan-metrics">
-          <div><span>Indice de friction</span><strong id="scanFriction">--</strong></div>
-          <div><span>Potentiel de recours</span><strong id="scanRecours">--</strong></div>
-          <div><span>État</span><strong id="scanStatus">--</strong></div>
-        </div>
-      </article>
-
-      <article class="panel logs-panel">
-        <div class="section-top">
-          <div>
-            <p class="micro">Logs</p>
-            <strong>Flux interne</strong>
+          <div class="trust-strip">
+            <div><span>Guides</span><strong>42</strong></div>
+            <div><span>Modèles</span><strong>18</strong></div>
+            <div><span>Alertes</span><strong>Temps réel</strong></div>
+            <div><span>Statut</span><strong>Indépendant</strong></div>
           </div>
         </div>
-        <ul class="logs" id="logList">
-          <li>initialisation…</li>
-        </ul>
-      </article>
-    </section>
 
-    <section class="shell layout-grid">
-      <aside class="panel sidebar desktop-only">
-        <div class="sidebar-block">
-          <p class="micro">Navigation</p>
-          <button class="side-link active" data-tab="accueil">Vue d’ensemble</button>
-          <button class="side-link" data-tab="scanner">Scanner</button>
-          <button class="side-link" data-tab="dossiers">Dossiers</button>
-          <button class="side-link" data-tab="identite">Identité FLD</button>
-          <button class="side-link" data-tab="archives">Archives cachées</button>
+        <div class="hero-visual">
+          <div class="official-card">
+            <div class="stamp-line">
+              <img src="assets/logo-r.png" alt="Marque déposée" class="mini-mark" />
+              <span>Référence visuelle interne</span>
+            </div>
+            <img src="assets/logo-main.jpeg" alt="Emblème principal" class="hero-emblem" />
+            <div class="official-divider"></div>
+            <p class="manifesto">
+              On ne subit plus.<br>
+              On comprend.<br>
+              On agit.<br>
+              <strong>Ensemble.</strong>
+            </p>
+          </div>
         </div>
-        <div class="sidebar-block">
-          <p class="micro">Système visuel</p>
-          <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="sidebar-logo" />
-          <p class="muted">Le principal reste partout. Le buggé caché apparaît comme couche secondaire. Le badge R valide. La mascotte incarne.</p>
-        </div>
-      </aside>
-
-      <section class="panel workspace">
-        <section class="tab-panel active" data-tab-panel="accueil">
-          <div class="section-head">
-            <p class="eyebrow">Accueil</p>
-            <h2>La V6 pour laww.fuckladouane.com</h2>
-            <p>Une base plus profonde, avec les vrais assets intégrés comme repères centraux du site.</p>
-          </div>
-
-          <div class="cards three-col">
-            <article class="card">
-              <span class="badge">Principal</span>
-              <h3>Logo FLD blanc</h3>
-              <p>Le vrai sceau principal. Header, footer, filigranes, signatures de sections, zones fortes.</p>
-            </article>
-            <article class="card">
-              <span class="badge accent">Caché</span>
-              <h3>Bugged hidden</h3>
-              <p>À utiliser comme couche secrète, apparition faible, hover, écran d’attente ou archive interne.</p>
-            </article>
-            <article class="card">
-              <span class="badge">Mascotte</span>
-              <h3>Version propre + version sale</h3>
-              <p>La propre tient l’interface. La sale nourrit l’underground. Les deux restent liées au même univers.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="tab-panel" data-tab-panel="scanner">
-          <div class="section-head">
-            <p class="eyebrow">Scanner</p>
-            <h2>Lecture froide. Résultat immédiat.</h2>
-            <p>Le site simule une machine qui classe, détecte et stabilise.</p>
-          </div>
-
-          <div class="cards two-col">
-            <article class="card scan-card">
-              <span class="badge">Analyse</span>
-              <h3>Classification en cours</h3>
-              <div class="scan-display">
-                <div><span>anomalie</span><strong id="anomalyState">détection partielle</strong></div>
-                <div><span>lecture</span><strong id="readState">ouverte</strong></div>
-                <div><span>sortie</span><strong id="exitState">protocole disponible</strong></div>
-              </div>
-            </article>
-            <article class="card mascot-card">
-              <span class="badge accent">Agent</span>
-              <h3>Mascotte opératoire</h3>
-              <img src="assets/mascot-clean.jpeg" alt="Mascotte propre" class="card-mascot">
-            </article>
-          </div>
-        </section>
-
-        <section class="tab-panel" data-tab-panel="dossiers">
-          <div class="section-head">
-            <p class="eyebrow">Dossiers</p>
-            <h2>Structure, preuve, duplication, contrôle.</h2>
-          </div>
-          <div class="cards three-col">
-            <article class="card">
-              <span class="badge">Bloc 01</span>
-              <h3>Ouverture</h3>
-              <p>Créer l’entrée, nommer les pièces, poser l’ID, créer la chronologie.</p>
-            </article>
-            <article class="card">
-              <span class="badge">Bloc 02</span>
-              <h3>Stabilisation</h3>
-              <p>Dupliquer, dater, lier les scans, classer les captures et verrouiller la version de travail.</p>
-            </article>
-            <article class="card">
-              <span class="badge accent">Bloc 03</span>
-              <h3>Marquage</h3>
-              <p>Appliquer le R comme signe de validation. Réserver le bugged hidden aux couches secondaires.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="tab-panel" data-tab-panel="identite">
-          <div class="section-head">
-            <p class="eyebrow">Identité</p>
-            <h2>Les logos principaux, le buggé caché et la véritable mascotte.</h2>
-          </div>
-
-          <div class="cards two-col identity-grid">
-            <article class="card">
-              <span class="badge">Logo principal</span>
-              <img src="assets/logo-main-white.png" alt="Logo principal blanc" class="asset-preview">
-              <p>Base du système. Toujours propre, fort, direct.</p>
-            </article>
-            <article class="card">
-              <span class="badge accent">Logo buggé caché</span>
-              <img src="assets/logo-bug-hidden.png" alt="Logo buggé caché" class="asset-preview">
-              <p>Couche secrète. Il doit apparaître comme un artefact, pas comme le logo principal.</p>
-            </article>
-            <article class="card">
-              <span class="badge">Glitch vert</span>
-              <img src="assets/logo-glitch-green.png" alt="Logo glitch vert" class="asset-preview">
-              <p>Version de rupture. Pour splash, écran de transition, carte rare.</p>
-            </article>
-            <article class="card">
-              <span class="badge accent">Badge R</span>
-              <img src="assets/logo-r.png" alt="Logo R" class="asset-preview small">
-              <p>Micro-validation, coin d’interface, état, repère court.</p>
-            </article>
-            <article class="card full-span">
-              <span class="badge">Vraie mascotte</span>
-              <div class="mascot-grid">
-                <img src="assets/mascot-clean.jpeg" alt="Mascotte clean" class="asset-preview">
-                <img src="assets/mascot-low.png" alt="Mascotte sale" class="asset-preview">
-              </div>
-              <p>La clean tient le site. La sale rappelle l’origine. Les deux doivent vivre ensemble dans le système V6.</p>
-            </article>
-            <article class="card full-span">
-              <span class="badge accent">Chaos logo</span>
-              <img src="assets/logo-chaos.jpeg" alt="Logo chaos" class="asset-preview chaos">
-              <p>Archive extrême. À réserver aux zones secrètes, easter eggs ou pages profondes.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="tab-panel" data-tab-panel="archives">
-          <div class="section-head">
-            <p class="eyebrow">Archives</p>
-            <h2>La couche secrète du système.</h2>
-            <p>Zone réservée aux dérives, aux assets occultes, aux apparitions faibles du buggé caché.</p>
-          </div>
-          <div class="cards two-col">
-            <article class="card archive-card">
-              <span class="badge accent">Archive 01</span>
-              <h3>Bug latent</h3>
-              <p>Le buggé caché doit apparaître en transparence, au hover, sur des écrans isolés ou dans les transitions longues.</p>
-              <img src="assets/logo-bug-hidden.png" alt="Bug latent" class="ghost-preview">
-            </article>
-            <article class="card archive-card">
-              <span class="badge">Archive 02</span>
-              <h3>Source chaotique</h3>
-              <p>Le chaos coloré n’est pas la base du site. C’est la mémoire corrompue derrière le portail.</p>
-              <img src="assets/logo-chaos.jpeg" alt="Source chaotique" class="ghost-preview chaos">
-            </article>
-          </div>
-        </section>
       </section>
-    </section>
-  </main>
 
-  <footer class="shell footer panel">
-    <div class="footer-left">
-      <img src="assets/logo-main-white.png" alt="Logo principal FLD" class="footer-logo">
-      <div>
-        <p class="micro">V6 / laww.fuckladouane.com</p>
-        <strong>FLD system build</strong>
-      </div>
-    </div>
-    <div class="footer-right">
-      <img src="assets/logo-r.png" alt="Logo R" class="footer-r">
-      <button class="ghost-btn" data-jump="accueil">Retour accueil</button>
-    </div>
-  </footer>
+      <section class="state-band">
+        <article>
+          <span>Statut</span>
+          <strong>Accès libre</strong>
+        </article>
+        <article>
+          <span>Approche</span>
+          <strong>Clarté procédurale</strong>
+        </article>
+        <article>
+          <span>Position</span>
+          <strong>Soutien citoyen</strong>
+        </article>
+        <article>
+          <span>Design</span>
+          <strong>Codes institutionnels détournés</strong>
+        </article>
+      </section>
 
-  <script src="app.js"></script>
+      <section class="grid-three" id="ressources">
+        <article class="info-card">
+          <div class="card-index">01</div>
+          <h2>S'informer</h2>
+          <p>Comprendre ce que la douane peut faire, ce qu'elle ne peut pas faire, et comment lire une procédure sans paniquer.</p>
+          <ul>
+            <li>Fouilles, saisies, retenues</li>
+            <li>Cadre légal simplifié</li>
+            <li>Fiches pratiques par situation</li>
+          </ul>
+        </article>
+
+        <article class="info-card">
+          <div class="card-index">02</div>
+          <h2>Se protéger</h2>
+          <p>Accéder rapidement à des modèles, formulations, checklists et réflexes essentiels avant toute réponse.</p>
+          <ul>
+            <li>Modèles de lettres</li>
+            <li>Recours et contestations</li>
+            <li>Préparation des dossiers</li>
+          </ul>
+        </article>
+
+        <article class="info-card">
+          <div class="card-index">03</div>
+          <h2>Agir ensemble</h2>
+          <p>Faire remonter les abus, documenter les situations, comparer les cas et créer une base collective utile.</p>
+          <ul>
+            <li>Témoignages structurés</li>
+            <li>Veille réglementaire</li>
+            <li>Réseau d'entraide</li>
+          </ul>
+        </article>
+      </section>
+
+      <section class="content-layout" id="procedures">
+        <div class="content-main">
+          <div class="section-head">
+            <span class="section-label">Base de connaissances</span>
+            <h2>Une structure crédible, lisible, presque étatique.</h2>
+            <p>
+              L'interface doit reprendre les codes d'un portail public : calme, rationnel, hiérarchisé.
+              Les deux logos sont intégrés comme des signes officieux, presque des cachets internes,
+              pour garder la tension visuelle sans tomber dans l'esthétique « IA cyberpunk ».
+            </p>
+          </div>
+
+          <div class="knowledge-grid">
+            <article class="panel panel-wide">
+              <div class="panel-head">
+                <h3>Procédures fréquentes</h3>
+                <span>Mis à jour</span>
+              </div>
+              <div class="rows">
+                <div class="row"><strong>Contrôle de bagage</strong><span>Cadre légal, limites, recours</span></div>
+                <div class="row"><strong>Saisie d'objet</strong><span>Documents à exiger, délais, contestation</span></div>
+                <div class="row"><strong>Blocage colis</strong><span>Déclaration, contact, régularisation</span></div>
+                <div class="row"><strong>Retenue d'espèces</strong><span>Justificatifs, demande écrite, défense</span></div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <h3>Outils</h3>
+                <span>Accès rapide</span>
+              </div>
+              <ul class="link-list">
+                <li>Modèles de courrier</li>
+                <li>Checklist après contrôle</li>
+                <li>Préparer une contestation</li>
+                <li>Archiver les preuves</li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <h3>Alertes</h3>
+                <span>Veille</span>
+              </div>
+              <ul class="feed-list">
+                <li><strong>Nouveau :</strong> évolution des franchises voyageurs</li>
+                <li><strong>Signalement :</strong> hausse des saisies sans explication écrite</li>
+                <li><strong>Rappel :</strong> conservez toujours la notification remise</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <aside class="content-side" id="communaute">
+          <div class="side-card emblem-side">
+            <div class="side-top">
+              <span>Emblème secondaire</span>
+              <img src="assets/logo-r.png" alt="R" class="r-badge" />
+            </div>
+            <p>
+              Utilisation recommandée : pictogramme, cachet, coin de carte, cartouche de validation,
+              favicon, marque de section ou pastille d'identité.
+            </p>
+          </div>
+
+          <div class="side-card">
+            <h3>Codes à garder</h3>
+            <ul class="bullet-list">
+              <li>Fond clair ou noir très administratif</li>
+              <li>Serif luxe pour les grands titres</li>
+              <li>Inter pour le fonctionnel</li>
+              <li>Violet profond en accent minimal</li>
+              <li>Textures papier, encre, grain léger</li>
+            </ul>
+          </div>
+
+          <div class="side-card">
+            <h3>À éviter</h3>
+            <ul class="bullet-list danger-list">
+              <li>Néon trop agressif</li>
+              <li>Glow partout</li>
+              <li>Symétrie trop parfaite</li>
+              <li>UI futuriste générique</li>
+              <li>Icônes gaming / cyberpunk</li>
+            </ul>
+          </div>
+        </aside>
+      </section>
+
+      <section class="closing-band" id="alertes">
+        <div class="closing-copy">
+          <span class="section-label">Statement final</span>
+          <h2>Votre colère est légitime. Notre force doit rester lisible, structurée, documentée.</h2>
+          <p>
+            La bonne direction n'est pas le chaos visuel. C'est la crédibilité froide,
+            le détournement institutionnel, et l'intégration parfaite de tes deux logos dans un langage d'État.
+          </p>
+        </div>
+        <a href="#" class="btn btn-solid">Créer le prototype</a>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
