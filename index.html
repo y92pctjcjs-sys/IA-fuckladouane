@@ -1,237 +1,177 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FuckLaDouane.com — Plateforme citoyenne</title>
-  <meta name="description" content="Plateforme d'information, d'orientation et de défense face aux procédures douanières." />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>IA Origin Verification Protocol</title>
+  <meta name="description" content="Satirical garment scan ritual" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="page-shell">
-    <header class="topbar">
-      <div class="brand-lockup">
-        <img src="assets/logo-main.jpeg" alt="Logo principal" class="brand-mark" />
-        <div>
-          <div class="eyebrow">Plateforme citoyenne indépendante</div>
-          <div class="brand-name">FuckLaDouane.com</div>
+  <canvas id="matrix"></canvas>
+  <div class="noise"></div>
+  <div class="scanlines"></div>
+  <div class="vignette"></div>
+
+  <main class="app">
+    <section class="shell">
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark">IA</div>
+          <div>ia.fuckladouane.com / synthetic origin verification protocol</div>
         </div>
+        <div class="status" id="systemStatus">Dormant</div>
       </div>
 
-      <nav class="nav">
-        <a href="#mission">Mission</a>
-        <a href="#ressources">Ressources</a>
-        <a href="#procedures">Procédures</a>
-        <a href="#communaute">Communauté</a>
-        <a href="#alertes">Alertes</a>
-      </nav>
+      <section class="section show" id="introStage">
+        <div class="hero-grid">
+          <div class="panel">
+            <div class="panel-inner">
+              <div class="eyebrow">Restricted interpretive ritual</div>
+              <h1>Garment Reading Procedure</h1>
+              <p class="lead">
+                The marker has been recognized. The garment may now be subjected to an unnecessarily deep interpretive scan.
+              </p>
+              <p class="lead">
+                This process does not authenticate fabric. It evaluates posture, confidence residue, thread behavior, symbolic excess and the statistical probability that something here feels too deliberate.
+              </p>
 
-      <div class="nav-actions">
-        <a href="#connexion" class="btn btn-ghost">Connexion</a>
-        <a href="#rejoindre" class="btn btn-solid">Rejoindre</a>
+              <div class="button-row">
+                <button class="btn btn-primary" id="startBtn">Enter Protocol</button>
+                <button class="btn btn-secondary" id="skipBtn">Immediate Verdict</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel intro-visual">
+            <div class="ring"></div>
+            <div class="beam"></div>
+
+            <svg class="garment" viewBox="0 0 300 360" aria-hidden="true">
+              <path d="M95 72 L126 46 L174 46 L205 72 L238 88 L220 128 L201 118 L201 310 L99 310 L99 118 L80 128 L62 88 Z" />
+              <path class="inner" d="M126 46 Q150 72 174 46" />
+              <line x1="150" y1="88" x2="150" y2="310"></line>
+              <line x1="111" y1="160" x2="99" y2="216"></line>
+              <line x1="189" y1="160" x2="201" y2="216"></line>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="analysisStage">
+        <div class="full-panel">
+          <div class="panel scanner">
+            <div class="scanner-frame"></div>
+            <div class="corner tl"></div>
+            <div class="corner tr"></div>
+            <div class="corner bl"></div>
+            <div class="corner br"></div>
+            <div class="beam"></div>
+
+            <svg class="garment" viewBox="0 0 300 360" aria-hidden="true">
+              <path d="M95 72 L126 46 L174 46 L205 72 L238 88 L220 128 L201 118 L201 310 L99 310 L99 118 L80 128 L62 88 Z" />
+              <path class="inner" d="M126 46 Q150 72 174 46" />
+              <line x1="150" y1="88" x2="150" y2="310"></line>
+              <line x1="111" y1="160" x2="99" y2="216"></line>
+              <line x1="189" y1="160" x2="201" y2="216"></line>
+            </svg>
+          </div>
+
+          <div class="analysis-stack">
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="eyebrow">Phase Progression</div>
+                <h2 class="analysis-title">Performing Deep Read</h2>
+
+                <div class="progress-meta">
+                  <span>Protocol completion</span>
+                  <span id="progressLabel">0%</span>
+                </div>
+                <div class="progress-wrap">
+                  <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <div class="phase-row">
+                  <div class="phase active" id="phase0">Acquisition</div>
+                  <div class="phase" id="phase1">Interpretation</div>
+                  <div class="phase" id="phase2">Projection</div>
+                  <div class="phase" id="phase3">Sentence</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-inner">
+                <div class="eyebrow">Live Feed</div>
+                <div class="log-box" id="logBox"></div>
+              </div>
+            </div>
+
+            <div class="meter-grid">
+              <div class="panel"><div class="panel-inner"><div class="meta-label">Swagability</div><div class="meter-value" id="swagValue">00.0</div></div></div>
+              <div class="panel"><div class="panel-inner"><div class="meta-label">Human-made trust</div><div class="meter-value" id="humanValue">100%</div></div></div>
+              <div class="panel"><div class="panel-inner"><div class="meta-label">Made in swagistan?</div><div class="meter-value" id="swagistanValue">Pending</div></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="resultStage">
+        <div class="result-grid">
+          <div class="panel card-min">
+            <div class="panel-inner">
+              <div class="eyebrow">Verdict</div>
+              <div class="meta-label">IA origin probability</div>
+              <div class="probability" id="probabilityText">99.8%</div>
+
+              <div class="chart" aria-hidden="true">
+                <div class="bar" style="height: 30%"></div>
+                <div class="bar" style="height: 46%"></div>
+                <div class="bar" style="height: 24%"></div>
+                <div class="bar" style="height: 58%"></div>
+                <div class="bar" style="height: 36%"></div>
+                <div class="bar" style="height: 72%"></div>
+                <div class="bar" style="height: 49%"></div>
+                <div class="bar" style="height: 90%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel big-reveal" id="bigReveal">
+            <div class="reveal-burst"></div>
+            <div style="position: relative; z-index: 1;">
+              <div class="result-text">
+                This garment has been made by
+                <span class="ia-word">IA</span>
+              </div>
+              <div class="subline">Shame on ur ass 😂🫵</div>
+            </div>
+          </div>
+
+          <div class="panel card-min">
+            <div class="panel-inner">
+              <div class="eyebrow">Summary</div>
+              <ul class="summary-list">
+                <li>&gt; scanning whole swag: completed</li>
+                <li>&gt; define swagability: successful</li>
+                <li>&gt; made in swagistan: very likely</li>
+                <li>&gt; symbolic confidence residue: excessive</li>
+                <li>&gt; human-made alibi: collapsed</li>
+                <li>&gt; final conclusion: IA influence confirmed</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button class="btn btn-primary hidden" id="restartBtn">Run Ritual Again</button>
       </div>
-    </header>
 
-    <main>
-      <section class="hero" id="mission">
-        <div class="hero-copy">
-          <div class="hero-kicker">Information — Orientation — Défense</div>
-          <h1>Reprenez le contrôle face aux procédures douanières.</h1>
-          <p class="hero-text">
-            Une interface pensée comme un site institutionnel, mais conçue pour redonner de la lisibilité,
-            des recours concrets et des outils utiles aux personnes confrontées à des contrôles, saisies,
-            blocages ou incompréhensions administratives.
-          </p>
+      <div class="note">This is a satirical project. Not a real authentication tool.</div>
+    </section>
+  </main>
 
-          <div class="hero-actions">
-            <a href="#ressources" class="btn btn-solid">Accéder aux ressources</a>
-            <a href="#procedures" class="btn btn-ghost">Voir les procédures</a>
-          </div>
-
-          <div class="trust-strip">
-            <div><span>Guides</span><strong>42</strong></div>
-            <div><span>Modèles</span><strong>18</strong></div>
-            <div><span>Alertes</span><strong>Temps réel</strong></div>
-            <div><span>Statut</span><strong>Indépendant</strong></div>
-          </div>
-        </div>
-
-        <div class="hero-visual">
-          <div class="official-card">
-            <div class="stamp-line">
-              <img src="assets/logo-r.png" alt="Marque déposée" class="mini-mark" />
-              <span>Référence visuelle interne</span>
-            </div>
-            <img src="assets/logo-main.jpeg" alt="Emblème principal" class="hero-emblem" />
-            <div class="official-divider"></div>
-            <p class="manifesto">
-              On ne subit plus.<br>
-              On comprend.<br>
-              On agit.<br>
-              <strong>Ensemble.</strong>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="state-band">
-        <article>
-          <span>Statut</span>
-          <strong>Accès libre</strong>
-        </article>
-        <article>
-          <span>Approche</span>
-          <strong>Clarté procédurale</strong>
-        </article>
-        <article>
-          <span>Position</span>
-          <strong>Soutien citoyen</strong>
-        </article>
-        <article>
-          <span>Design</span>
-          <strong>Codes institutionnels détournés</strong>
-        </article>
-      </section>
-
-      <section class="grid-three" id="ressources">
-        <article class="info-card">
-          <div class="card-index">01</div>
-          <h2>S'informer</h2>
-          <p>Comprendre ce que la douane peut faire, ce qu'elle ne peut pas faire, et comment lire une procédure sans paniquer.</p>
-          <ul>
-            <li>Fouilles, saisies, retenues</li>
-            <li>Cadre légal simplifié</li>
-            <li>Fiches pratiques par situation</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <div class="card-index">02</div>
-          <h2>Se protéger</h2>
-          <p>Accéder rapidement à des modèles, formulations, checklists et réflexes essentiels avant toute réponse.</p>
-          <ul>
-            <li>Modèles de lettres</li>
-            <li>Recours et contestations</li>
-            <li>Préparation des dossiers</li>
-          </ul>
-        </article>
-
-        <article class="info-card">
-          <div class="card-index">03</div>
-          <h2>Agir ensemble</h2>
-          <p>Faire remonter les abus, documenter les situations, comparer les cas et créer une base collective utile.</p>
-          <ul>
-            <li>Témoignages structurés</li>
-            <li>Veille réglementaire</li>
-            <li>Réseau d'entraide</li>
-          </ul>
-        </article>
-      </section>
-
-      <section class="content-layout" id="procedures">
-        <div class="content-main">
-          <div class="section-head">
-            <span class="section-label">Base de connaissances</span>
-            <h2>Une structure crédible, lisible, presque étatique.</h2>
-            <p>
-              L'interface doit reprendre les codes d'un portail public : calme, rationnel, hiérarchisé.
-              Les deux logos sont intégrés comme des signes officieux, presque des cachets internes,
-              pour garder la tension visuelle sans tomber dans l'esthétique « IA cyberpunk ».
-            </p>
-          </div>
-
-          <div class="knowledge-grid">
-            <article class="panel panel-wide">
-              <div class="panel-head">
-                <h3>Procédures fréquentes</h3>
-                <span>Mis à jour</span>
-              </div>
-              <div class="rows">
-                <div class="row"><strong>Contrôle de bagage</strong><span>Cadre légal, limites, recours</span></div>
-                <div class="row"><strong>Saisie d'objet</strong><span>Documents à exiger, délais, contestation</span></div>
-                <div class="row"><strong>Blocage colis</strong><span>Déclaration, contact, régularisation</span></div>
-                <div class="row"><strong>Retenue d'espèces</strong><span>Justificatifs, demande écrite, défense</span></div>
-              </div>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <h3>Outils</h3>
-                <span>Accès rapide</span>
-              </div>
-              <ul class="link-list">
-                <li>Modèles de courrier</li>
-                <li>Checklist après contrôle</li>
-                <li>Préparer une contestation</li>
-                <li>Archiver les preuves</li>
-              </ul>
-            </article>
-
-            <article class="panel">
-              <div class="panel-head">
-                <h3>Alertes</h3>
-                <span>Veille</span>
-              </div>
-              <ul class="feed-list">
-                <li><strong>Nouveau :</strong> évolution des franchises voyageurs</li>
-                <li><strong>Signalement :</strong> hausse des saisies sans explication écrite</li>
-                <li><strong>Rappel :</strong> conservez toujours la notification remise</li>
-              </ul>
-            </article>
-          </div>
-        </div>
-
-        <aside class="content-side" id="communaute">
-          <div class="side-card emblem-side">
-            <div class="side-top">
-              <span>Emblème secondaire</span>
-              <img src="assets/logo-r.png" alt="R" class="r-badge" />
-            </div>
-            <p>
-              Utilisation recommandée : pictogramme, cachet, coin de carte, cartouche de validation,
-              favicon, marque de section ou pastille d'identité.
-            </p>
-          </div>
-
-          <div class="side-card">
-            <h3>Codes à garder</h3>
-            <ul class="bullet-list">
-              <li>Fond clair ou noir très administratif</li>
-              <li>Serif luxe pour les grands titres</li>
-              <li>Inter pour le fonctionnel</li>
-              <li>Violet profond en accent minimal</li>
-              <li>Textures papier, encre, grain léger</li>
-            </ul>
-          </div>
-
-          <div class="side-card">
-            <h3>À éviter</h3>
-            <ul class="bullet-list danger-list">
-              <li>Néon trop agressif</li>
-              <li>Glow partout</li>
-              <li>Symétrie trop parfaite</li>
-              <li>UI futuriste générique</li>
-              <li>Icônes gaming / cyberpunk</li>
-            </ul>
-          </div>
-        </aside>
-      </section>
-
-      <section class="closing-band" id="alertes">
-        <div class="closing-copy">
-          <span class="section-label">Statement final</span>
-          <h2>Votre colère est légitime. Notre force doit rester lisible, structurée, documentée.</h2>
-          <p>
-            La bonne direction n'est pas le chaos visuel. C'est la crédibilité froide,
-            le détournement institutionnel, et l'intégration parfaite de tes deux logos dans un langage d'État.
-          </p>
-        </div>
-        <a href="#" class="btn btn-solid">Créer le prototype</a>
-      </section>
-    </main>
-  </div>
+  <script src="app.js"></script>
 </body>
 </html>
