@@ -21,7 +21,7 @@ function togglePause() {
 function recordLabel() { return save.data.bestTime === null ? 'RECORD / AUCUNE FUITE ENREGISTRÉE' : `MEILLEURE FUITE / ${formatTime(save.data.bestTime)} · ${save.data.bestScore} PTS`; }
 function launch() {
   input.clear(); race = createRace(); clock = createClock(race, input.read); recorded = null; lastTime = performance.now();
-  start(race); audio.resume(); paintState();
+  renderer.reset(); start(race); audio.resume(); hud(); paintState();
 }
 $('start').addEventListener('click', launch); $('replay').addEventListener('click', launch);
 $('pause').addEventListener('click', togglePause); $('resume').addEventListener('click', togglePause);

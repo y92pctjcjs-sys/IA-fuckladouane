@@ -21,6 +21,7 @@ test('actual Three scene, track and instanced vehicles build without missing geo
   for(const s of [0,700,1800,2250,3000,4200,5100]){r.state='RACE';r.s=s;r.speed=48;r.cops.forEach(c=>{c.s=s-12;c.active=true;});r.traffic.forEach((c,i)=>c.s=s+50+i*100);view.render(r,1/60);}
   r.s=LENGTH;r.result={won:true,ending:'love'};r.state='ARRIVAL';for(const time of [0,4,6,10,13]){r.cinematic=time;view.render(r,1/60);}
   r.result={won:true,ending:'escape'};r.cinematic=4;view.render(r,1/60);r.result={won:false,ending:'caught'};r.state='INTERCEPTION';view.render(r,1/60);
-  view.dispose();assert.equal(calls,14);assert.ok(maxDraws>50);
+  view.reset();view.render(createRace(),1/60);
+  view.dispose();assert.equal(calls,15);assert.ok(maxDraws>50);
  } finally {for(const k of names){if(previous[k]===undefined)delete globalThis[k];else globalThis[k]=previous[k];}}
 });

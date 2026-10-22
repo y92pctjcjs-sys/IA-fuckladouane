@@ -249,6 +249,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       scene.fog.color.set(love && r.cinematic > 5 ? '#30233a' : sectorAt(r.s) === 1 ? '#20162e' : '#17112b');
       renderer.render(scene, camera);
     },
+    reset() { initialized = false; skidCursor = 0; lastSkid = 0; skid.forEach(m => { m.visible = false; }); },
     dispose() { removeEventListener('resize', resize); renderer.dispose(); },
     info: renderer.info
   };

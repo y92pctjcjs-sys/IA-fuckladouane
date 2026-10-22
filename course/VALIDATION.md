@@ -19,7 +19,8 @@
 - Tirage : les 30 valeurs produisent une seule issue romantique ; rejet des valeurs du seau incomplet ; tirage exécuté une fois par victoire et jamais lors d'une défaite.
 - Stockage corrompu/refusé et souvenir persistant couverts par tests. Aucune écriture hors de `fld.course.v1`.
 - Multitouch tourner + nitro, relâchement indépendant, annulation/perte de capture, clavier et perte de focus couverts par événements dans les tests.
-- Interface seule : vérifiée dans une prévisualisation locale remplaçant exclusivement le renderer par un fond 2D explicitement marqué QA. Cette vérification ne valide ni le rendu ni la fluidité du jeu.
+- Interface seule : décompte, pause au clavier P, reprise, fin romantique déterministe, résultats, souvenir et bouton rejouer vérifiés dans une prévisualisation locale avec rendu explicitement marqué QA. Le démarrage et la pause fonctionnent aussi lorsque l’accès à localStorage déclenche réellement une SecurityError dans la page. Cette vérification ne valide ni le rendu ni la fluidité du jeu.
+- Nouvelle partie : HUD rafraîchi immédiatement, caméra réinitialisée et traces de drift effacées ; construction et réinitialisation couvertes par le test de scène.
 
 ## Contrôle de la géométrie sans GPU
 
