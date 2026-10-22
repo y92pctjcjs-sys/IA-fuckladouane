@@ -1,65 +1,85 @@
-# FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB
+# FUITE DOUANIÈRE — ORIGINE NON DÉCLARÉE
 
-Extension statique indépendante du protocole IA / FLD. Entrée : `/course.html`.
+Version 2 de la course autonome FLD. Une traversée nocturne de **13 km**, du Bureau des origines douteuses au Swagistan. Entrée inchangée : `/course.html`. Branche de revue : `feat/swagistan-night-run`, basée sur `main` au commit `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`.
 
-## Modules
+Cette version n’est pas publiée sur le domaine du QR. La fusion et la publication GitHub Pages attendent la validation de l’utilisateur. `CNAME`, la racine, le bouton vert, le protocole de la veste, les autres jeux et leurs données restent inchangés.
 
-- `track.js` : route de 5 200 m, échantillonnage partagé, reliefs, secteurs et barrages.
-- `simulation.js` : physique arcade, trafic, trois poursuivants au maximum, collisions, états et horloge fixe à 120 Hz.
-- `renderer.js` : assemblage Three.js, éclairage PBR, caméra, secteurs et scènes terminales.
-- `models.js` et `assets/vehicle-data.js` : géométrie automobile issue du jeu pmndrs, adaptée aux dimensions et livrées FLD ; roues animées.
-- `materials.js` : asphalte, métal, façades, normales et environnement de réflexion procéduraux.
-- `scenery.js` : quais, conduites, skyline, tunnel, échangeur et poste frontière.
-- `effects.js` : traces, fumée et boost adaptés du code MIT de pmndrs, avec pools fixes.
-- `CREDITS.md` et `credits.html` : sources, licences et transformations ; crédit 3D accessible depuis le menu.
-- `input.js` : clavier et contacts indépendants avec capture des pointeurs.
-- `main.js` : interface, orchestration, pause, cycle de vie de la page et résultats.
-- `ending.js` : décision terminale par tirage cryptographique uniforme, générateur injectable dans les tests.
-- `storage.js` : records et souvenir dans `fld.course.v1`, repli en mémoire.
-- `audio.js` : synthèse locale, sans fichiers sonores externes, silence initial.
-- `vendor/three.module.min.js` : Three.js **0.160.0**, distribution officielle `r160`, un module autonome, licence MIT jointe.
+## Tester la branche
 
-## Exécution et contrôles
-
-Servir le dépôt avec un serveur HTTP statique, puis ouvrir `/course.html`. Aucun assemblage, installation, CDN, API ou compte requis. Les modules ES ne sont pas destinés à être ouverts par `file://`.
-
-- Direction : flèches gauche/droite ou A/D.
-- Frein : flèche bas ou S.
-- Drift : espace avec direction ; relâcher pour reprendre l'adhérence.
-- Nitro : Majuscule.
-- Pause/reprise : P ou Échap, ou bouton Ⅱ.
-- Sur écran tactile : maintenir les boutons correspondants, y compris plusieurs contacts.
-
-Le chronomètre et les règles ne dépendent pas du rendu : accumulateur à pas fixe, rattrapage plafonné à 250 ms pour éviter une explosion de simulation après une interruption. Les collisions possèdent une fenêtre de protection de 900 ms. Les barrages signalés à 100 m laissent au moins une ouverture de largeur suffisante. Le son est activé uniquement par un geste et suspendu en arrière-plan.
-
-## Vérifications
-
-Depuis la racine :
+Node 18+ pour les contrôles ; Python 3 ou tout serveur HTTP statique pour jouer. Aucun paquet à installer pour le jeu, aucun CDN, compte ou serveur applicatif.
 
 ```sh
+git clone --branch feat/swagistan-night-run https://github.com/y92pctjcjs-sys/IA-fuckladouane.git
+cd IA-fuckladouane
 npm run check
-node --test tests/*.test.js course/tests/*.test.js
-node --check course/boot.js
-node --check course/main.js
-node --check course/renderer.js
-node --check course/audio.js
-node --check course/input.js
+npm test
+python3 -m http.server 8080
 ```
 
-Le lancement automatique `npm test` découvre également les tests de la course dans un checkout propre. Ne pas conserver dans le dépôt un export de prévisualisation qui en dupliquerait les tests.
+Ouvrir `http://localhost:8080/course.html`. Pour un iPhone sur le même réseau, ouvrir `http://ADRESSE_LOCALE_DU_SERVEUR:8080/course.html` dans Safari ; l’adresse locale dépend de la machine qui sert le dossier. Ne pas ouvrir le HTML par `file://` : les modules natifs nécessitent HTTP.
 
-Tests déterministes : 30 issues du tirage, rejet de valeurs hors du seau uniforme, tirage unique par arrivée, défaite sans tirage, parcours complet et rejouabilité, interception, collisions, drift, nitro, direction, pause, horloge à 30/60/144 Hz, stockage bloqué, multitouch et protection du protocole.
+`node course/tools/measure.mjs` reproduit les mesures de simulation et de construction de scène **CPU seulement**. Le récepteur de rendu de cet outil ne valide ni WebGL ni les performances d’un téléphone.
+
+## Voyage et progression
+
+| Étape | Distance | Situation |
+| --- | --- | --- |
+| Bureau des origines douteuses | 0–2,2 km | Quais textiles, colis, entrepôts, première patrouille |
+| From Elsewhere | 2,2–5,2 km | Route ouverte, pylônes, reliefs et ciel numérique |
+| Tunnel OMERTA | 5,2–7,4 km | Béton suivant la route, conduites, lumière violette et ambiance sourde |
+| Zone de contrôle | 7,4–10,5 km | Échangeur, locaux, véhicules stationnés et barrages |
+| Dernière frontière | 10,5–13 km | Skyline fixe du Swagistan qui grossit à l’approche, poste frontalier puis découverte |
+
+Neuf situations alternent pression et respiration. Les distances et paramètres sont partagés dans `track.js`. Les parcours automatisés mesurés prennent environ **4 min 31 à 4 min 34** ; la durée et la difficulté d’une partie manuelle restent à confirmer sur téléphone.
+
+Chaque victoire franchit le poste du Swagistan et montre sept secondes d’arrivée. La rencontre après la frontière prolonge rarement cette arrivée : tirage cryptographique uniforme exact de 1/30, effectué une seule fois par victoire, jamais pour une défaite, sans compteur ni paramètre de forçage. L’algorithme de `ending.js` est inchangé.
+
+## Commandes
+
+| Action | Mobile | Clavier |
+| --- | --- | --- |
+| Direction | Zone analogique gauche, ou boutons via ⚙ | ← → / A D |
+| Drift | DRIFT avec la direction | Espace |
+| Nitro | NITRO | Majuscule |
+| Frein | FREIN | ↓ / S |
+| Pause / reprise | Ⅱ puis REPRENDRE | P / Échap |
+
+Accélération automatique. Deux contacts suffisent pour toutes les manœuvres nécessaires. Direction lissée selon la vitesse, transition progressive vers la glisse et retour d’adhérence. Une nitro épuisée exige de relâcher le bouton avant réactivation afin d’éviter des à-coups.
+
+Capture des pointeurs, relâchement hors zone, annulation, perte de capture et perte de focus libèrent les commandes. La pause automatique en arrière-plan fige le temps, les dégâts et la poursuite ; la reprise demande une action explicite. Le paysage est plus ouvert, le portrait reste pris en charge. Pas de plein écran ni de gyroscope requis.
+
+Les barrages sont annoncés par des panneaux à 260 m et par un signal calculé selon la vitesse, au moins trois secondes avant le contact. Les dix rangées conservent une ouverture physique de plus d’une largeur de voiture. Trafic et poursuivants dégagent ce corridor ; les phases d’attaque sont interrompues à l’approche d’un barrage. Frottement et impacts sont différenciés, avec délai de protection.
+
+## Audio et préférences
+
+**ORIGINE NON DÉCLARÉE**, composition instrumentale originale à 108 BPM. Introduction, basse séquencée, batterie, nappes, inversions, plusieurs phrases d’arpèges, variation du tunnel, montée et résolution. La partition dépend du secteur, de la phrase et de la pression ; ce n’est pas un fichier court bouclé.
+
+Web Audio programme les notes à partir de `currentTime`, indépendamment de `requestAnimationFrame` : rappel de 25 ms, anticipation de 120 ms, notes trop tardives abandonnées et voix bornées. Moteur/rapports simulés, vent, roulement, glisse, nitro, impacts, sirènes atténuées par la distance, tunnel et signaux de passage sont synthétisés localement. Le son commence uniquement après SON. Les volumes général/musique/effets sont distincts.
+
+Une interruption audio de Safari met la partie en pause ; le retour dans la page ne force pas la réactivation. Une nouvelle partie réinitialise la partition sans empiler les séquenceurs. L’écoute et le mixage sur un iPhone réel restent à vérifier.
+
+## Architecture et budgets
+
+- `track.js` : route, secteurs, situations, courbure, dimensions des collisions et anticipation des barrages.
+- `simulation.js` : simulation fixe à 120 Hz, conduite, trafic, rôles et phases des trois poursuivants, collisions, pause et fins.
+- `input.js` : zone analogique, boutons, clavier et cycle de vie des contacts.
+- `renderer.js` : dix emplacements de décor recyclés par tronçons de 80 m, géométries retirées libérées ; aucun décor complet de 13 km construit au démarrage.
+- `sky.js` : un atlas 320 × 48, une géométrie instanciée et une passe GPU ; profondeur conservée, moins de chiffres en économie et après la frontière, décor figé en mouvement réduit.
+- `models.js` : voiture FLD, intercepteur bas, patrouille haute originale ; roues de tous les véhicules mobiles animées séparément.
+- `scenery.js`, `materials.js`, `effects.js` : architecture, cartes partagées et pools d’effets fixes (160 traces, 48 bouffées, 16 éléments de boost).
+- `quality.js` : résolution adaptative ×0,72 / ×1 / ×1,25, hystérésis, moins de décor lointain et de particules en économie. Les indications nécessaires à la conduite sont conservées.
+- `score.js`, `audio.js` : composition et synthèse ; 96 voix transitoires maximum, sept couches continues.
+- `storage.js`, `ending.js` : records distincts et tirage sans biais.
+- `main.js`, `boot.js`, `style.css` : orchestration, interface, réglages, zones système, hauteur Safari et retour au protocole si le moteur échoue.
+
+Objectifs : 60 images/s sur téléphone récent, environ 30 en économie sur matériel moins puissant. **Aucune de ces valeurs n’est déclarée mesurée sur téléphone.** Les statistiques accessibles dans ⚙ décrivent seulement le navigateur qui exécute réellement le rendu.
+
+## Données
+
+L’ancienne clé `fld.course.v1` reste lue et conservée sans écriture. Le souvenir amoureux existant est hérité. Les nouveaux chronos, scores et compteurs sont stockés dans `fld.course.v2`, avec l’identifiant `swagistan-13k-v2` ; les préférences du jeu utilisent `fld.course.preferences.v2`. Aucun record de 5,2 km n’entre dans le classement de 13 km. Stockage refusé, corrompu ou absent : fonctionnement en mémoire.
+
+Les sources et licences sont détaillées dans [CREDITS.md](CREDITS.md), avec un écran de crédits depuis le menu. L’état des vérifications et les limites d’appareil sont dans [VALIDATION.md](VALIDATION.md).
 
 ## Retour arrière
 
-Le commit de départ est `d0abc539c9e43c3b5b5bd7a9e8a10367b6e36293`. Sa référence distante est `backup/pre-course-2026-10-22`. La branche de travail est `feat/fuite-douaniere`. Après une éventuelle fusion, préférer un revert du commit d'intégration afin de conserver l'historique.
-
-Les fichiers de prévisualisation, adaptations sans GPU, import maps de test et moyens d'injecter une fin déterministe restent locaux : ils ne font pas partie de cette extension publiée.
-
-## Refonte graphique
-
-La géométrie de la voiture utilise le modèle Classic Muscle car d'Alexus16, via le dépôt pmndrs/racing-game, crédité sous CC BY 4.0. Les codes de Skid, Dust et Boost de ce jeu sont adaptés sous MIT. Les fichiers source sont conservés et le modèle est décompressé/quantifié hors ligne ; seul `vehicle-data.js` est importé par le jeu. Aucun décodeur, modèle distant, CDN ou nouvelle dépendance npm n'est nécessaire.
-
-La résolution de rendu est plafonnée à 1,25 sur petit écran et 1,5 sur écran plus large. Les géométries du véhicule et les textures sont partagées. Le bitume et les façades utilisent des cartes de 128 px ; les six faces de réflexion font 64 px. Les ombres de contact et éclairages au sol remplacent les ombres et réflexions planaires coûteuses. Le coût réel doit encore être mesuré sur Safari iPhone avec WebGL actif.
-
-Sauvegarde avant cette refonte : `backup/course-before-graphics-20261022` → `37a23a6a1f205c1f16339028d38b69e348e193cf`.
+Avant fusion, il suffit de rester sur `main` : la production n’est pas modifiée. Après une fusion ultérieure explicitement validée, faire un revert du commit d’intégration de cette branche, puis publier ce revert par le mécanisme GitHub Pages existant. Pour une fusion avec commit de merge : `git revert -m 1 SHA_DU_MERGE` ; pour une fusion squash : `git revert SHA_DU_SQUASH`. Le commit de référence est `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Ne pas réécrire l’historique ni modifier `CNAME`. Les anciennes données et le souvenir restent présents ; laisser les nouvelles clés en place est sans effet sur l’ancien jeu.

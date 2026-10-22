@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test",
-    "check": "node --check app.js && node --check matrix.js && node --check arcade.js && node --check core.js && node --check drop.js"
+    "test": "node --test tests/*.test.js course/tests/*.test.js",
+    "check": "node course/tools/check.mjs"
   }
 }
