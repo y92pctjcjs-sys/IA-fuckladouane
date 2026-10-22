@@ -2,7 +2,7 @@
 
 ## Statut
 
-**Branche de travail uniquement : validation graphique WebGL non terminée. Ne pas fusionner/publication GitHub Pages avant cette validation.** Le site de production et sa configuration restent sur le commit initial.
+**Publication autorisée par l'utilisateur le 22 octobre 2026 pour permettre les essais sur son appareil.** Les 53 tests sont réussis ; la validation graphique WebGL et Safari iPhone reste non terminée. Le jeu est une option accessible depuis le bouton vert, sans charger son moteur sur la page principale. Cette autorisation remplace la suspension de publication précédente et ne constitue pas une validation du rendu sur appareil réel.
 
 ## Vérifications terminées
 
@@ -34,7 +34,7 @@ Le navigateur distant refuse la création du contexte WebGL. L'erreur Three.js i
 
 Il n'y a donc **aucune capture validée de la course 3D**. Les images jointes documentent le bouton mobile, le blocage réel et des aperçus CPU explicitement identifiés ; elles ne doivent pas être présentées comme une preuve de jouabilité 3D.
 
-## Contrôles à terminer avant fusion
+## Contrôles restant à faire sur appareil réel
 
 Sur un navigateur disposant de WebGL, puis sur Safari d'un iPhone réel :
 
@@ -46,7 +46,7 @@ Sur un navigateur disposant de WebGL, puis sur Safari d'un iPhone réel :
 6. Vérifier la fluidité soutenue, la chauffe, la lisibilité nocturne et le comportement aux variations de fréquence. Le plafond de résolution et l'instanciation réduisent le coût, sans constituer une mesure de performance sur appareil.
 7. Vérifier le son et son mixage moteur/nitro/impacts/sirènes, le passage en arrière-plan, le retour nécessitant une reprise et le mouvement réduit.
 8. Faire un parcours avec localStorage réellement bloqué et confirmer le résultat conservé en mémoire.
-9. Après ces contrôles seulement : fusionner dans main, attendre GitHub Pages, ouvrir l'URL publique et vérifier le lien et les fichiers. Aucun déploiement n'est déclaré validé à ce stade.
+9. La publication est demandée pour permettre ces essais : contrôler séparément le succès de GitHub Pages, l'URL publique, le bouton et les fichiers. Un déploiement réussi ne valide pas à lui seul la conduite et la fluidité sur iPhone.
 
 ## Protection du dépôt
 
@@ -63,7 +63,7 @@ Sauvegarde : `backup/pre-course-2026-10-22` → `d0abc539c9e43c3b5b5bd7a9e8a1036
 - Traces de pneus, fumée et boost adaptés des modules MIT de pmndrs avec 160 marques, 48 bouffées et 16 éléments de boost au maximum. Temps de simulation, pause, effacement et mouvement réduit testés.
 - Cinq nouveaux tests couvrent les buffers et index du modèle, son empreinte au sol, le partage des géométries et les roues, les pools d'effets, les cartes et les sources/licences. Les roues gauches sont tournées vers l'extérieur par rotation, sans échelle négative, pour conserver des matrices compatibles avec l'instanciation et la même géométrie partagée.
 - Vue CPU rapprochée du véhicule, secteurs et rencontre inspectés. Ce rendu de diagnostic ignore les cartes et reflets et produit des erreurs de tri sur les grandes surfaces : il ne représente pas le rendu WebGL final et ne valide pas la performance.
-- Nouvel essai du moteur réel dans le navigateur distant : même refus de contexte WebGL. Le rendu PBR, les textures, les transparences et la fluidité GPU restent à vérifier sur un appareil disposant de WebGL avant publication.
+- Nouvel essai du moteur réel dans le navigateur distant : même refus de contexte WebGL. Le rendu PBR, les textures, les transparences et la fluidité GPU restent à vérifier sur un appareil disposant de WebGL pendant les essais après mise en ligne demandés par l'utilisateur.
 - QR, CNAME et page principale conservés. Référence de sauvegarde avant graphismes : backup/course-before-graphics-20261022 → 37a23a6a1f205c1f16339028d38b69e348e193cf.
 
 Les captures rapprochées de diagnostic de cette refonte restent hors du dépôt public : le contrôle automatique a refusé leur publication JPEG, faute de validation de leur contenu. Elles montrent la géométrie modifiée, sans préjuger du rendu GPU des matériaux.
