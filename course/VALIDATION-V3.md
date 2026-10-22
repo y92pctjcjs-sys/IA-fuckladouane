@@ -1,5 +1,7 @@
 # Validation — RECHERCHÉ V3
 
+> Rapport historique. La mise à jour suivante des six livrées et son raccord avec RECHERCHÉ V3 sont vérifiés dans [VEHICLES.md](VEHICLES.md).
+
 Demande du 22 octobre 2026 : enrichir les décors, corriger gauche/droite, rendre la douane plus présente, intégrer des banalisées, rendre la victoire exigeante et mémorable, remplacer le moteur et pouvoir le couper seul, ouvrir la bande-son vers une synthwave plus aérienne.
 
 Base publique initiale : `d9e3962d29759e47538e587519f486f2c9dc0262`. Pendant le travail, main a reçu la mise à jour indépendante des véhicules originaux et du garage, `edd865e7512b1bdecf1e4e96bd5535c4219bb1bd`. Cette mise à jour est intégrée et conservée, avec ses tests et le logo intact. La sauvegarde publique immédiatement avant RECHERCHÉ est désormais `backup/pre-pursuit-v3-with-vehicles` → `edd865e7512b1bdecf1e4e96bd5535c4219bb1bd`. La sauvegarde initiale `backup/pre-pursuit-v3-2026-10-22` reste également disponible. Travail : `feat/swagistan-pursuit-v3`. La demande précédente d’appliquer les modifications au site existant reste applicable ; publication via main / GitHub Pages, sans autre hébergement.

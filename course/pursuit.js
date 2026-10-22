@@ -1,4 +1,4 @@
-import {LENGTH, BLOCKADES, pressureAt} from './track.js?v=pursuit3';
+import {LENGTH, BLOCKADES, pressureAt} from './track.js?v=atelier-002';
 
 export const PURSUIT = Object.freeze({maxSpeed:61, acceleration:9.2, braking:18, grace:2.4, recycleDistance:180});
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));

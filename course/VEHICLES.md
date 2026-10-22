@@ -1,44 +1,69 @@
-# Véhicules FLD / DOUANE — 23 octobre 2026
+# Atelier 89 — six livrées 3D
 
-Le même jeu publié à `/course.html` utilise désormais deux familles de véhicules 3D originaux. Le [garage](garage.html), accessible depuis son menu, montre les mêmes géométries que la course : rotation au doigt, pincement/roulette pour zoomer, vues avant/arrière/profil, atelier/nuit et rotation automatique facultative. Les flèches et les touches +/− fonctionnent lorsque le canvas a le focus. Le mouvement réduit désactive la rotation initiale et fige les flashes.
+Cette version prolonge RECHERCHÉ V3 (`main` : `d7279acf9c9008719c11e0d58fda1bc966a3e828`). Le [garage](garage.html) et la course utilisent les mêmes géométries. Branche : `feat/vehicle-master-skins`. Les rapports de l’ancienne version restent archivés dans `validation/vehicles-*.json` ; les mesures présentes sont `validation/master-skins-*.json`.
 
-## Direction et références
+## Modèles et styles
 
-- **fld® / 89 NIGHTRUNNER** : coupé à silhouette en coin, peinture prune, extensions d’ailes, jantes à sept branches, persiennes arrière, aileron avec dérives, double sortie, diffuseur, plaque `FLD-089-SW`, motifs magenta/violet/acide et capot portant le véritable tribal FLD. Le modèle n’est pas une reproduction d’un véhicule constructeur.
-- **DOUANE / D-89 INTERCEPTION** : livrée claire et bleu marine, filet rouge, marquages DOUANE, balisage arrière rouge/jaune, rampe et feux de pénétration bleus, antenne, jantes à cinq branches et plaque fictive `D-089-FR`. Deux profils partagent cette identité : break haut pour les variantes paires, intercepteur bas pour les variantes impaires.
+Les carrosseries FLD et DOUANE sont originales. Le coupé garde une silhouette rétro large et basse ; la DOUANE conserve son profil haut, sa livrée identifiable et ses feux bleus. Les versions de silhouette haute/basse restent disponibles dans la fabrique de modèles, tandis que la poursuite V3 utilise une patrouille marquée haute et deux berlines banalisées.
 
-Références visuelles consultées, sans importation de leur géométrie ou de leurs photographies :
+| Véhicule | Livrée | Détails réels du modèle et de la matière |
+| --- | --- | --- |
+| FLD | NIGHTRUNNER / Origine | Prune métallisé, accents acide/magenta, carbone tissé, jantes forgées, persiennes et aileron |
+| FLD | SÉRAPHIN / Angélique | Nacre froide, or champagne, plumes métalliques de l’aéro, auréole arrière et jantes claires |
+| FLD | MALÉDICTION / Cursed | Ultraviolet, cyan et acide saturés, iridescence, dédoublement chromatique imprimé du tribal et pointes d’ailes |
+| DOUANE | INTERCEPTION / Brigade | Blanc/bleu marine/filet rouge, marquages DOUANE, rampe bleue, balisage et prises d’air creusées |
+| DOUANE | INFERNAL / Démoniaque | Noir calciné, rouge et ambre, cornes profilées, grille à crocs, DOUANE et feux bleus conservés |
+| DOUANE | ÉPAVE / Tout cassé | Tôle déformée à l’avant droit et à la porte, capot froissé, peinture rayée, verre fissuré, rétroviseur manquant et optique brisée |
 
-1. [Lotus — histoire de l’Esprit](https://www.lotuscars.com/fr-FR/lotus-story/road-cars/esprit), constructeur : carrosserie anguleuse de Giugiaro, proportions basses et silhouette des années 1970–1980.
-2. [Association pour l’Histoire de l’Administration des Douanes — signalisation 1980–2000](https://histoire-de-la-douane.org/la-signalisation-des-vehicules-douaniers-de-1980-a-2000/) : rampes à éclats bleus, inscriptions, sérigraphie et R21 Nevada. Il s’agit d’une inspiration historique, pas d’une reproduction exacte d’une flotte actuelle.
-3. [BRL — balisage Douane](https://brldistribution.fr/kit-balisage-vehicules-prioritaires-police/), documentation du fournisseur : hiérarchie des marquages avant/arrière/latéraux et bandes de balisage.
+Les skins sont cosmétiques. L’épave ne perd pas de résistance au départ et les accessoires ne changent pas les collisions, la vitesse ou le comportement de poursuite. Le mode cursed utilise un graphisme imprimé, sans flash de plein écran.
 
-Le logo provient du fichier `ED0A159A-B37D-4D7B-AB20-DBEF662A4FE0.png` présent dans l’en-tête du site de marque. Copie locale intacte : `assets/fld-tribal.png`, 1598 × 608, identique au fichier publié par la marque. Aucune nouvelle interprétation du tribal. La projection UV compense les dimensions du capot pour conserver son rapport largeur/hauteur.
+## Références étudiées
 
-## Construction et intégration
+- [Gameloft — création des voitures d’Asphalt 9](https://asphaltlegends.com/news/have-you-ever-wondered-how-the-cars-of-asphalt-9-are-created) : étude du travail des volumes, de l’adaptation au temps réel, des LOD, des matières et des variantes de carrosserie. Ici, les formes sont construites localement, sans CAD constructeur ni modèle Asphalt importé.
+- [Gameloft — évolution graphique d’Asphalt Legends Unite](https://asphaltlegends.com/news/asphalt-legends-unite-is-coming) : finitions de peinture, reflets et effets des optiques. Le garage FLD emploie un éclairage studio et une carte de réflexion précalculée localement ; la course conserve son environnement plus léger.
+- [Hyundai N — N Vision 74](https://www.hyundai-n.com/en/models/rolling-lab/n-vision-74) et [Lotus — Esprit](https://www.lotuscars.com/fr-FR/lotus-story/road-cars/esprit) : proportions rétro sportives, ailes larges et silhouette en coin. Aucun logo constructeur, photo ni fichier de géométrie incorporé.
+- [Association pour l’Histoire de l’Administration des Douanes — signalisation 1980–2000](https://histoire-de-la-douane.org/la-signalisation-des-vehicules-douaniers-de-1980-a-2000/) et [BRL — balisage](https://brldistribution.fr/kit-balisage-vehicules-prioritaires-police/) : hiérarchie des marquages, bleu de signalisation, filet et bandes. La D-89 est un véhicule fictif.
 
-`vehicle-designs.js` construit les carrosseries à sections variables, avec arches de roues ouvertes, fermeture des extrémités suivant les reliefs du capot/coffre, vitrages distincts et châssis. Les matériaux statiques sont fusionnés ; les couleurs des lampes sont regroupées en couleurs de sommets. Les géométries sont partagées entre instances. Les moyeux braquent, les pneus/jantes tournent, les étriers de frein restent fixes. Les flashes demeurent des maillages indépendants. Aucun modèle, décodeur ou moteur supplémentaire ne se télécharge depuis un service tiers.
+## Logo et fabrication
 
-`vehicle-livery.js` produit deux atlas locaux 1024 × 1024. Les deux portes gardent un texte lisible sans inversion. Le vrai fichier tribal complète l’atlas après chargement local ; un wordmark reste présent si le PNG n’est pas disponible.
+`assets/fld-tribal.png` est toujours la copie intacte du fichier de marque `ED0A159A-B37D-4D7B-AB20-DBEF662A4FE0.png`, 1598 × 608. Son empreinte Git reste `7aaaa2f837fb7197399135e79a41cd443efa0eed`. Le masque pigmentaire reprend les pixels et espaces négatifs du vrai dessin, puis adapte sa couleur à la livrée. Le dessin et le ® ne sont pas reconstruits au texte.
 
-`models.js` conserve l’interface `createVehicle(kind, variant)` et les animations existantes. Les véhicules civils utilisent toujours le modèle Alexus16 / CC BY 4.0, ses fichiers source et son attribution. Les nouveaux véhicules FLD/DOUANE, y compris leurs roues, ne dérivent pas de cette géométrie. Le rendu évite de regrouper une seconde fois leurs parties animées.
+`vehicle-livery.js` fournit un atlas 1024 × 1024 par skin effectivement demandé. Capot, portes, toit, arrière, bande de pare-brise, plaque et centre des roues ont leurs zones UV. Les deux portes gardent un texte lisible ; les rapports physiques de projection sont compensés. Les grands motifs font partie de la surface de carrosserie. Ils ne sont plus des rectangles flottants au-dessus de la peinture.
 
-La physique, l’audio, les contrôles, les records et la fin rare ne sont pas changés par cette mise à jour. Seul un lien de garage est ajouté au menu de `course.html`. `index.html`, le domaine du QR brodé, `CNAME`, les modules et sons du portail restent identiques.
+`vehicle-designs.js` utilise des sections interpolées, des ailes bombées, des arches ouvertes, des extrémités fermées et des ouvertures de calandre. Pavillon et vitrages ont leur courbure ; joints, montants, essuie-glaces, rétroviseurs, logements de projecteurs, diffuseur, sorties d’échappement et aileron restent distincts visuellement. `vehicle-mesh.js` fusionne les parties fixes par matière et regroupe les lampes fixes par couleurs de sommets. Les quatre roues braquent et roulent ; les étriers restent fixes et les flashes bleus restent commutables.
 
-## Validation
+Le vernis, la nacre, l’iridescence, le carbone et l’usure reposent sur des matériaux physiques locaux. `vehicle-studio.js` construit une réflexion PMREM à partir de quatre surfaces de studio, sans HDR téléchargé. Les six modèles ne sont pas tous créés à l’ouverture : le garage les construit à la demande et réutilise ensuite leurs données.
 
-Base inspectée : `main` au commit `d9e3962d29759e47538e587519f486f2c9dc0262`. Sauvegarde : `backup/pre-vehicle-designs-2026-10-23`. Branche de travail : `feat/fld-custom-vehicles`.
+`vehicle-detail.js` met en cache une géométrie simplifiée pour la patrouille éloignée, au-delà de 85 m, ou 55 m en qualité économique. Les UV, matériaux et ruptures de normales restent séparés ; les géométries de près sont restaurées à l’identique. Ce changement ne touche ni la silhouette civile des banalisées ni leurs groupes de feux cachés.
 
-- `npm test` : **72 tests réussis**, dont les tests de conservation du portail, du domaine et des assets audio. Les nouveaux contrôles couvrent les fermetures de carrosserie par rayons, les étriers fixes, les flashes indépendants et les atlas partagés.
-- `npm run check` : **38 fichiers de syntaxe vérifiés**. `git diff --check` sans erreur.
-- Les nouvelles voitures restent dans les gabarits existants : largeur mesurée ~2,098 m ; longueurs ~4,155 m pour FLD et ~4,194 m pour DOUANE. Les dimensions du garage sont arrondies. Pas d’élargissement des collisions.
-- FLD : environ 11 306 triangles ; break DOUANE : 9 798 ; variante basse : 9 734. Les ombres planes sont exclues de ces comptes.
-- Deux balayages CPU du parcours : **332 maillages visibles maximum**, dix tronçons de décor maximum. Ce comptage n’est pas une mesure de FPS sur téléphone. Résultat brut : `validation/vehicles-cpu.json`.
+## Utilisation en course
 
-Les vérifications navigateur utilisent Chromium 153 avec WebGL logiciel : modèles, logo et textures réellement affichés ; changement de véhicule et d’éclairage, vues, déplacement de caméra ; contrôles accessibles sans débordement horizontal à 1440 × 1000, 390 × 844, 844 × 390 et 320 × 700 ; lancement et pause d’une course utilisant le modèle FLD ; aucun asset 3D chargé par le portail QR. Résultat brut : `validation/vehicles-browser.json`.
+Choisir FLD ou DOUANE, sélectionner une des trois livrées puis **ÉQUIPER**. **PATROUILLE ALÉATOIRE** tire une livrée de la patrouille marquée au départ, à partir du seed routier existant ; un même style peut être tiré plusieurs fois. Les deux véhicules banalisés gardent leur modèle et leur peinture civile jusqu’à leur révélation.
 
-Ces essais ne constituent pas une mesure du GPU, de la chauffe ou de Safari sur un iPhone physique. Le comportement de conduite reste celui de la version publique de départ ; cette mise à jour porte sur les véhicules et leur présentation.
+La clé séparée `fld.course.appearance.v1` mémorise le choix. Les liens de retour transportent aussi `car` et `patrol` pour fonctionner lorsque le stockage est refusé. Ces paramètres ne commandent que l’apparence. Le retour depuis le cache de navigation recharge le choix mémorisé.
+
+La logique RECHERCHÉ V3, ses affiches, son radar, sa carte de score, le moteur réglable indépendamment, les contrôles et les records restent présents. Le tirage rare de fin ne change pas. Le trafic et les banalisées conservent la géométrie Alexus16, ses fichiers source et l’attribution CC BY 4.0. Aucun asset 3D n’est ajouté au chargement du portail QR ; `index.html`, ses scripts, ses sons et `CNAME` restent identiques. Les imports de course utilisent la version de cache commune `atelier-002`.
+
+## Validation de cette version
+
+- **92 tests réussis**, **51 fichiers de syntaxe vérifiés**, `git diff --check` sans erreur. Géométrie finie et bornée, déformations réelles, atlas réutilisés, LOD restaurables, flashes et braquage protégés, stockage isolé, conservation des banalisées pendant les changements de skins.
+- Gabarit mesuré : environ 2,079 m de large, 4,119 m pour FLD et 4,161 m pour la DOUANE. L’antenne explique la hauteur totale de 2,049 m de la patrouille. Les dimensions indiquées au garage sont arrondies.
+
+| Livrée | Triangles près | Triangles éloignés |
+| --- | ---: | ---: |
+| Nightrunner | 25 090 | 12 590 |
+| Séraphin | 26 194 | 13 346 |
+| Malédiction | 25 096 | 12 596 |
+| Interception | 26 282 | 15 050 |
+| Infernal | 26 672 | 15 332 |
+| Épave | 27 190 | 16 483 |
+
+Comptes avec les feux initialement visibles et sans ombre plane. Le LOD en course concerne la patrouille ; les chiffres FLD décrivent la capacité du même réducteur, sans l’appliquer au joueur proche.
+
+`node course/tools/measure.mjs` : construction initiale 405 ms, deux balayages CPU avec construction 1 011 ms, dix tronçons maximum, 346 maillages visibles et 170 géométries simultanées. Les six traversées de référence à 30/60/144 Hz retrouvent les résultats RECHERCHÉ V3. Rapport : [master-skins-cpu.json](validation/master-skins-cpu.json). Il s’agit d’un récepteur de scène CPU, pas d’un benchmark GPU.
+
+Le rapport [master-skins-browser.json](validation/master-skins-browser.json) consigne les 38 contrôles réalisés avec Chromium 153 et WebGL logiciel : six livrées affichées, vrai logo prêt, sélection et équipement persistants, mêmes choix dans le rendu de course, maintien des deux banalisées, lancement/pause, stockage refusé et portail isolé. Les formats vérifiés sont 1440 × 1000, 390 × 844, 844 × 390 et 320 × 700. Les vues ont été inspectées à l’écran ; aucune performance sur iPhone physique n’est affirmée.
 
 ## Retour arrière
 
-Revert du commit d’intégration de cette mise à jour, puis publication par GitHub Pages existant. La sauvegarde conserve l’état antérieur ; ne pas modifier le domaine, réécrire l’historique ou effacer les records.
+Revert du commit d’intégration puis publication GitHub Pages existante. La sauvegarde `backup/pre-master-skins-with-pursuit-v3` conserve `d7279acf9c9008719c11e0d58fda1bc966a3e828`. Pas de réécriture de main, de changement de domaine ou d’effacement des données.

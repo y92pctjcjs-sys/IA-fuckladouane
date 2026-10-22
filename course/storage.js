@@ -1,4 +1,4 @@
-import {ROUTE_ID} from './track.js?v=pursuit3';
+import {ROUTE_ID} from './track.js?v=atelier-002';
 export const LEGACY_KEY='fld.course.v1';
 export const PREVIOUS_KEY='fld.course.v2';
 export const SAVE_KEY='fld.course.v3';

@@ -2,7 +2,7 @@
 
 ## Modèle du trafic civil
 
-Depuis la mise à jour des véhicules du 23 octobre 2026, cette géométrie et ses roues ne servent qu’au trafic civil. Le coupé FLD et les deux variantes de DOUANE sont des géométries originales, décrites dans [VEHICLES.md](VEHICLES.md). Le logo tribal FLD vient du fichier de marque déjà publié par le propriétaire ; il n’a pas été redessiné. Les références visuelles consultées ne sont pas des sources de géométrie importée.
+Depuis la mise à jour des véhicules du 23 octobre 2026, cette géométrie et ses roues servent au trafic civil et aux deux douanes banalisées de RECHERCHÉ V3. Le coupé FLD et les deux variantes de DOUANE sont des géométries originales, décrites dans [VEHICLES.md](VEHICLES.md). Le logo tribal FLD vient du fichier de marque déjà publié par le propriétaire ; il n’a pas été redessiné. Les références visuelles consultées ne sont pas des sources de géométrie importée.
 
 **Classic Muscle car — Alexus16**
 
@@ -77,3 +77,10 @@ Version fondée sur main `edd865e7512b1bdecf1e4e96bd5535c4219bb1bd`, branche `fe
 - **HORIZON NON DÉCLARÉ — composition et synthèse originales FLD, 108 BPM.** Nouvelle version de `score.js` et `audio.js` : accords de septième, motifs de mélodie originaux en appels/réponses, arpèges stéréo, deux échos filtrés, variantes de tunnel et résolution. Direction dreamwave de route nocturne demandée par l’utilisateur ; aucun enregistrement, sample ou thème de Skydive n’est utilisé. L’ancien moteur en dent de scie est remplacé par triangle/sinus graves filtrés, avec rapports à hystérésis et bus de volume indépendant.
 
 Documentation technique consultée : [panoramique stéréo Web Audio](https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createStereoPanner), [DelayNode](https://developer.mozilla.org/en-US/docs/Web/API/BaseAudioContext/createDelay), [partage de fichiers et détection de capacité](https://developer.mozilla.org/en-US/docs/Web/API/Navigator/canShare). Aucun extrait de code de ces pages n’est copié dans le projet.
+
+
+## Atelier 89 — six livrées
+
+Carrosseries et roues originales retravaillées, vernis/nacre/carbone, atlas du tribal exact, aéro angélique, accessoires infernaux, déformations et verre fissuré, livrée cursed, studio de réflexion et LOD local : créations du projet FLD. Aucun modèle, logo, texture, code ou son d’Asphalt n’est distribué. Le logo FLD original reste intact dans `assets/fld-tribal.png` ; les masques pigmentaires et variantes de couleur conservent sa forme.
+
+Études primaires : [Gameloft, création des voitures d’Asphalt 9](https://asphaltlegends.com/news/have-you-ever-wondered-how-the-cars-of-asphalt-9-are-created), [Gameloft, reflets et finitions d’Asphalt Legends Unite](https://asphaltlegends.com/news/asphalt-legends-unite-is-coming), [Hyundai N Vision 74](https://www.hyundai-n.com/en/models/rolling-lab/n-vision-74). Techniques et direction visuelle réinterprétées dans le code local. Les photographies consultées ne sont pas incorporées. Voir [VEHICLES.md](VEHICLES.md) pour les références historiques Douane et Lotus, les six styles et la validation. Les licences et fichiers source du trafic/banalisées demeurent inchangés.

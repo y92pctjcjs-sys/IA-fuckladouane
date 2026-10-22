@@ -8,7 +8,7 @@ import {testCanvas} from './helpers/canvas.js';
 function withCanvas(run){const previous=globalThis.document;globalThis.document={createElement:testCanvas};try{run();}finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}}
 
 test('front and rear body caps close the raised centre of the bonnet and boot',()=>withCanvas(()=>{
-  for(const [kind,variant,frontY,rearY] of [['fld',0,.675,.835],['cop',0,.805,.984],['cop',1,.805,.984]]) {
+  for(const [kind,variant,frontY,rearY] of [['fld',0,.675,.805],['cop',0,.805,.970],['cop',1,.805,.970]]) {
     const car=createVehicle(kind,variant);car.updateMatrixWorld(true);const body=car.getObjectByName('Chassis');
     for(const [z,y,direction] of [[2.5,frontY,-1],[-2.5,rearY,1]]) {
       const ray=new T.Raycaster(new T.Vector3(0,y,z),new T.Vector3(0,0,direction));
