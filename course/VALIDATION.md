@@ -1,5 +1,7 @@
 # Validation — Route 02 / Swagistan 13K
 
+Rapport archivé. La validation de RECHERCHÉ est dans [VALIDATION-V3.md](VALIDATION-V3.md).
+
 > Ce document conserve le compte rendu de la publication initiale. Pour la mise à jour des voitures, le garage et les vérifications WebGL du 23 octobre 2026, lire [VEHICLES.md](VEHICLES.md).
 
 Date : 22 octobre 2026. Branche : `feat/swagistan-night-run`.

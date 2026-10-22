@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,softTexture} from './materials.js';
-import {vehicleLivery,atlasUV} from './vehicle-livery.js';
+import {surface,softTexture} from './materials.js?v=pursuit3';
+import {vehicleLivery,atlasUV} from './vehicle-livery.js?v=pursuit3';
 
 // Original road-ready meshes. Coordinates in metres; front +Z, wheel axles X.
 // Actual cut-out wheel arches, separate glass, rotating wheels and static calipers.

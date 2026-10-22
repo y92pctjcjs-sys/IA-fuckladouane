@@ -1,5 +1,6 @@
 // One route definition for driving, scenery, events, audio and records. Metres.
-export const ROUTE_ID = 'swagistan-13k-v2';
+export const ROUTE_ID = 'swagistan-13k-v3-pursuit';
+export const RULESET = 'RECHERCHÉ / V3';
 export const LENGTH = 13000;
 export const HALF_WIDTH = 8;
 export const STAGES = Object.freeze([
@@ -14,15 +15,15 @@ export const sectorAt = s => {const i=STAGES.findIndex(stage=>s<stage.end);retur
 export const stageAt = s => STAGES[sectorAt(s)];
 // A new road situation about every 30–40 seconds, including breathing room.
 export const BEATS = Object.freeze([
-  {s:0, pressure:.15, label:'MADE IN SWAGISTAN / RETROUVEZ L’ORIGINE'},
-  {s:1400, pressure:.58, label:'PREMIÈRE PATROUILLE'},
+  {s:0, pressure:.55, label:'MADE IN SWAGISTAN / RETROUVEZ L’ORIGINE'},
+  {s:1400, pressure:.78, label:'AVIS DE RECHERCHE / FLD 89'},
   {s:2900, pressure:.22, label:'FROM ELSEWHERE / ROUTE OUVERTE'},
-  {s:4400, pressure:.65, label:'OMERTA / ENTRÉE DU TUNNEL'},
-  {s:5900, pressure:.82, label:'OMERTA / GARDER LE SILENCE'},
+  {s:4400, pressure:.82, label:'OMERTA / ENTRÉE DU TUNNEL'},
+  {s:5900, pressure:.95, label:'OMERTA / GARDER LE SILENCE'},
   {s:7200, pressure:.35, label:'LA SORTIE EST DEVANT'},
-  {s:8600, pressure:.9, label:'CONTRÔLE DU SWAG'},
+  {s:8600, pressure:1, label:'CONTRÔLE DU SWAG'},
   {s:10100, pressure:.3, label:'SWAGISTAN / SIGNAL REÇU'},
-  {s:11600, pressure:.85, label:'DERNIÈRE FRONTIÈRE'}
+  {s:11600, pressure:1, label:'DERNIÈRE FRONTIÈRE'}
 ]);
 export function beatAt(s) {return BEATS.findLast?.(b=>s>=b.s)||[...BEATS].reverse().find(b=>s>=b.s)||BEATS[0];}
 export function pressureAt(s) {return beatAt(s).pressure;}
@@ -53,3 +54,7 @@ export const BLOCKADES=Object.freeze([
 export const warningDistance=speed=>Math.max(150,Math.max(0,speed)*3.2+25);
 export function blockadeAhead(s,speed){return BLOCKADES.find(b=>b.s>s&&b.s-s<=warningDistance(speed))||null;}
 export const DIMENSIONS=Object.freeze({player:{halfWidth:.95,halfLength:2.05},traffic:{halfWidth:.95,halfLength:2.05},cop:{halfWidth:.98,halfLength:2.12},barrier:{halfWidth:1.65,halfLength:.5}});
+// The chase camera looks along +Z: its screen-right axis is road-local -X.
+// Input stays semantic (right = +1); only this boundary converts to world space.
+export const screenSteerToRoad = value => -value;
+export const screenSide = lateral => lateral > 0 ? 'GAUCHE' : lateral < 0 ? 'DROITE' : 'CENTRE';
