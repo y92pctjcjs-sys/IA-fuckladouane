@@ -2,7 +2,7 @@
 
 Version 2 de la course autonome FLD. Une traversée nocturne de **13 km**, du Bureau des origines douteuses au Swagistan. Entrée inchangée : `/course.html`. Branche de revue : `feat/swagistan-night-run`, basée sur `main` au commit `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`.
 
-Cette version n’est pas publiée sur le domaine du QR. La fusion et la publication GitHub Pages attendent la validation de l’utilisateur. `CNAME`, la racine, le bouton vert, le protocole de la veste, les autres jeux et leurs données restent inchangés.
+Le 22 octobre 2026, l’utilisateur autorise l’application de cette version au site existant. La publication utilise GitHub Pages, sans changer le domaine du QR. `CNAME`, la racine, le bouton vert, le protocole de la veste, les autres jeux et leurs données restent inchangés. La version publique précédente est conservée dans `backup/pre-swagistan-13k-2026-10-22`.
 
 ## Tester la branche
 
@@ -82,4 +82,4 @@ Les sources et licences sont détaillées dans [CREDITS.md](CREDITS.md), avec un
 
 ## Retour arrière
 
-Avant fusion, il suffit de rester sur `main` : la production n’est pas modifiée. Après une fusion ultérieure explicitement validée, faire un revert du commit d’intégration de cette branche, puis publier ce revert par le mécanisme GitHub Pages existant. Pour une fusion avec commit de merge : `git revert -m 1 SHA_DU_MERGE` ; pour une fusion squash : `git revert SHA_DU_SQUASH`. Le commit de référence est `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Ne pas réécrire l’historique ni modifier `CNAME`. Les anciennes données et le souvenir restent présents ; laisser les nouvelles clés en place est sans effet sur l’ancien jeu.
+La sauvegarde distante `backup/pre-swagistan-13k-2026-10-22` pointe sur la version publique précédente, `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Pour revenir à cette version, faire un revert du commit d’intégration de la PR #2 avec `git revert -m 1 SHA_DU_MERGE`, puis publier ce revert par le mécanisme GitHub Pages existant. Ne pas réécrire l’historique ni modifier `CNAME`. Les anciennes données et le souvenir restent présents ; laisser les nouvelles clés en place est sans effet sur l’ancien jeu.

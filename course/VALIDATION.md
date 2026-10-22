@@ -3,7 +3,7 @@
 Date : 22 octobre 2026. Branche : `feat/swagistan-night-run`.
 Référence de départ : `main` → `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`, revérifiée sur GitHub avant modification.
 
-**État : version complète en branche de revue ; aucune fusion ni publication sur GitHub Pages. La mise en production du domaine du QR attend la validation de l’utilisateur.** La prévisualisation séparée, lorsqu’elle est indiquée dans la PR, sert aux essais de cette branche ; elle ne change pas le domaine du QR.
+**État : publication de cette version autorisée par l’utilisateur le 22 octobre 2026.** La sauvegarde distante `backup/pre-swagistan-13k-2026-10-22` conserve exactement la version publique précédente (`ed6d9f01fbc3474a74010b00ce15c94ef35826f5`). L’intégration passe par la PR #2 et la publication GitHub Pages existante ; aucun changement de domaine, QR ou configuration Pages. Les limites de validation sur appareil ci-dessous restent applicables.
 
 ## Référence et protections
 
@@ -77,7 +77,7 @@ La copie de diagnostic ne prouve ni la conduite manuelle avec image 3D, ni l’o
 
 ## Validation restant sur un appareil avec WebGL
 
-Sur la prévisualisation de la branche, puis sur Safari iPhone accessible :
+Sur la version publiée, puis sur Safari iPhone accessible :
 
 1. Course manuelle entière en portrait et paysage : conduite à deux pouces, zones système, barre Safari, retour au centre, drift et reprise d’adhérence.
 2. Route, reliefs, matériaux, ciel réellement derrière le décor, occultation par le tunnel, éclairage, voitures et concordance avec collisions.
@@ -86,18 +86,22 @@ Sur la prévisualisation de la branche, puis sur Safari iPhone accessible :
 5. Audio sur haut-parleur et écouteurs, volumes, mixage sirènes/musique, absence de pics gênants, cinq minutes de composition ; appel/interruption audio, arrière-plan, retour et reprise explicite.
 6. FPS et chauffe en qualité adaptative puis économique pendant plusieurs minutes. Les statistiques dans ⚙ décrivent le navigateur en train de rendre la scène. Noter le modèle d’iPhone, la version Safari, la qualité et les valeurs réellement obtenues.
 7. Stockage bloqué sur l’appareil ; sauvegarde en session, souvenir existant et séparation des records.
-8. QR et portail après une éventuelle publication validée, distinctement du résultat d’un déploiement.
+8. QR et portail après publication, distinctement du résultat d’un déploiement.
 
 ## Retour arrière
 
-Aucune action nécessaire avant fusion : le domaine public sert toujours main. Après une intégration ultérieure approuvée, revert du merge (`git revert -m 1 SHA_DU_MERGE`) ou du squash (`git revert SHA_DU_SQUASH`), puis publication par GitHub Pages existant. Référence de départ : `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Ne pas faire de reset forcé, modifier CNAME ou effacer le stockage. Les nouvelles clés sont sans effet sur la version précédente.
+La branche distante `backup/pre-swagistan-13k-2026-10-22` conserve la référence de départ `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Pour revenir à cette sauvegarde, revert du commit de merge de la PR #2 (`git revert -m 1 SHA_DU_MERGE`), puis publication par GitHub Pages existant. Ne pas faire de reset forcé, modifier CNAME ou effacer le stockage. Les nouvelles clés sont sans effet sur la version précédente.
 
 ## Livraison et hébergement de test
 
-PR de brouillon : https://github.com/y92pctjcjs-sys/IA-fuckladouane/pull/2. Le code testé a été poussé sous le commit `250d68b099a2e94e5b3ad45cf38dc67eb932d139` ; l’arbre Git distant a été comparé à l’arbre local testé. Les éventuels commits suivants de cette livraison ne changent que ce rapport.
+PR : https://github.com/y92pctjcjs-sys/IA-fuckladouane/pull/2. Le code testé a été poussé sous le commit `250d68b099a2e94e5b3ad45cf38dc67eb932d139` ; l’arbre Git distant a été comparé à l’arbre local testé. Les commits de préparation de publication suivants ne changent que la documentation.
 
 Contrôles d’interface complémentaires après les essais ci-dessus : écran INTERCEPTÉ obtenu, résultat romantique et souvenir AMOUR NON DÉCLARÉ affichés dans la copie locale de diagnostic. Ces présentations utilisent uniquement les moyens de test exclus du livrable et ne constituent toujours pas une validation 3D.
 
 L’hébergement de test Vercel n’est pas livré comme un lien jouable : le premier envoi d’un nouveau projet a été classé `production`, y compris sur une tentative portant `target: staging`. Les projets de test ont été mis en pause. Le contrôle automatique d’approbation a ensuite explicitement rejeté une réactivation, au motif qu’elle rétablirait un déploiement classé production malgré la restriction de l’utilisateur. Aucun contournement de ce refus n’est utilisé. Le mode de test par serveur HTTP depuis la branche reste complet et autonome.
 
-Ressources de test laissées désactivées : `fld-swagistan-review-13k` (`prj_PoTi7mlC0mqP7UGjE33pimUZByjn`) et `fld-swagistan-staging-13k` (`prj_fESLbuLfGWmvEmZ0v4ltOzqvnQGr`). Elles n’ont aucun domaine personnalisé ni raccord au QR. Une éventuelle autorisation ultérieure devrait viser explicitement la réactivation d’une instance de test isolée malgré l’étiquette Vercel production ; elle ne donnerait pas autorisation de fusionner main ou de publier GitHub Pages.
+Ressources de test laissées désactivées : `fld-swagistan-review-13k` (`prj_PoTi7mlC0mqP7UGjE33pimUZByjn`) et `fld-swagistan-staging-13k` (`prj_fESLbuLfGWmvEmZ0v4ltOzqvnQGr`). Elles n’ont aucun domaine personnalisé ni raccord au QR. L’autorisation reçue ensuite concerne l’application de la version au site existant via GitHub Pages ; ces projets de test restent désactivés.
+
+## Autorisation de publication
+
+Le 22 octobre 2026, l’utilisateur demande : « applique les modifications si ça ne me plait pas je te dirais simplement de revenir a la sauvegarde precedente ». Les 68 tests, le contrôle de syntaxe des 34 fichiers et `git diff --check` ont été relancés avec succès avant l’intégration. La branche de sauvegarde ci-dessus a été créée et la PR est intégrée avec un commit de merge pour permettre un retour arrière par revert. Le statut du workflow Pages et les fichiers réellement servis doivent être contrôlés après cette intégration ; une réussite du déploiement ne constitue pas une validation 3D ou Safari iPhone.
