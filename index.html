@@ -1,177 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IA Origin Verification Protocol</title>
-  <meta name="description" content="Satirical garment scan ritual" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#08050d">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Le vêtement vous observe. Protocole IA, archives classifiées et arcade clandestine du Swagistan. Une expérience fuckladouane®.">
+  <title>IA / FLD® — Bureau des origines douteuses</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308050d'/%3E%3Ctext x='7' y='47' fill='%23bd94ff' font-family='monospace' font-size='39' font-weight='bold'%3EIA%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./styles.css?v=4">
+  <script type="module" src="./app.js?v=4"></script>
 </head>
-<body>
-  <canvas id="matrix"></canvas>
-  <div class="noise"></div>
-  <div class="scanlines"></div>
-  <div class="vignette"></div>
+<body data-motion="on">
+  <a class="skip-link" href="#main">Aller au protocole</a>
+  <canvas id="matrix" aria-hidden="true"></canvas>
+  <div class="screen-texture" aria-hidden="true"></div>
 
-  <main class="app">
-    <section class="shell">
-      <div class="topbar">
-        <div class="brand">
-          <div class="mark">IA</div>
-          <div>ia.fuckladouane.com / synthetic origin verification protocol</div>
-        </div>
-        <div class="status" id="systemStatus">Dormant</div>
-      </div>
+  <header class="masthead">
+    <div class="brand-block">
+      <button class="wordmark" id="brandEgg" aria-label="fuckladouane, sceau du bureau">fld<span>®</span></button>
+      <div class="brand-caption">SWAGISTAN NETWORK<br><span>BUREAU DES ORIGINES DOUTEUSES</span></div>
+    </div>
+    <div class="system-tools">
+      <button class="tool" id="soundBtn" aria-pressed="false">SON <span>OFF</span></button>
+      <button class="tool" id="motionBtn" aria-pressed="true">FLUX <span>ON</span></button>
+    </div>
+  </header>
 
-      <section class="section show" id="introStage">
-        <div class="hero-grid">
-          <div class="panel">
-            <div class="panel-inner">
-              <div class="eyebrow">Restricted interpretive ritual</div>
-              <h1>Garment Reading Procedure</h1>
-              <p class="lead">
-                The marker has been recognized. The garment may now be subjected to an unnecessarily deep interpretive scan.
-              </p>
-              <p class="lead">
-                This process does not authenticate fabric. It evaluates posture, confidence residue, thread behavior, symbolic excess and the statistical probability that something here feels too deliberate.
-              </p>
+  <nav class="navigation" aria-label="Parcours">
+    <div class="nav-links">
+      <button class="nav-link active" data-view="scan" aria-current="page"><span>01</span> PROTOCOLE</button>
+      <button class="nav-link" data-view="arcade"><span>02</span> ARCADE</button>
+      <button class="nav-link" data-view="archives"><span>03</span> ARCHIVES <i id="eggCount">0/8</i></button>
+    </div>
+    <span class="connection"><i></i> SIGNAL LOCAL</span>
+  </nav>
 
-              <div class="button-row">
-                <button class="btn btn-primary" id="startBtn">Enter Protocol</button>
-                <button class="btn btn-secondary" id="skipBtn">Immediate Verdict</button>
-              </div>
+  <main id="main">
+    <section id="scanView" class="view" aria-labelledby="scanHeading">
+      <div class="section-topline"><span>PORTAIL VESTE / IA–04</span><span id="systemStatus" role="status">EN ATTENTE DU SUJET</span></div>
+      <div class="scan-layout" id="scanExperience" data-stage="intro">
+        <div class="narrative">
+          <div id="introStage">
+            <div class="eyebrow">VOUS AVEZ SCANNÉ. ON VOUS SCANNE.</div>
+            <h1 id="scanHeading" tabindex="-1">LE VÊTEMENT<br>VOUS <em>OBSERVE.</em></h1>
+            <p class="intro-copy">Une veste. Un QR. Beaucoup trop de questions.<br>Le bureau va déterminer qui a vraiment créé ce bail.</p>
+            <div class="intro-actions">
+              <button class="button primary" id="startBtn">LANCER L’ANALYSE <span aria-hidden="true">↗</span></button>
+              <button class="text-button" id="skipBtn">J’ai déjà peur. Le verdict.</button>
             </div>
+            <div class="micro-note"><span class="status-dot"></span> COUPE COURTE / DOSSIER LONG / AUCUNE INNOCENCE</div>
           </div>
 
-          <div class="panel intro-visual">
-            <div class="ring"></div>
-            <div class="beam"></div>
+          <div id="analysisStage" hidden>
+            <div class="eyebrow">SCAN EN COURS / NE BOUGEZ PAS VOTRE SWAG</div>
+            <h2 class="scan-title" id="phaseTitle" tabindex="-1">LECTURE<br>DE L’ÉTIQUETTE.</h2>
+            <div class="progress-head"><span id="phaseCounter">PHASE 01 / 04</span><strong id="progressLabel">0<span>%</span></strong></div>
+            <div class="progress-track" id="progressTrack" role="progressbar" aria-label="Progression du scan" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div id="progressBar"></div></div>
+            <div class="phase-row" aria-label="Phases de l’analyse"><span class="active">01 CONTACT</span><span>02 COUTURES</span><span>03 ORIGINE</span><span>04 VERDICT</span></div>
+            <div class="scan-meters">
+              <div><span>SWAGABILITÉ</span><strong id="swagValue">00.0</strong></div>
+              <div><span>ALIBI HUMAIN</span><strong id="humanValue">100%</strong></div>
+              <div><span>TERRITOIRE</span><strong id="territoryValue">INCONNU</strong></div>
+            </div>
+            <button class="alibi-button" id="humanBtn">JE SUIS HUMAIN <span aria-hidden="true">[ ? ]</span></button>
+            <div class="live-feed"><div class="feed-heading"><span>INTERCEPTIONS DU BUREAU</span><span class="live-dot">LIVE</span></div><div id="logBox"></div></div>
+            <div class="analysis-actions"><button class="text-button" id="finishBtn">Abréger l’interrogatoire ↗</button><button class="text-button" id="cancelScanBtn">Annuler</button></div>
+          </div>
 
-            <svg class="garment" viewBox="0 0 300 360" aria-hidden="true">
-              <path d="M95 72 L126 46 L174 46 L205 72 L238 88 L220 128 L201 118 L201 310 L99 310 L99 118 L80 128 L62 88 Z" />
-              <path class="inner" d="M126 46 Q150 72 174 46" />
-              <line x1="150" y1="88" x2="150" y2="310"></line>
-              <line x1="111" y1="160" x2="99" y2="216"></line>
-              <line x1="189" y1="160" x2="201" y2="216"></line>
+          <div id="resultStage" hidden>
+            <div class="eyebrow">VERDICT IRRÉVOCABLE, MAIS REJOUABLE.</div>
+            <h2 class="verdict" id="resultHeading" tabindex="-1">THIS GARMENT<br>HAS BEEN<br>MADE BY <b>IA<span>.</span></b></h2>
+            <p class="result-joke">Shame on ur ass 😂🫵</p>
+            <div class="verdict-strip"><span>ORIGINE SYNTHÉTIQUE</span><strong>99.8%</strong><span>HUMAN ALIBI: 0%</span></div>
+            <div class="result-actions">
+              <button class="button primary" data-view="arcade">FUIR VERS L’ARCADE <span aria-hidden="true">↗</span></button>
+              <button class="button secondary" id="downloadBtn">GARDER LE VERDICT ↓</button>
+              <button class="text-button" id="restartBtn">Contester. Refaire le scan.</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="scanner-wrap">
+          <div class="scanner-caption"><span>OBJET 001 / ZIP JACKET</span><span id="scannerTag">PRÊTE À SUSPECTER</span></div>
+          <div class="scanner" id="scanner">
+            <div class="coordinate top-left">X: 048<br>Y: 026</div>
+            <div class="coordinate bottom-right">FLD–S/N<br><span id="serialLabel">0001</span></div>
+            <div class="target-cross cross-one" aria-hidden="true"></div><div class="target-cross cross-two" aria-hidden="true"></div>
+            <div class="scan-grid" aria-hidden="true"></div>
+            <div class="scan-beam" aria-hidden="true"></div>
+            <svg class="jacket" viewBox="0 0 380 340" role="img" aria-labelledby="jacketTitle jacketDesc">
+              <title id="jacketTitle">Veste zippée courte FLD</title>
+              <desc id="jacketDesc">Buste court à la taille, capuche, manches longues, zip central et bord-côte inférieur. Illustration schématique du vêtement.</desc>
+              <defs>
+                <pattern id="fabricGrid" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M9 0H0V9" fill="none" stroke="#ab7cf8" stroke-opacity=".17" stroke-width=".5"/></pattern>
+                <linearGradient id="jacketFill" x1="0" x2="1"><stop stop-color="#180d29"/><stop offset=".5" stop-color="#29143f"/><stop offset="1" stop-color="#120b20"/></linearGradient>
+              </defs>
+              <g class="garment-body">
+                <path class="jacket-fill" d="M151 85 123 95 89 109Q80 113 77 124L43 267 83 279 115 174 116 263Q190 277 264 263L265 174 297 279 337 267 303 124Q300 113 291 109L257 95 229 85Z"/>
+                <path class="jacket-grid" d="M151 85 123 95 89 109Q80 113 77 124L43 267 83 279 115 174 116 263Q190 277 264 263L265 174 297 279 337 267 303 124Q300 113 291 109L257 95 229 85Z"/>
+                <path class="jacket-fill hood" d="M151 88Q130 72 147 45Q161 26 190 27Q219 26 233 45Q250 72 229 88L213 106H167Z"/>
+                <path d="M151 88Q163 60 190 59Q217 60 229 88M167 106Q190 121 213 106M190 111V271M185 116V267M116 251Q190 264 264 251M121 251V269M128 254V271M135 256V272M142 257V273M149 258V274M231 258V274M238 257V273M245 256V272M252 254V271M259 252V269"/>
+                <path d="M48 248 89 262M291 262 332 248M118 172 124 119M262 172 256 119M143 188 132 224 159 222M237 188 248 224 221 222" class="seams"/>
+                <path class="cuff" d="M43 267 83 279 79 293 40 281ZM297 279 337 267 340 281 301 293Z"/>
+                <path class="cuff" d="M116 263Q190 277 264 263L263 278Q190 291 117 278Z"/>
+                <path d="M54 266 50 281M63 269 59 285M72 272 68 288M308 273 312 288M317 270 321 285M326 267 330 282" class="rib"/>
+                <rect x="185" y="126" width="10" height="13" rx="2" class="zip-pull"/>
+                <rect x="185" y="254" width="10" height="10" rx="2" class="zip-pull"/>
+                <text x="217" y="154" class="jacket-logo">fld®</text>
+                <rect x="131" y="231" width="18" height="13" rx="1" class="label-patch"/>
+                <path d="M134 234H146M134 237H142M134 240H146" class="patch-lines"/>
+              </g>
+              <g class="measure-lines" aria-hidden="true"><path d="M104 108H94M99 108V279M94 279H104M118 303H263M118 298V308M263 298V308"/><text x="113" y="325">CROPPED FIT / LONG SLEEVES</text></g>
             </svg>
+            <button class="hotspot hotspot-label" data-seam="label" aria-label="Inspecter l’étiquette"><span>01</span></button>
+            <button class="hotspot hotspot-chest" data-seam="chest" aria-label="Inspecter la poitrine"><span>02</span></button>
+            <button class="hotspot hotspot-hem" data-seam="hem" aria-label="Inspecter l’ourlet court"><span>03</span></button>
+            <div class="inspection-caption" id="inspectionCaption" role="status">Touchez les trois points. La veste a des choses à cacher.</div>
+            <div class="verdict-stamp" aria-hidden="true">IA<br><small>CONFIRMED</small></div>
           </div>
+          <div class="scanner-footer"><span><i class="status-dot"></i> AUCUNE CAMÉRA NÉCESSAIRE</span><span id="seamCount">COUTURES 0/3</span></div>
         </div>
-      </section>
-
-      <section class="section" id="analysisStage">
-        <div class="full-panel">
-          <div class="panel scanner">
-            <div class="scanner-frame"></div>
-            <div class="corner tl"></div>
-            <div class="corner tr"></div>
-            <div class="corner bl"></div>
-            <div class="corner br"></div>
-            <div class="beam"></div>
-
-            <svg class="garment" viewBox="0 0 300 360" aria-hidden="true">
-              <path d="M95 72 L126 46 L174 46 L205 72 L238 88 L220 128 L201 118 L201 310 L99 310 L99 118 L80 128 L62 88 Z" />
-              <path class="inner" d="M126 46 Q150 72 174 46" />
-              <line x1="150" y1="88" x2="150" y2="310"></line>
-              <line x1="111" y1="160" x2="99" y2="216"></line>
-              <line x1="189" y1="160" x2="201" y2="216"></line>
-            </svg>
-          </div>
-
-          <div class="analysis-stack">
-            <div class="panel">
-              <div class="panel-inner">
-                <div class="eyebrow">Phase Progression</div>
-                <h2 class="analysis-title">Performing Deep Read</h2>
-
-                <div class="progress-meta">
-                  <span>Protocol completion</span>
-                  <span id="progressLabel">0%</span>
-                </div>
-                <div class="progress-wrap">
-                  <div class="progress-bar" id="progressBar"></div>
-                </div>
-
-                <div class="phase-row">
-                  <div class="phase active" id="phase0">Acquisition</div>
-                  <div class="phase" id="phase1">Interpretation</div>
-                  <div class="phase" id="phase2">Projection</div>
-                  <div class="phase" id="phase3">Sentence</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="panel">
-              <div class="panel-inner">
-                <div class="eyebrow">Live Feed</div>
-                <div class="log-box" id="logBox"></div>
-              </div>
-            </div>
-
-            <div class="meter-grid">
-              <div class="panel"><div class="panel-inner"><div class="meta-label">Swagability</div><div class="meter-value" id="swagValue">00.0</div></div></div>
-              <div class="panel"><div class="panel-inner"><div class="meta-label">Human-made trust</div><div class="meter-value" id="humanValue">100%</div></div></div>
-              <div class="panel"><div class="panel-inner"><div class="meta-label">Made in swagistan?</div><div class="meter-value" id="swagistanValue">Pending</div></div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="resultStage">
-        <div class="result-grid">
-          <div class="panel card-min">
-            <div class="panel-inner">
-              <div class="eyebrow">Verdict</div>
-              <div class="meta-label">IA origin probability</div>
-              <div class="probability" id="probabilityText">99.8%</div>
-
-              <div class="chart" aria-hidden="true">
-                <div class="bar" style="height: 30%"></div>
-                <div class="bar" style="height: 46%"></div>
-                <div class="bar" style="height: 24%"></div>
-                <div class="bar" style="height: 58%"></div>
-                <div class="bar" style="height: 36%"></div>
-                <div class="bar" style="height: 72%"></div>
-                <div class="bar" style="height: 49%"></div>
-                <div class="bar" style="height: 90%"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="panel big-reveal" id="bigReveal">
-            <div class="reveal-burst"></div>
-            <div style="position: relative; z-index: 1;">
-              <div class="result-text">
-                This garment has been made by
-                <span class="ia-word">IA</span>
-              </div>
-              <div class="subline">Shame on ur ass 😂🫵</div>
-            </div>
-          </div>
-
-          <div class="panel card-min">
-            <div class="panel-inner">
-              <div class="eyebrow">Summary</div>
-              <ul class="summary-list">
-                <li>&gt; scanning whole swag: completed</li>
-                <li>&gt; define swagability: successful</li>
-                <li>&gt; made in swagistan: very likely</li>
-                <li>&gt; symbolic confidence residue: excessive</li>
-                <li>&gt; human-made alibi: collapsed</li>
-                <li>&gt; final conclusion: IA influence confirmed</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <div class="actions">
-        <button class="btn btn-primary hidden" id="restartBtn">Run Ritual Again</button>
       </div>
+      <div class="ticker" aria-hidden="true"><div>THIS GARMENT IS WATCHING YOU. &nbsp; / &nbsp; MADE IN SWAGISTAN. &nbsp; / &nbsp; HUMAN ERROR IS A DESIGN CHOICE. &nbsp; / &nbsp; THIS GARMENT IS WATCHING YOU. &nbsp; / &nbsp; MADE IN SWAGISTAN. &nbsp; / &nbsp; HUMAN ERROR IS A DESIGN CHOICE. &nbsp; / &nbsp;</div></div>
+    </section>
 
-      <div class="note">This is a satirical project. Not a real authentication tool.</div>
+    <section id="arcadeView" class="view" hidden aria-labelledby="arcadeHeading">
+      <div class="section-topline"><span>ZONE FRANCHE / AUCUNE TAXE SUR LES SCORES</span><span>03 MACHINES EN SERVICE</span></div>
+      <div class="page-heading"><div class="eyebrow">VOUS N’AVEZ RIEN À DÉCLARER.</div><h2 id="arcadeHeading" tabindex="-1">CIRCULEZ.<br><em>JOUEZ.</em></h2><p>Le bureau confisque les colis, jamais les records.</p></div>
+      <div class="arcade-layout">
+        <div class="game-menu" role="group" aria-label="Choisir un jeu">
+          <button class="game-card selected" data-game="runner" aria-pressed="true"><span class="game-index">01 / ESQUIVE</span><strong>DOUANE<br>RUN</strong><span>Trois voies. Zéro déclaration.</span><b class="record" id="runnerRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
+          <button class="game-card" data-game="breaker" aria-pressed="false"><span class="game-index">02 / CASSE-BRIQUES</span><strong>CASSE<br>FRONTIÈRE</strong><span>Démanteler le poste de contrôle.</span><b class="record" id="breakerRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
+          <button class="game-card" data-game="memory" aria-pressed="false"><span class="game-index">03 / MÉMOIRE</span><strong>MÉMOIRE<br>SAISIE</strong><span>Huit paires avant l’oubli.</span><b class="record" id="memoryRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
+        </div>
+        <div class="cabinet" id="cabinet">
+          <div class="cabinet-top"><span id="gameName">DOUANE RUN</span><span id="gameStatus" role="status">PRÊT</span></div>
+          <div class="game-hud"><span id="gameScore">00000</span><span id="gameLives" aria-label="3 vies">● ● ●</span></div>
+          <div class="playfield">
+            <canvas id="gameCanvas" width="360" height="430" tabindex="0" aria-label="Douane Run. Changez de voie avec les flèches gauche et droite. Évitez les barrières."></canvas>
+            <div id="memoryBoard" class="memory-board" hidden aria-label="Cartes de Mémoire saisie"></div>
+            <div id="gameOverlay" class="game-overlay"><span id="overlayEyebrow">CONTRÔLE NON AUTORISÉ</span><h3 id="overlayTitle">PASSEZ<br>ENTRE LES LIGNES.</h3><p id="overlayCopy">Flèches, boutons ou toucher une voie.<br>Visez les losanges. Évitez les barrières.</p><button class="button primary" id="playBtn">JOUER <span aria-hidden="true">↗</span></button></div>
+          </div>
+          <div class="cabinet-controls">
+            <button id="leftBtn" class="direction-button" aria-label="Aller à gauche">←</button>
+            <button id="pauseBtn" class="pause-button" aria-label="Mettre le jeu en pause" disabled>PAUSE</button>
+            <button id="rightBtn" class="direction-button" aria-label="Aller à droite">→</button>
+          </div>
+          <p id="gameHelp" class="game-help">3 vies · Touchez une voie ou utilisez ← →</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="archivesView" class="view" hidden aria-labelledby="archivesHeading">
+      <div class="section-topline"><span>ARCHIVES OMERTA / ACCÈS TROP FACILE</span><span id="archiveCount">00 / 08 PIÈCES</span></div>
+      <div class="page-heading"><div class="eyebrow">LE BUREAU N’OUBLIE PAS. VOTRE NAVIGATEUR, PARFOIS.</div><h2 id="archivesHeading" tabindex="-1">RIEN N’EST<br><em>CLASSÉ.</em></h2><p>Des traces à trouver dans les coutures, les mots et les machines.</p></div>
+      <div class="archive-layout">
+        <div id="achievementGrid" class="achievement-grid"></div>
+        <div class="terminal">
+          <div class="terminal-bar"><span>OMERTA://BUREAU</span><span aria-hidden="true">_ □ ×</span></div>
+          <div id="terminalOutput" class="terminal-output" role="log" aria-label="Réponses du bureau"><p>Session ouverte. Votre silence a été enregistré.</p><p>Tapez HELP pour interroger le bureau.</p></div>
+          <form id="terminalForm" autocomplete="off"><label for="terminalInput">FLD&gt;</label><input id="terminalInput" name="commande" placeholder="help" maxlength="40" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Commande du bureau"><button type="submit" aria-label="Envoyer la commande">↵</button></form>
+          <p class="terminal-hint">Les mots voyagent mieux sans déclaration.</p>
+        </div>
+      </div>
     </section>
   </main>
 
-  <script src="app.js"></script>
+  <footer class="site-footer"><span>FUCKLADOUANE® / EXPÉRIENCE SATIRIQUE</span><a href="https://www.fuckladouane.com/">RETOUR À LA FRONTIÈRE ↗</a><button id="secret404" aria-label="Erreur 404">404</button></footer>
+  <div class="toast" id="toast" role="status" hidden></div>
+  <dialog id="receiptDialog" class="receipt-dialog" aria-labelledby="receiptHeading">
+    <div class="receipt-top"><h2 id="receiptHeading">PIÈCE À CONVICTION</h2><button id="closeReceipt" aria-label="Fermer le reçu">FERMER ×</button></div>
+    <img id="receiptImage" alt="Reçu du bureau FLD : this garment has been made by IA, origine synthétique 99,8 %." width="900" height="1200">
+    <a id="receiptLink" class="button primary">TÉLÉCHARGER LE REÇU SVG ↓</a>
+    <p>Sur iPhone, ouvrez le fichier téléchargé dans Fichiers pour le conserver ou le partager.</p>
+  </dialog>
+  <audio id="ambient" src="./ambient-loop-22s.wav" loop preload="none"></audio>
+  <noscript><div class="noscript">Le protocole et les jeux utilisent JavaScript. Activez-le dans votre navigateur, puis rechargez cette page. THIS GARMENT HAS BEEN MADE BY IA.</div></noscript>
 </body>
 </html>
