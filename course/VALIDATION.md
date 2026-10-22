@@ -6,8 +6,8 @@
 
 ## Vérifications terminées
 
-- 48 tests Node réussis : les 28 tests d'origine et 20 tests de l'extension.
-- Syntaxe des cinq modules d'origine et des neuf modules du jeu vérifiée.
+- 53 tests Node réussis : les 28 tests d'origine et 25 tests de l'extension.
+- Syntaxe des cinq modules d'origine et des modules du jeu, y compris modèles, matériaux, décor et effets vérifiée.
 - Identité binaire des modules `app.js`, `arcade.js`, `core.js`, `drop.js`, `matrix.js`, du CSS existant, de `CNAME` et des tests existants.
 - Enlever les deux ajouts de `index.html` restitue exactement le blob Git initial. Footer et secret 404 intacts.
 - Accueil chargé dans Chrome distant : aucun fichier sous `/course/` demandé ; seule la feuille isolée `course-entry.css` s'ajoute.
@@ -26,7 +26,7 @@
 
 Le vrai constructeur de scène Three.js a été exécuté avec un récepteur de rendu injecté dans les tests : secteurs, véhicules instanciés, matrices et caméra, arrivée normale, interception et scène romantique sans objet manquant ou valeur non finie. Le nombre de maillages visibles reste sous 350 dans ces instantanés ; cela ne constitue pas une mesure GPU.
 
-Un aperçu local utilise le SVGRenderer officiel de Three.js r160 sur la géométrie réelle. Les instances y sont développées pour inspection. Les vues industrie, tunnel et rencontre ont été inspectées ; cela a permis de dégager l'accès à la station et d'orienter les personnages face à face. Les captures portent un avertissement explicite : ce rendu CPU ne valide pas WebGL, les textures, le brouillard ou la fluidité. Aucun de ces fichiers d'aperçu ne fait partie du commit.
+Un aperçu local utilise le SVGRenderer officiel de Three.js r160 sur la géométrie réelle. Les instances y sont développées pour inspection. Les vues industrie, tunnel et rencontre ont été inspectées ; cela a permis de dégager l'accès à la station et d'orienter les personnages face à face. Les captures portent un avertissement explicite : ce rendu CPU ne valide pas WebGL, les textures, le brouillard ou la fluidité. Les scripts de cet aperçu restent exclus du commit ; seules les captures de diagnostic sont jointes dans `validation/`.
 
 ## Blocage graphique observé
 
@@ -50,6 +50,20 @@ Sur un navigateur disposant de WebGL, puis sur Safari d'un iPhone réel :
 
 ## Protection du dépôt
 
-Le nouveau commit doit avoir pour parent le main actuel vérifié. Le nouvel arbre reprend l'arbre de départ et ajoute uniquement `course.html`, `course-entry.css`, les fichiers `course/` et les deux ajouts de `index.html`. Les sons existants sont hérités de l'arbre de départ, sans lecture/écriture ou remplacement de leurs blobs. Aucun changement de CNAME, GitHub Pages ou domaine.
+La branche de travail descend du main vérifié `d0abc539c9e43c3b5b5bd7a9e8a10367b6e36293`. Elle ajoute uniquement `course.html`, `course-entry.css`, les fichiers `course/` et les deux ajouts de `index.html`. La refonte graphique part du commit de cette branche `37a23a6a1f205c1f16339028d38b69e348e193cf`. Les sons existants sont hérités de l'arbre de départ, sans remplacement de leurs blobs. Aucun changement de CNAME, GitHub Pages ou domaine.
 
 Sauvegarde : `backup/pre-course-2026-10-22` → `d0abc539c9e43c3b5b5bd7a9e8a10367b6e36293`.
+
+## Refonte graphique après recherche des jeux ouverts
+
+- Référence principale : pmndrs/racing-game, commit 7816a5d954b75e6ad853ae4e4f0cbbd628072643. Licence du code MIT lue ; attribution spécifique du modèle Alexus16 en CC BY 4.0 retenue malgré le résumé CC0 du README. Sources binaires comparées à leurs blobs Git et crédits intégrés au menu.
+- Modèle de voiture de plusieurs milliers de triangles avec carrosserie, vitrages, optiques, chrome et roues distincts. Dimensions du modèle adaptées et testées contre les collisions existantes. Géométrie partagée entre véhicules.
+- PBR avec peinture et clearcoat, environnement de réflexion procédural, asphalte et normales, façades et métal texturés. Aucun fichier HDR ni texture géante.
+- Quais, conduites, cheminées, skyline, éclairage de tunnel, échangeur, clôtures, guérites et station enrichis. Personnages arrondis et caméra plus basse.
+- Traces de pneus, fumée et boost adaptés des modules MIT de pmndrs avec 160 marques, 48 bouffées et 16 éléments de boost au maximum. Temps de simulation, pause, effacement et mouvement réduit testés.
+- Cinq nouveaux tests couvrent les buffers et index du modèle, son empreinte au sol, le partage des géométries et les roues, les pools d'effets, les cartes et les sources/licences. Les roues gauches sont tournées vers l'extérieur par rotation, sans échelle négative, pour conserver des matrices compatibles avec l'instanciation et la même géométrie partagée.
+- Vue CPU rapprochée du véhicule, secteurs et rencontre inspectés. Ce rendu de diagnostic ignore les cartes et reflets et produit des erreurs de tri sur les grandes surfaces : il ne représente pas le rendu WebGL final et ne valide pas la performance.
+- Nouvel essai du moteur réel dans le navigateur distant : même refus de contexte WebGL. Le rendu PBR, les textures, les transparences et la fluidité GPU restent à vérifier sur un appareil disposant de WebGL avant publication.
+- QR, CNAME et page principale conservés. Référence de sauvegarde avant graphismes : backup/course-before-graphics-20261022 → 37a23a6a1f205c1f16339028d38b69e348e193cf.
+
+Les captures rapprochées de diagnostic de cette refonte restent hors du dépôt public : le contrôle automatique a refusé leur publication JPEG, faute de validation de leur contenu. Elles montrent la géométrie modifiée, sans préjuger du rendu GPU des matériaux.

@@ -6,7 +6,12 @@ Extension statique indépendante du protocole IA / FLD. Entrée : `/course.html`
 
 - `track.js` : route de 5 200 m, échantillonnage partagé, reliefs, secteurs et barrages.
 - `simulation.js` : physique arcade, trafic, trois poursuivants au maximum, collisions, états et horloge fixe à 120 Hz.
-- `renderer.js` : Three.js, compacte FLD et décors procéduraux, scène d'arrivée et rencontre.
+- `renderer.js` : assemblage Three.js, éclairage PBR, caméra, secteurs et scènes terminales.
+- `models.js` et `assets/vehicle-data.js` : géométrie automobile issue du jeu pmndrs, adaptée aux dimensions et livrées FLD ; roues animées.
+- `materials.js` : asphalte, métal, façades, normales et environnement de réflexion procéduraux.
+- `scenery.js` : quais, conduites, skyline, tunnel, échangeur et poste frontière.
+- `effects.js` : traces, fumée et boost adaptés du code MIT de pmndrs, avec pools fixes.
+- `CREDITS.md` et `credits.html` : sources, licences et transformations ; crédit 3D accessible depuis le menu.
 - `input.js` : clavier et contacts indépendants avec capture des pointeurs.
 - `main.js` : interface, orchestration, pause, cycle de vie de la page et résultats.
 - `ending.js` : décision terminale par tirage cryptographique uniforme, générateur injectable dans les tests.
@@ -50,3 +55,11 @@ Tests déterministes : 30 issues du tirage, rejet de valeurs hors du seau unifor
 Le commit de départ est `d0abc539c9e43c3b5b5bd7a9e8a10367b6e36293`. Sa référence distante est `backup/pre-course-2026-10-22`. La branche de travail est `feat/fuite-douaniere`. Après une éventuelle fusion, préférer un revert du commit d'intégration afin de conserver l'historique.
 
 Les fichiers de prévisualisation, adaptations sans GPU, import maps de test et moyens d'injecter une fin déterministe restent locaux : ils ne font pas partie de cette extension publiée.
+
+## Refonte graphique
+
+La géométrie de la voiture utilise le modèle Classic Muscle car d'Alexus16, via le dépôt pmndrs/racing-game, crédité sous CC BY 4.0. Les codes de Skid, Dust et Boost de ce jeu sont adaptés sous MIT. Les fichiers source sont conservés et le modèle est décompressé/quantifié hors ligne ; seul `vehicle-data.js` est importé par le jeu. Aucun décodeur, modèle distant, CDN ou nouvelle dépendance npm n'est nécessaire.
+
+La résolution de rendu est plafonnée à 1,25 sur petit écran et 1,5 sur écran plus large. Les géométries du véhicule et les textures sont partagées. Le bitume et les façades utilisent des cartes de 128 px ; les six faces de réflexion font 64 px. Les ombres de contact et éclairages au sol remplacent les ombres et réflexions planaires coûteuses. Le coût réel doit encore être mesuré sur Safari iPhone avec WebGL actif.
+
+Sauvegarde avant cette refonte : `backup/course-before-graphics-20261022` → `37a23a6a1f205c1f16339028d38b69e348e193cf`.

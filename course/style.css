@@ -5,3 +5,5 @@
 @media(max-height:660px){.overlay{align-items:flex-start}.menu .intro{margin:8px 0}.menu .race-meta{margin:10px 0}.menu h1{margin:12px 0}.menu .short-help{margin:8px 0}.menu .record{margin-top:8px}.menu .text-button{margin-top:6px}.menu .primary{margin-top:10px}}
 @media(orientation:landscape) and (max-height:500px){.overlay{padding-top:80px}.menu{width:450px}.menu h1{font-size:40px}.menu .race-meta,.menu .intro,.menu .record{display:none}.telemetry{top:85px;width:130px}.route{top:90px}.pursuit{top:135px}.controls{bottom:12px}.controls button{min-height:50px}.actions .nitro{min-height:58px}.centered{padding:15px}.centered h2{font-size:32px}.result-grid{margin:10px 0;gap:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important}}
+
+.credits-link{display:inline-block;color:#8e819f;font:9px monospace;letter-spacing:1px;padding:10px 0;text-underline-offset:4px}

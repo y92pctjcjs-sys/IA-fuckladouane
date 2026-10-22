@@ -10,7 +10,7 @@ test('actual Three scene, track and instanced vehicles build without missing geo
  let calls=0, maxDraws=0;
  globalThis.document={createElement(){return {width:0,height:0,getContext(){return {fillRect(){},strokeRect(){},fillText(){}};}};}};
  globalThis.devicePixelRatio=3;globalThis.innerWidth=390;globalThis.innerHeight=844;globalThis.addEventListener=()=>{};globalThis.removeEventListener=()=>{};
- const fake={setPixelRatio(r){assert.equal(r,1.5);},setSize(w,h){assert.equal(w,390);assert.equal(h,844);},dispose(){},info:{},render(scene,camera){
+ const fake={setPixelRatio(r){assert.equal(r,1.25);},setSize(w,h){assert.equal(w,390);assert.equal(h,844);},dispose(){},info:{},render(scene,camera){
   calls++;scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);
   assert.ok(camera.isPerspectiveCamera);assert.ok(camera.position.toArray().every(Number.isFinite));assert.ok(camera.quaternion.toArray().every(Number.isFinite));
   let draws=0,instances=0;scene.traverseVisible(o=>{if(o.isMesh){draws++;assert.ok(o.geometry.attributes.position.count>0);assert.ok(o.matrixWorld.elements.every(Number.isFinite));if(o.isInstancedMesh)instances+=o.count;}});
