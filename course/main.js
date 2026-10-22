@@ -1,15 +1,19 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=pursuit3';
-import {createRenderer} from './renderer.js?v=pursuit3';
-import {createInput} from './input.js?v=pursuit3';
-import {createAudio} from './audio.js?v=pursuit3';
-import {createSave,createPreferences} from './storage.js?v=pursuit3';
-import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=pursuit3';
-import {formatTime,resultBadge,createScoreCard} from './results.js?v=pursuit3';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=atelier-002';
+import {createRenderer} from './renderer.js?v=atelier-002';
+import {createInput} from './input.js?v=atelier-002';
+import {createAudio} from './audio.js?v=atelier-002';
+import {createSave,createPreferences} from './storage.js?v=atelier-002';
+import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=atelier-002';
+import {formatTime,resultBadge,createScoreCard} from './results.js?v=atelier-002';
+import {createAppearance,resolveSkin} from './vehicle-skins.js?v=atelier-002';
 const $=id=>document.getElementById(id);
 let storage;try{storage=localStorage;}catch{storage=null;}
 const save=createSave(storage),preferences=createPreferences(storage),systemMotion=matchMedia('(prefers-reduced-motion: reduce)');
+const appearance=createAppearance(storage),cosmeticQuery=new URLSearchParams(location.search);
+appearance.update({fld:cosmeticQuery.get('car'),cop:cosmeticQuery.get('patrol')});
 const isReduced=()=>preferences.data.motion==='reduced'||systemMotion.matches;
-const renderer=createRenderer($('world'),isReduced(),undefined,preferences.data.quality);
+const renderer=createRenderer($('world'),isReduced(),undefined,preferences.data.quality,appearance.data);
+$('vehicleName').textContent='fld® / '+resolveSkin('fld',appearance.data.fld).name;
 let race=createRace(),clock,recorded,previousState,frame,lastTime=0,lastHud=0;
 let proofURL=null,proofFile=null,proofResult=null;
 const audio=createAudio(()=>{pause(race);input.clear();$('audioStatus').textContent='Audio interrompu par l’appareil. Reprenez explicitement la course pour le réactiver.';paintState();});
@@ -35,7 +39,7 @@ function recordLabel(){return save.data.bestTime===null?'RECHERCHÉ V3 / AUCUNE 
 function freshSeed(){try{const values=new Uint32Array(1);crypto.getRandomValues(values);return values[0];}catch{return (Date.now()^Math.floor(performance.now()*1000))>>>0;}}
 function launch(){
  input.clear();if(proofURL)URL.revokeObjectURL(proofURL);proofURL=null;proofFile=null;proofResult=null;
- race=createRace(undefined,freshSeed());clock=createClock(race,input.read);recorded=null;lastTime=performance.now();renderer.reset();audio.reset();start(race);audio.resume();hud();paintState();
+ race=createRace(undefined,freshSeed());renderer.setAppearance(appearance.data,race.seed);clock=createClock(race,input.read);recorded=null;lastTime=performance.now();renderer.reset();audio.reset();start(race);audio.resume();hud();paintState();
 }
 $('start').addEventListener('click',launch);$('replay').addEventListener('click',launch);
 $('pause').addEventListener('click',togglePause);$('resume').addEventListener('click',togglePause);
@@ -122,7 +126,7 @@ function animate(now){
 function hide(){pause(race);input.clear();audio.suspend();paintState();cancelAnimationFrame(frame);frame=null;lastTime=0;}
 function show(){if(frame===null){lastTime=0;frame=requestAnimationFrame(animate);}}
 document.addEventListener('visibilitychange',()=>document.hidden?hide():show());
-addEventListener('pagehide',hide);addEventListener('pageshow',()=>{if(!document.hidden)show();});
+addEventListener('pagehide',hide);addEventListener('pageshow',event=>{if(event.persisted&&storage){appearance.update(createAppearance(storage).data);renderer.setAppearance(appearance.data,race.seed);$('vehicleName').textContent='fld® / '+resolveSkin('fld',appearance.data.fld).name;}if(!document.hidden)show();});
 addEventListener('blur',()=>{pause(race);input.clear();audio.suspend();paintState();});
 $('world').addEventListener('webglcontextlost',e=>{e.preventDefault();hide();$('overlay').hidden=false;document.querySelectorAll('#overlay .panel').forEach(p=>p.hidden=true);$('failure').hidden=false;document.querySelector('.tools').hidden=true;$('failureMessage').textContent='Le contexte graphique a été interrompu. Rechargez la page pour reprendre la route.';});
-paintState();frame=requestAnimationFrame(animate);
+paintState();$('start').disabled=false;$('menu').removeAttribute('aria-busy');frame=requestAnimationFrame(animate);

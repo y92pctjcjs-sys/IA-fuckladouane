@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {STAGES} from './track.js?v=pursuit3';
+import {STAGES} from './track.js?v=atelier-002';
 
 // Original FLD street print series. One shared atlas; no external fonts or images.
 export const POSTERS=Object.freeze([

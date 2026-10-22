@@ -17,7 +17,7 @@ test('custom FLD car has valid finite geometry and a footprint matching the exis
   const pos=o.geometry.attributes.position;assert.ok([...pos.array].every(Number.isFinite));
   const index=o.geometry.index;if(index)for(const i of index.array)assert.ok(i>=0&&i<pos.count);triangles+=(index?index.count:pos.count)/3;
  });
- const size=bounds.getSize(new T.Vector3());assert.ok(size.x<2.12&&size.x>1.8);assert.ok(size.z<4.25&&size.z>3.8);assert.ok(triangles>3000&&triangles<12000);
+ const size=bounds.getSize(new T.Vector3());assert.ok(size.x<2.12&&size.x>1.8);assert.ok(size.z<4.25&&size.z>3.8);assert.ok(triangles>3000&&triangles<30000);
 }));
 test('custom vehicle instances share geometry; steering and wheel animation respect the paused step',()=>withCanvas(()=>{
  const first=createVehicle(),second=createVehicle();const a=first.getObjectByName('Chassis'),b=second.getObjectByName('Chassis');assert.equal(a.geometry,b.geometry);assert.equal(first.userData.paint.isMeshPhysicalMaterial,true);

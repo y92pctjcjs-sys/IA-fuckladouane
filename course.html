@@ -7,8 +7,8 @@
 <meta name="description" content="Treize kilomètres jusqu’au Swagistan. Une voiture FLD. Rien à déclarer aux poursuivants. Course arcade 3D indépendante.">
 <title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="./course/style.css?v=pursuit3">
-<script type="module" src="./course/boot.js?v=pursuit3"></script>
+<link rel="stylesheet" href="./course/style.css?v=atelier-002">
+<script type="module" src="./course/boot.js?v=atelier-002"></script>
 </head>
 <body>
 <canvas id="world" aria-label="Circuit 3D nocturne vers le Swagistan"></canvas>
@@ -21,15 +21,15 @@
 <p id="alert" class="alert" role="status"></p>
 </section>
 <main id="overlay" class="overlay">
-<section id="menu" class="panel menu">
+<section id="menu" class="panel menu" aria-busy="true">
 <div class="eyebrow">FLD® / RECHERCHÉ / PARCOURS 03</div>
 <h1>FUITE<br>DOUANIÈRE<span>SWAGISTAN MOTOR CLUB</span></h1>
 <p class="intro">Le protocole dit : MADE IN SWAGISTAN.<br>Il reste à retrouver l’origine de la veste.</p>
-<div class="race-meta"><span>13 KM<br><b>ROUTE DE NUIT</b></span><span>4–6 MIN<br><b>AUCUNE FORMALITÉ</b></span><span>01 AUTO<br><b>fld® / 89</b></span></div>
+<div class="race-meta"><span>13 KM<br><b>ROUTE DE NUIT</b></span><span>4–6 MIN<br><b>AUCUNE FORMALITÉ</b></span><span>01 AUTO<br><b id="vehicleName">fld® / NIGHTRUNNER</b></span></div>
 <p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Patrouilles et douanes banalisées. Gardez de la nitro.</p>
-<button id="start" class="primary">PRENDRE LA ROUTE <span>↗</span></button>
+<button id="start" class="primary" disabled>PRENDRE LA ROUTE <span>↗</span></button>
 <button id="menuHelp" class="text-button">VOIR LES COMMANDES</button>
-<a class="credits-link" href="./course/garage.html">EXAMINER LES VOITURES / GARAGE 3D ↗</a>
+<a class="credits-link" href="./course/garage.html?v=atelier-002">PERSONNALISER / 6 LIVRÉES 3D ↗</a>
 <div id="recordMenu" class="record"></div>
 <a class="credits-link" href="./course/credits.html" target="_blank" rel="noopener">SOURCES & MUSIQUE ↗</a>
 </section>

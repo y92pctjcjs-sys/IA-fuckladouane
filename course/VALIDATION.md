@@ -1,5 +1,7 @@
 # Validation — Route 02 / Swagistan 13K
 
+> Rapport historique. La mise à jour suivante des six livrées et son raccord avec RECHERCHÉ V3 sont vérifiés dans [VEHICLES.md](VEHICLES.md).
+
 Rapport archivé. La validation de RECHERCHÉ est dans [VALIDATION-V3.md](VALIDATION-V3.md).
 
 > Ce document conserve le compte rendu de la publication initiale. Pour la mise à jour des voitures, le garage et les vérifications WebGL du 23 octobre 2026, lire [VEHICLES.md](VEHICLES.md).

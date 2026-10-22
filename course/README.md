@@ -2,7 +2,7 @@
 
 Version 3 **RECHERCHÉ** de la course autonome FLD. Une traversée nocturne de **13 km**, du Bureau des origines douteuses au Swagistan. Entrée inchangée : `/course.html`. Branche : `feat/swagistan-pursuit-v3`, basée sur la version publique `edd865e7512b1bdecf1e4e96bd5535c4219bb1bd`.
 
-**Véhicules / 23 octobre 2026 :** la voiture joueur est désormais le coupé original **fld® / 89 NIGHTRUNNER**. Les poursuivants utilisent le modèle **DOUANE / D-89 INTERCEPTION**, en break haut et variante basse. Le [garage 3D](garage.html) permet de les examiner, au doigt ou au clavier, depuis le menu du jeu. Modèles, références et validation dans [VEHICLES.md](VEHICLES.md). Le trafic civil conserve son ancien modèle et ses crédits.
+**Atelier 89 / six livrées :** carrosseries FLD et DOUANE retravaillées, vrai tribal intégré à la peinture, optiques et aéro détaillées. Le [garage 3D](garage.html) propose NIGHTRUNNER, SÉRAPHIN et MALÉDICTION pour FLD ; INTERCEPTION, INFERNAL et ÉPAVE pour la patrouille. Sélectionner puis **ÉQUIPER** pour jouer avec ce style. La patrouille peut aussi être tirée au sort au départ ; les deux banalisées restent civiles. Références et validation : [VEHICLES.md](VEHICLES.md).
 
 La publication utilise GitHub Pages, sans changer le domaine du QR. `CNAME`, la racine, le bouton vert, le protocole de la veste, les autres jeux et leurs données restent inchangés. La version de 13 km précédant cette hausse de difficulté est conservée dans `backup/pre-pursuit-v3-with-vehicles`. La sauvegarde antérieure de la course de 5,2 km reste également conservée.
 
@@ -11,7 +11,7 @@ La publication utilise GitHub Pages, sans changer le domaine du QR. `CNAME`, la 
 Node 18+ pour les contrôles ; Python 3 ou tout serveur HTTP statique pour jouer. Aucun paquet à installer pour le jeu, aucun CDN, compte ou serveur applicatif.
 
 ```sh
-git clone --branch feat/swagistan-pursuit-v3 https://github.com/y92pctjcjs-sys/IA-fuckladouane.git
+git clone --branch main https://github.com/y92pctjcjs-sys/IA-fuckladouane.git
 cd IA-fuckladouane
 npm run check
 npm test

@@ -1,5 +1,5 @@
-import {sectorAt,stageAt} from './track.js?v=pursuit3';
-import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=pursuit3';
+import {sectorAt,stageAt} from './track.js?v=atelier-002';
+import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=atelier-002';
 export {BPM};
 export function engineTone(speed,previousGear=1){
  const limits=[0,10,21,33,46,61,76];let gear=Math.max(1,Math.min(6,previousGear));

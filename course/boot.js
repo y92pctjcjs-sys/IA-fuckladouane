@@ -1,4 +1,4 @@
-import('./main.js?v=pursuit3').catch(error => {
+import('./main.js?v=atelier-002').catch(error => {
   console.error('FLD course boot:', error);
   document.querySelectorAll('#overlay .panel').forEach(panel => { panel.hidden = true; });
   document.querySelector('#overlay').hidden = false;

@@ -1,12 +1,14 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=pursuit3';
-import {createVehicle,animateVehicle} from './models.js?v=pursuit3';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=pursuit3';
-import {createDrivingEffects} from './effects.js?v=pursuit3';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=pursuit3';
-import {createDigitalSky} from './sky.js?v=pursuit3';
-import {createQuality} from './quality.js?v=pursuit3';
-import {addRoadPosters} from './posters.js?v=pursuit3';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=atelier-002';
+import {createVehicle,animateVehicle} from './models.js?v=atelier-002';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=atelier-002';
+import {createDrivingEffects} from './effects.js?v=atelier-002';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=atelier-002';
+import {createDigitalSky} from './sky.js?v=atelier-002';
+import {createQuality} from './quality.js?v=atelier-002';
+import {addRoadPosters} from './posters.js?v=atelier-002';
+import {patrolSkin} from './vehicle-skins.js?v=atelier-002';
+import {setVehicleDetail} from './vehicle-detail.js?v=atelier-002';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
 const mats = new Map();
@@ -55,8 +57,8 @@ function batch(root, exclude = new Set()) {
     root.add(instanced);
   }
 }
-function car(kind='fld',variant=0) {
-  const vehicle=createVehicle(kind,variant);
+function car(kind='fld',variant=0,skin='') {
+  const vehicle=createVehicle(kind,variant,skin);
   if(vehicle.userData.staticBatched)return vehicle;
   const exclude=new Set([vehicle.userData.flame,vehicle.userData.blue,vehicle.userData.red]);
   for(const signal of [vehicle.userData.blue,vehicle.userData.red]){if(signal?.isGroup)batch(signal);signal?.traverse(n=>exclude.add(n));}
@@ -100,7 +102,7 @@ function person(parent,x,z,jacket) {
   for(const side of[-1,1])cube(g,side*.065,1.80,.177,.027,.023,.015,'#332b33');
   return g;
 }
-export function createRenderer(canvas, reduced = false, makeRenderer = options => new T.WebGLRenderer(options), qualityMode='auto') {
+export function createRenderer(canvas, reduced = false, makeRenderer = options => new T.WebGLRenderer(options), qualityMode='auto', appearance={fld:'nightrunner',cop:'mixed'}) {
   const quality=createQuality(qualityMode);
   const renderer = makeRenderer({canvas, antialias: false, powerPreference: 'default'});
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1,quality.ratio)); renderer.outputColorSpace = T.SRGBColorSpace;
@@ -233,13 +235,13 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   cube(station,5.5,.6,-1,2.8,.15,.65,'#776276');for(const x of[4.5,6.5])cube(station,x,.3,-1,.12,.6,.5,'#4a4556');
   const warmPool=lightPool(station,'#edc18c',23,24);warmPool.position.set(-2,.04,-5);
   const stationSign = plate(station, 'DERNIÈRE STATION / fld®', 0, 5.6, -10.1, 17, 1); stationSign.rotation.y = Math.PI;
-  const waitingCar = car(); waitingCar.position.set(-3, .1, -1); waitingCar.rotation.y = Math.PI * .68; station.add(waitingCar);
+  const waitingCar = car('fld',0,appearance.fld); waitingCar.position.set(-3, .1, -1); waitingCar.rotation.y = Math.PI * .68; station.add(waitingCar);
   const stranger = person(station, -2, -1, '#b7a0d7'); stranger.rotation.y = -Math.PI / 2;
   const playerPerson = person(station, -8, -1, '#22202d'); playerPerson.rotation.y = Math.PI / 2; playerPerson.visible = false;
   const warm = new T.PointLight('#f4ca94', 22, 30, 2); warm.position.set(-2, 4.5, -6); station.add(warm);
   const movingStation=new Set();for(const object of[waitingCar,stranger,playerPerson])object.traverse(n=>movingStation.add(n));batch(station,movingStation);
-  const player = car(); scene.add(player);
-  const cops = Array.from({length: 3}, (_,i) => { const c = car(i?'undercover':'cop',i);  scene.add(c); return c; });
+  const player = car('fld',0,appearance.fld); scene.add(player);
+  const cops = Array.from({length: 3}, (_,i) => { const c = car(i?'undercover':'cop',i,i?'':patrolSkin(appearance,0));  scene.add(c); return c; });
   let trafficVariant=0;
   const traffic = Array.from({length: 7}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
   const effects=createDrivingEffects(scene,reduced);
@@ -249,6 +251,8 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   const aim = new T.Vector3(), desired = new T.Vector3();
   function resize() { const w = globalThis.visualViewport?.width||innerWidth, h = globalThis.visualViewport?.height||innerHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
   addEventListener('resize', resize);globalThis.visualViewport?.addEventListener('resize',resize); resize();
+  function reportAppearance(){if(canvas.dataset){canvas.dataset.vehicle=player.userData.skin;canvas.dataset.patrols=cops.map(c=>c.userData.skin||c.userData.kind).join(',');}}
+  reportAppearance();
   return {
     render(r, elapsed = 1 / 60) {
       const love = r.result?.ending === 'love' && ['ARRIVAL', 'RESULTS', 'PAUSE'].includes(r.state);
@@ -268,6 +272,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         const c = r.cops[i], m = cops[i]; m.visible = (c.active||c.undercover) && c.s>0 && c.s-r.s<300 && c.s-r.s>-100 && (!ending||r.result.won&&r.cinematic<3);
         positionOn(m, Math.max(0,c.s+(ending?Math.min(r.cinematic,2)*c.speed*.3:0)), c.x);
         animateVehicle(m,{...r,speed:c.speed,steer:c.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0);
+        if(m.visible&&m.userData.staticBatched)setVehicleDetail(m,Math.abs(c.s-r.s)>(quality.level===0?55:85));
         m.userData.blue.visible = c.active&&(reduced || Math.sin(r.time * 6 + i) > 0); m.userData.red.visible = c.active&&(reduced || !m.userData.blue.visible);
       }
       for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0); }
@@ -299,6 +304,14 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
       renderer.render(scene, camera);
+    },
+    setAppearance(next,seed=0){
+      const marked=patrolSkin(next,seed>>>0);
+      if(next.fld===appearance.fld&&marked===cops[0].userData.skin)return;
+      function replace(target,kind,variant,skin){const source=car(kind,variant,skin);target.clear();target.add(...source.children.slice());target.userData=source.userData;target.name=source.name;}
+      if(next.fld!==appearance.fld){replace(player,'fld',0,next.fld);replace(waitingCar,'fld',0,next.fld);}
+      if(marked!==cops[0].userData.skin)replace(cops[0],'cop',0,marked);
+      appearance={...next};reportAppearance();
     },
     reset() { initialized = false; effects.clear();stranger.position.set(-2,0,-1);playerPerson.visible=false; },
     configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},

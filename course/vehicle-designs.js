@@ -1,271 +1,246 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,softTexture} from './materials.js?v=pursuit3';
-import {vehicleLivery,atlasUV} from './vehicle-livery.js?v=pursuit3';
+import {surface,softTexture} from './materials.js?v=atelier-002';
+import {vehicleLivery,atlasUV} from './vehicle-livery.js?v=atelier-002';
+import {resolveSkin} from './vehicle-skins.js?v=atelier-002';
+import {primitive,patch,grid,mesh,block,tube,panel,mergeStatic} from './vehicle-mesh.js?v=atelier-002';
 
-// Original road-ready meshes. Coordinates in metres; front +Z, wheel axles X.
-// Actual cut-out wheel arches, separate glass, rotating wheels and static calipers.
-export const VEHICLE_DESIGNS=Object.freeze({
-  fld:{id:'fld-89-nightrunner',name:'fld® / 89 NIGHTRUNNER',role:'ORIGINE NON DÉCLARÉE',length:4.15,width:2.10,wheelbase:2.52},
-  cop:{id:'douane-d89-interception',name:'DOUANE / D-89 INTERCEPTION',role:'BRIGADE DU DERNIER PÉAGE',length:4.19,width:2.10,wheelbase:2.52}
-});
-const cache=new Map(),templates=new Map();
-const box=new T.BoxGeometry(1,1,1),plane=new T.PlaneGeometry(1,1);
-const M={
-  black:surface('#10121b',.48,.35),rubber:surface('#0b0e15',.88,.03),
-  chrome:surface('#c1c9d2',.23,.87),rotor:surface('#6c7582',.40,.83),
-  glass:new T.MeshPhysicalMaterial({color:'#1a3046',metalness:.36,roughness:.13,clearcoat:1,envMapIntensity:1.7}),
-  carbon:surface('#171626',.55,.47),navy:surface('#163657',.29,.56),
-  fld:new T.MeshPhysicalMaterial({color:'#28152f',roughness:.26,metalness:.67,clearcoat:1,clearcoatRoughness:.19}),
-  cop:new T.MeshPhysicalMaterial({color:'#e7edf0',roughness:.31,metalness:.42,clearcoat:.7}),
-  acid:new T.MeshBasicMaterial({color:'#caff49',toneMapped:false}),
-  pink:new T.MeshBasicMaterial({color:'#ee4da6',toneMapped:false}),
-  cyan:new T.MeshBasicMaterial({color:'#75e4ed',toneMapped:false}),
-  red:new T.MeshBasicMaterial({color:'#fa304b',toneMapped:false}),
-  blue:new T.MeshBasicMaterial({color:'#499dff',toneMapped:false}),
-  white:new T.MeshBasicMaterial({color:'#ebefff',toneMapped:false}),
-  amber:new T.MeshBasicMaterial({color:'#ffb94e',toneMapped:false})
-};
-const lampAtlasMaterial=new T.MeshBasicMaterial({vertexColors:true,toneMapped:false});lampAtlasMaterial.name='Baked lamp colours';
-for(const [name,mat] of Object.entries(M))mat.name=name;
-const v3=a=>new T.Vector3(...a);
-function mesh(parent,geo,mat,name='') {const m=new T.Mesh(geo,mat);m.name=name;parent.add(m);return m;}
-function block(parent,x,y,z,w,h,d,mat,rz=0) {const m=mesh(parent,box,mat);m.position.set(x,y,z);m.scale.set(w,h,d);m.rotation.z=rz;return m;}
-function cached(key,make) {if(!cache.has(key))cache.set(key,make());return cache.get(key);}
-function faces(points,quads,region=null,uvs=null) {
-  const positions=[],uv=[],indices=[];
-  for(let i=0;i<points.length;i++){positions.push(...points[i]);const p=uvs?.[i]||[i%2,Math.floor(i/2)%2];uv.push(...(region?atlasUV(region,...p):p));}
-  for(const q of quads){if(q.length===3)indices.push(...q);else indices.push(q[0],q[1],q[2],q[0],q[2],q[3]);}
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('uv',new T.Float32BufferAttribute(uv,2));g.setIndex(indices);g.computeVertexNormals();return g;
+// Metres, front +Z, axle X. Cosmetics stay within the existing collision footprint.
+export const VEHICLE_DESIGNS=Object.freeze({fld:{id:'fld-89-nightrunner',name:'fld® / 89 GT',length:4.13,width:2.08,wheelbase:2.52},cop:{id:'douane-d89-interception',name:'DOUANE / D-89 GT',length:4.17,width:2.08,wheelbase:2.52}});
+const templates=new Map(),materials=new Map(),wheelCache=new Map();
+const wheelZ=[-1.25,1.27],wheelY=.365,archRadius=.411;
+const basic=color=>new T.MeshBasicMaterial({color,toneMapped:false});
+const M={rubber:surface('#0b0d12',.93,.02),dark:surface('#0c111a',.48,.30),seal:surface('#11151c',.62,.05),chrome:surface('#a8b2bf',.26,.90),blue:basic('#499dff'),red:basic('#ff2745'),white:basic('#e7efff'),amber:basic('#ffb657'),crack:basic('#9cabb3')};
+for(const [key,mat]of Object.entries(M))mat.name=key;
+function carbon(){
+ if(materials.has('carbon'))return materials.get('carbon');
+ const n=128,data=new Uint8Array(n*n*4),normal=new Uint8Array(n*n*4);
+ for(let y=0;y<n;y++)for(let x=0;x<n;x++){const i=(y*n+x)*4,a=Math.floor(x/8)%2,b=Math.floor(y/8)%2,f=a===b?14+(x%8)*2:17+(y%8)*2;data.set([f,f+1,f+7,255],i);normal.set([128+Math.sin(x*Math.PI/4)*5,128+Math.cos(y*Math.PI/4)*5,254,255],i);}
+ const map=new T.DataTexture(data,n,n),bump=new T.DataTexture(normal,n,n);map.colorSpace=T.SRGBColorSpace;for(const t of[map,bump]){t.wrapS=t.wrapT=T.RepeatWrapping;t.repeat.set(6,6);t.needsUpdate=true;}
+ const mat=new T.MeshPhysicalMaterial({map,normalMap:bump,normalScale:new T.Vector2(.11,.11),roughness:.43,metalness:.55,clearcoat:.7});mat.name='Carbon weave';materials.set('carbon',mat);return mat;
 }
-function quad(parent,points,mat,region=null,uvs=[[0,0],[1,0],[1,1],[0,1]]) {return mesh(parent,faces(points,[[0,1,2,3]],region,uvs),mat);}
-function line(parent,points,radius,mat) {
-  const curve=new T.CatmullRomCurve3(points.map(v3),false,'centripetal');
-  return mesh(parent,new T.TubeGeometry(curve,Math.max(1,(points.length-1)*2),radius,5,false),mat);
+function finish(s){
+ if(materials.has(s.id))return materials.get(s.id);
+ const paint=vehicleLivery(s.kind==='cop',s.id),alloy=new T.MeshPhysicalMaterial({map:paint.map,metalness:.90,roughness:s.id==='wreck'?.49:.27,clearcoat:.45});alloy.name='Forged alloy / '+s.id;
+ const glass=new T.MeshPhysicalMaterial({color:s.glass,metalness:.32,roughness:s.id==='wreck'?.27:.10,clearcoat:1,clearcoatRoughness:.08,envMapIntensity:1.15});glass.name='Glass / '+s.id;
+ const underglow=new T.MeshBasicMaterial({map:softTexture('glow'),color:s.accent,transparent:true,opacity:.16,depthWrite:false,toneMapped:false,blending:T.AdditiveBlending});
+ const f={paint,alloy,glass,accent:basic(s.accent),secondary:basic(s.secondary),carbon:carbon(),underglow};materials.set(s.id,f);return f;
 }
-// One material = one static draw. Merged geometries are cached and shared by every car.
-function mergeGeometry(items) {
-  const positions=[],normals=[],uvs=[],colors=[],useColors=items.some(item=>item.color);
-  for(const {geometry,matrix,color} of items){
-    const g=geometry.index?geometry.toNonIndexed():geometry.clone();g.applyMatrix4(matrix);
-    positions.push(...g.attributes.position.array);normals.push(...g.attributes.normal.array);
-    if(g.attributes.uv)uvs.push(...g.attributes.uv.array);else for(let i=0;i<g.attributes.position.count;i++)uvs.push(0,0);
-    if(useColors)for(let i=0;i<g.attributes.position.count;i++)colors.push(color?.r??1,color?.g??1,color?.b??1);
-    g.dispose();
-  }
-  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('normal',new T.Float32BufferAttribute(normals,3));g.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));if(useColors)g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.computeBoundingBox();g.computeBoundingSphere();return g;
-}
-function mergeStatic(root) {
-  root.updateMatrixWorld(true);const buckets=new Map(),geos=new Set();
-  root.traverse(o=>{if(!o.isMesh)return;const flat=o.material.isMeshBasicMaterial&&!o.material.map&&!o.material.transparent,mat=flat?lampAtlasMaterial:o.material;if(!buckets.has(mat))buckets.set(mat,[]);buckets.get(mat).push({geometry:o.geometry,matrix:o.matrixWorld.clone(),color:flat?o.material.color:null});if(o.geometry!==box&&o.geometry!==plane&&!cacheHas(o.geometry))geos.add(o.geometry);});
-  root.clear();for(const [material,items] of buckets){mesh(root,mergeGeometry(items),material,material===M.fld||material===M.cop?'Chassis':material.name);}
-  for(const geo of geos)geo.dispose();return root;
-}
-function cacheHas(geometry){for(const value of cache.values())if(value===geometry)return true;return false;}
-const wheelZ=[-1.25,1.27],wheelY=.35,archRadius=.405;
 const profiles={
-  fld:[[-2.02,.84,.81],[-1.7,.96,.89],[-1.25,.98,.90],[-.65,.92,.88],[.50,.91,.84],[1.27,.96,.80],[1.75,.93,.73],[2.02,.85,.65]],
-  cop:[[-2.04,.86,.96],[-1.6,.96,1.0],[-1.25,.96,1.01],[-.5,.93,1.0],[.60,.93,.98],[1.27,.96,.94],[1.75,.94,.86],[2.04,.86,.78]]
+ fld:[[-2.02,.83,.78,.82],[-1.72,.95,.87,.91],[-1.25,.98,.96,.91],[-.70,.92,.89,.89],[.40,.91,.86,.86],[1.27,.98,.90,.82],[1.73,.93,.79,.75],[2.02,.83,.69,.70]],
+ cop:[[-2.04,.86,.94,.98],[-1.70,.95,.99,1.02],[-1.25,.98,1.02,1.0],[-.60,.93,.96,.99],[.50,.92,.97,.99],[1.27,.97,.97,.93],[1.77,.93,.86,.84],[2.04,.85,.80,.81]]
 };
-function sectionAt(sections,z) {
-  let a=sections[0],b=sections[1];for(let i=1;i<sections.length;i++){b=sections[i];if(z<=b[0])break;a=b;}
-  const t=T.MathUtils.clamp((z-a[0])/(b[0]-a[0]||1),0,1);return [T.MathUtils.lerp(a[1],b[1],t),T.MathUtils.lerp(a[2],b[2],t)];
+function cubic(a,b,c,d,t){return .5*((2*b)+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);}
+function section(police,z){
+ const rows=profiles[police?'cop':'fld'];let i=0;while(i<rows.length-2&&z>rows[i+1][0])i++;const b=rows[i],c=rows[i+1],t=T.MathUtils.clamp((z-b[0])/(c[0]-b[0]),0,1);return[1,2,3].map(j=>cubic(rows[Math.max(0,i-1)][j],b[j],c[j],rows[Math.min(rows.length-1,i+2)][j],t));
 }
-function hoodY(sections,z,x) {const [w,h]=sectionAt(sections,z);return h+.048-Math.abs(x)/(.82*w)*.020;}
-function body(parent,police) {
-  const sections=profiles[police?'cop':'fld'],paint=police?M.cop:M.fld;
-  const points=[],quads=[];
-  for(let i=0;i<sections.length;i++){
-    const [z,w,h]=sections[i];points.push([-w,h-.025,z],[-w*.82,h+.028,z],[0,h+.048,z],[w*.82,h+.028,z],[w,h-.025,z]);
-    if(i)for(let j=0;j<4;j++){const a=(i-1)*5+j;quads.push([a,a+5,a+6,a+1]);}
-  }
-  mesh(parent,faces(points,quads),paint);
-  // The lower edge rises over each tyre, so the shell never intersects a rotating wheel.
-  for(const side of [-1,1]) {
-    const pts=[],qs=[],uv=[];const end=sections.at(-1)[0],start=sections[0][0],steps=100;
-    for(let i=0;i<=steps;i++) {
-      const z=T.MathUtils.lerp(start,end,i/steps),[w,h]=sectionAt(sections,z);
-      let lower=.28;for(const wz of wheelZ){const d=z-wz;if(Math.abs(d)<archRadius)lower=Math.max(lower,wheelY+Math.sqrt(archRadius**2-d*d));}
-      pts.push([side*(w-.016),lower,z],[side*w,h-.026,z]);
-      // Front is LEFT when looking at the passenger door; the driver door is reversed geometrically.
-      const u=side>0?1-i/steps:i/steps;uv.push([u,(lower-.28)/.74],[u,(h-.306)/.74]);
-      if(i){const a=(i-1)*2;qs.push(side>0?[a,a+1,a+3,a+2]:[a,a+2,a+3,a+1]);}
-    }
-    mesh(parent,faces(pts,qs,'side',uv),vehicleLivery(police));
-    // Proud overfenders with a real opening and visible fasteners.
-    for(const wz of wheelZ) {
-      const pts=[],qs=[];for(let i=0;i<=24;i++) {
-        const a=Math.PI*i/24,z=wz+Math.cos(a)*archRadius,y=wheelY+Math.sin(a)*archRadius;
-        const [w]=sectionAt(sections,z);pts.push([side*(w+.014),y,z],[side*1.015,y+.055,z+.017*Math.cos(a)]);
-        if(i){const n=(i-1)*2;qs.push(side>0?[n,n+1,n+3,n+2]:[n,n+2,n+3,n+1]);}
-        if(i%6===0){const bolt=mesh(parent,cached('bolt',()=>new T.SphereGeometry(.014,6,4)),M.chrome);bolt.position.set(side*1.021,y+.037,z);}
-      }
-      const arch=faces(pts,qs);arch.userData.wheelArch=true;mesh(parent,arch,paint);
-    }
-    const skirt=block(parent,side*.96,.29,0,.11,.12,1.54,police?M.navy:M.carbon);
-    block(parent,side*1.018,.31,0,.014,.019,1.54,police?M.chrome:M.acid);
-    line(parent,[[side*.93,.83,-.67],[side*.93,.39,-.67],[side*.93,.37,.60],[side*.93,.80,.62]],.0055,M.black);
-    block(parent,side*.944,.78,-.37,.018,.025,.17,M.chrome);
-  }
-  // Ends are separate panels; their geometry follows the taper of the shell.
-  for(const front of [false,true]){
-    const [z,w,h]=front?sections.at(-1):sections[0];
-    const top=[[-w,h-.025],[-w*.82,h+.028],[0,h+.048],[w*.82,h+.028],[w,h-.025]],pts=[],qs=[];
-    for(const [x,y] of top)pts.push([x,.29,z],[x,y,z]);
-    for(let j=0;j<4;j++){const a=j*2;qs.push(front?[a,a+2,a+3,a+1]:[a,a+1,a+3,a+2]);}
-    mesh(parent,faces(pts,qs),paint);
-  }
-  block(parent,0,.255,0,1.50,.05,3.90,M.black);
+function topY(police,z,x){const[w,h,c]=section(police,z),a=Math.min(1,Math.abs(x)/w);return T.MathUtils.lerp(c,h,a*a)+.018*Math.sin(Math.PI*a);}
+function sidePoint(police,side,z,t){
+ const[w,h]=section(police,z);let bottom=.27;for(const wz of wheelZ){const d=z-wz;if(Math.abs(d)<archRadius)bottom=Math.max(bottom,wheelY+Math.sqrt(archRadius**2-d*d));}
+ return[side*(w-.065*(1-t)+.022*Math.sin(Math.PI*t)-.024*Math.exp(-Math.pow((t-.46)/.19,2))),T.MathUtils.lerp(bottom,h,t),z];
 }
-function cabin(parent,police,tall) {
-  const top=police?(tall?1.56:1.29):1.27,back=police?(tall?-1.87:-.83):-1.04;
-  const roofRear=police?(tall?-1.55:-.37):-.42,roofFront=police?.39:.28,front=police?1.07:.95;
-  const base=police?.999:.897,roofWidth=police?.71:.66,baseWidth=police?.81:.78;
-  const pts=[[-roofWidth,top,roofRear],[roofWidth,top,roofRear],[roofWidth,top,roofFront],[-roofWidth,top,roofFront]];
-  quad(parent,[...pts].reverse(),police?M.navy:M.fld);
-  for(const z of [roofRear,roofFront])line(parent,[[-roofWidth,top-.015,z],[roofWidth,top-.015,z]],.026,M.black);
-  // Glass normals point outward, and physical glass stays opaque for mobile sorting stability.
-  quad(parent,[[-baseWidth,base,front],[baseWidth,base,front],[roofWidth,top-.035,roofFront],[-roofWidth,top-.035,roofFront]],M.glass);
-  quad(parent,[[baseWidth,base,back],[-baseWidth,base,back],[-roofWidth,top-.035,roofRear],[roofWidth,top-.035,roofRear]],M.glass);
-  for(const side of [-1,1]) {
-    const window=[[side*baseWidth,base,back],[side*baseWidth,base,front],[side*roofWidth,top-.035,roofFront],[side*roofWidth,top-.035,roofRear]];
-    quad(parent,side>0?[...window].reverse():window,M.glass);
-    const frame=[[side*baseWidth,base,back],[side*roofWidth,top,roofRear],[side*roofWidth,top,roofFront],[side*baseWidth,base,front],[side*baseWidth,base,back]];
-    line(parent,frame,.026,police?M.navy:M.carbon);
-    line(parent,[[side*(roofWidth+.015),top-.03,-.03],[side*baseWidth,base,-.03]],.025,M.black);
-    if(police&&tall)line(parent,[[side*(roofWidth+.01),top-.03,-.66],[side*baseWidth,base,-.66]],.028,M.navy);
-    block(parent,side*.91,base+.08,.66,.14,.045,.06,M.black);
-    const mirror=block(parent,side*.988,base+.115,.66,.10,.08,.19,police?M.navy:M.fld);mirror.rotation.y=side*.12;
-    block(parent,side*.99,base+.115,.568,.078,.049,.007,M.chrome);
+function body(root,police,f){
+ const rear=police?-2.04:-2.02,front=-rear;
+ for(const [a,b,count]of[[rear,.83,43],[.83,1.88,28],[1.88,front,5]]){
+  const hood=a===.83;
+  mesh(root,grid(20,count,(u,v)=>{const z=T.MathUtils.lerp(a,b,v),w=section(police,z)[0],x=(u*2-1)*w;return[x,topY(police,z,x),z];},(u,v,p)=>hood?atlasUV('hood',.5+p[0]/1.8,1-v):atlasUV('blank',.5,.5),true),f.paint,'Sculpted bonnet / shoulders');
+ }
+ for(const side of[-1,1]){
+  mesh(root,grid(100,9,(u,v)=>sidePoint(police,side,T.MathUtils.lerp(rear,front,u),v),(u,v,p)=>atlasUV('side',side>0?1-u:u,(p[1]-.27)/.75),side>0),f.paint,'Integrated side wrap');
+  for(const wz of wheelZ){
+   mesh(root,grid(32,4,(u,v)=>{const a=u*Math.PI,r=archRadius+.037*v,z=wz+Math.cos(a)*r,y=wheelY+Math.sin(a)*r;return[side*(section(police,z)[0]+.012+.018*Math.sin(Math.PI*v)),y,z];},null,side<0),f.paint,'Rolled wheel arch');
+   tube(root,Array.from({length:17},(_,i)=>{const a=i/16*Math.PI,z=wz+Math.cos(a)*archRadius;return[side*(section(police,z)[0]+.012),wheelY+Math.sin(a)*archRadius,z];}),.007,M.dark);
   }
-  line(parent,[[-.67,base+.035,front+.007],[.67,base+.035,front+.007]],.017,M.black);
-  for(const side of [-1,1])line(parent,[[side*.12,base+.04,front+.025],[side*.48,base+.045,front+.04]],.009,M.black);
-  if(!police)for(let i=0;i<7;i++) {
-    const t=i/7,z=T.MathUtils.lerp(back+.025,roofRear-.09,t),y=T.MathUtils.lerp(base+.04,top-.06,t);
-    const louver=block(parent,0,y,z,1.38-t*.15,.025,.035,M.carbon);louver.rotation.x=-.35;
+  const skirt=panel(root,side*.965,.29,0,1.48,.105,.08,f.carbon,.025);skirt.rotation.y=side*Math.PI/2;
+  const accent=block(root,side*1.008,.30,0,.012,.016,1.35,f.accent);accent.rotation.y=-side*.015;
+  const seam=[[-.66,.86],[-.69,.72],[-.65,.38],[-.47,.34],[.49,.36],[.64,.47],[.65,.82]];
+  tube(root,seam.map(([z,y])=>{const[w,h]=section(police,z);return[side*(w-.008),police?y+.09:y,z];}),.0038,M.dark,'Door shutline');
+  const handle=panel(root,side*.935,police?.88:.78,-.38,.15,.023,.013,M.chrome,.009);handle.rotation.y=side*Math.PI/2;
+ }
+ // Properly closed curved end caps, with actual holes for the front air intakes.
+ for(const isFront of[false,true]){
+  const z=isFront?front:rear,w=section(police,z)[0],xs=[...new Set([-w,-.81,-.60,-.49,0,.49,.60,.81,w].map(x=>T.MathUtils.clamp(x,-w,w)))].sort((a,b)=>a-b),ys=[.27,.38,.40,.57,.60,.65],p=[],idx=[];
+  for(let i=1;i<xs.length;i++)for(let j=0;j<ys.length;j++){
+   const x0=xs[i-1],x1=xs[i],y0=ys[j],yL=j===ys.length-1?topY(police,z,x0):ys[j+1],yR=j===ys.length-1?topY(police,z,x1):ys[j+1],cx=(x0+x1)/2,cy=(y0+Math.min(yL,yR))/2;
+   if(isFront&&(Math.abs(cx)<.49&&cy>.40&&cy<.60||Math.abs(cx)>.60&&Math.abs(cx)<.81&&cy>.38&&cy<.57))continue;
+   const a=p.length;p.push([x0,y0,z],[x1,y0,z],[x1,yR,z],[x0,yL,z]);idx.push(isFront?[a,a+1,a+2,a,a+2,a+3]:[a,a+2,a+1,a,a+3,a+2]);
   }
-  return top;
+  mesh(root,patch(p,idx),f.paint,'Closed curved end');
+ }
+ block(root,0,.245,0,1.54,.05,3.9,M.dark);
 }
-function fascia(parent,police) {
-  const z=police?2.045:2.025,back=police?-2.045:-2.025,frontY=police?.72:.60;
-  block(parent,0,.33,z,1.92,.07,.08,M.carbon);
-  block(parent,0,.51,z+.012,1.48,.205,.025,M.black);
-  for(let i=0;i<9;i++)block(parent,0,.43+i*.020,z+.030,1.15,.009,.012,police?M.chrome:M.carbon);
-  for(const side of [-1,1]) {
-    block(parent,side*.59,frontY,z+.020,.49,.16,.027,M.black);
-    for(const dx of [-.105,.105]){
-      const ring=mesh(parent,cached('lamp-ring',()=>new T.TorusGeometry(.043,.008,6,16)),M.chrome);ring.position.set(side*.59+dx,frontY,z+.037);
-      const lens=mesh(parent,cached('lamp-lens',()=>new T.CircleGeometry(.034,16)),M.white);lens.position.set(side*.59+dx,frontY,z+.040);
-    }
-    block(parent,side*.59,frontY-.10,z+.036,.45,.017,.010,police?M.white:M.cyan);
-    block(parent,side*.84,.43,z+.045,.10,.035,.015,M.amber);
-    block(parent,side*.71,.63,back-.022,.41,.105,.035,M.black);
-    for(let i=0;i<5;i++)block(parent,side*(.53+i*.083),.635,back-.045,.055,.052,.011,M.red);
-    block(parent,side*.62,.275,back+.015,.15,.11,.12,M.chrome);
-    block(parent,side*.62,.275,back-.047,.112,.076,.010,M.black);
+function mapped(root,points,region,material,reverse=false){const uv=[[0,0],[1,0],[1,1],[0,1]].map(p=>atlasUV(region,...p));return mesh(root,patch(points,reverse?[[0,2,1],[0,3,2]]:[[0,1,2],[0,2,3]],uv),material,region);}
+function cockpit(root,police,tall,s,f){
+ const top=police?(tall?1.56:1.30):1.28,base=police?.99:.885,back=police?(tall?-1.86:-.89):-1.05,rr=police?(tall?-1.50:-.39):-.43,rf=police?.37:.27,front=police?1.00:.92,rw=police?.71:.665,bw=police?.805:.78;
+ mesh(root,grid(18,16,(u,v)=>{const x=(u*2-1)*rw,z=T.MathUtils.lerp(rr,rf,v);return[x,top+.035*Math.sin(u*Math.PI)*Math.sin(v*Math.PI),z];},(u,v)=>atlasUV('roof',u,1-v),true),f.paint,'Domed roof');
+ const wind=(u,v,rear=false)=>{const x=T.MathUtils.lerp(bw,rw,v)*(u*2-1),z=T.MathUtils.lerp(rear?back:front,rear?rr:rf,v)+(rear?-.025:.025)*Math.sin(u*Math.PI)*Math.sin(v*Math.PI);return[x,T.MathUtils.lerp(base,top-.013,v)+.015*Math.sin(u*Math.PI)*Math.sin(v*Math.PI),z];};
+ for(const rear of[false,true]){
+  mesh(root,grid(18,12,(u,v)=>wind(u,v,rear),null,rear),f.glass,rear?'Curved rear glass':'Curved windscreen');
+  for(const v of[0,1])tube(root,Array.from({length:12},(_,i)=>wind(i/11,v,rear)),.012,M.seal);
+ }
+ for(const side of[-1,1]){
+  const p=(u,v)=>[side*T.MathUtils.lerp(bw,rw,v)+side*.012*Math.sin(u*Math.PI)*Math.sin(v*Math.PI),T.MathUtils.lerp(base,top-.013,v),T.MathUtils.lerp(T.MathUtils.lerp(back,front,u),T.MathUtils.lerp(rr,rf,u),v)];
+  mesh(root,grid(18,10,p,null,side>0),f.glass,'Convex side glass');
+  for(const u of[0,1])tube(root,Array.from({length:10},(_,i)=>p(u,i/9)),.020,f.paint,'Painted A/C pillar');
+  for(const v of[0,1])tube(root,Array.from({length:12},(_,i)=>p(i/11,v)),.011,M.seal);
+  for(const z of(police&&tall?[-.74,.01]:[-.06])){
+   const u=(z-back)/(front-back);tube(root,Array.from({length:8},(_,i)=>p(u,i/7)),.018,M.dark,'Flush B pillar');
   }
-  block(parent,0,.79,back-.014,1.66,.028,.012,police?M.red:M.pink);
-  for(let i=-2;i<=2;i++)block(parent,i*.21,.28,back+.065,.025,.14,.15,M.carbon);
-  block(parent,0,.37,back+.025,1.89,.07,.08,M.carbon);
-  // The end decals face the viewer and are never mirrored.
-  quad(parent,[[.44,.43,back-.031],[-.44,.43,back-.031],[-.44,.58,back-.031],[.44,.58,back-.031]],vehicleLivery(police),'plate');
-  const rearBottom=police?.80:.675,rearTop=police?.94:.79;
-  quad(parent,[[.59,rearBottom,back-.017],[-.59,rearBottom,back-.017],[-.59,rearTop,back-.017],[.59,rearTop,back-.017]],vehicleLivery(police),'rear');
-  // Flat bonnet panel follows the actual hood inclination, clear of the windscreen.
-  const sections=profiles[police?'cop':'fld'];const near=.995,far=1.77;
-  const hoodPoints=[],hoodQuads=[],hoodUV=[],columns=8,rows=16;
-  for(let i=0;i<=rows;i++)for(let j=0;j<=columns;j++) {
-    const z=T.MathUtils.lerp(near,far,i/rows),x=T.MathUtils.lerp(-.60,.60,j/columns);
-    hoodPoints.push([x,hoodY(sections,z,x)+.004,z]);hoodUV.push([j/columns,1-i/rows]);
-    if(i&&j){const a=(i-1)*(columns+1)+j-1;hoodQuads.push([a,a+columns+1,a+columns+2,a+1]);}
+  block(root,side*.87,base+.09,.64,.15,.027,.05,M.dark);
+  if(!(s.id==='wreck'&&side>0)){
+   const mirror=panel(root,side*.970,base+.11,.63,.12,.075,.09,f.carbon,.028);mirror.rotation.y=side*.08;
+   block(root,side*.977,base+.11,.576,.10,.043,.005,M.chrome);
   }
-  mesh(parent,faces(hoodPoints,hoodQuads,'hood',hoodUV),vehicleLivery(police));
-  for(const side of [-1,1]) {
-    line(parent,Array.from({length:8},(_,i)=>{const z=T.MathUtils.lerp(near,far,i/7),x=side*T.MathUtils.lerp(.66,.71,i/7);return[x,hoodY(sections,z,x)+.003,z];}),.006,M.black);
-    if(!police)for(let i=0;i<5;i++)block(parent,side*.58,.90,-1.26-i*.053,.29,.015,.024,M.black);
+ }
+ // Windscreen sun strip uses the same branded atlas, on the actual curved surface.
+ mesh(root,grid(18,3,(u,v)=>{const p=wind(u,.84+v*.155);p[2]+=.003;return p;},(u,v)=>atlasUV('banner',u,v)),f.paint,'Windscreen signature');
+ for(const side of[-1,1])tube(root,[[side*.14,base+.022,front+.022],[side*.50,base+.027,front+.025]],.006,M.dark,'Wiper');
+ if(!police)for(let i=0;i<7;i++){
+  const v=.12+i*.10,p=wind(.5,v,true),l=block(root,0,p[1]+.012,p[2]-.008,1.40-v*.17,.019,.038,f.carbon);l.rotation.x=-.47;
+ }
+ if(s.id==='wreck'){
+  const centre=[.31,.39],onGlass=(u,v)=>{const p=wind(T.MathUtils.clamp(u,.02,.98),T.MathUtils.clamp(v,.02,.81));p[2]+=.005;return p;};
+  for(let ray=0;ray<9;ray++){
+   const a=ray*Math.PI*2/9,points=[];for(let j=0;j<6;j++){const r=j*.063,bend=Math.sin(ray*4+j*3)*.013;points.push(onGlass(centre[0]+Math.cos(a)*r+Math.sin(a)*bend,centre[1]+Math.sin(a)*r+Math.cos(a)*bend));}
+   tube(root,points,.00125,M.crack,'Branched glass fracture');
+   const u=centre[0]+Math.cos(a)*.16,v=centre[1]+Math.sin(a)*.16;tube(root,[onGlass(u,v),onGlass(u+Math.cos(a+.8)*.07,v+Math.sin(a+.8)*.07),onGlass(u+Math.cos(a+.8)*.12,v+Math.sin(a+.8)*.12)],.0009,M.crack);
   }
+  for(const radius of[.065,.14]){const p=[];for(let i=0;i<=12;i++){const a=i/12*Math.PI*2,r=radius*(1+.10*Math.sin(i*7));p.push(onGlass(centre[0]+Math.cos(a)*r,centre[1]+Math.sin(a)*r));}tube(root,p,.0009,M.crack,'Impact fracture ring');}
+ }
+ return top;
 }
-function extras(parent,police,tall,roof) {
-  if(!police) {
-    const wing=block(parent,0,1.105,-1.77,1.98,.055,.28,M.carbon);wing.rotation.x=.06;
-    for(const side of [-1,1]) {
-      block(parent,side*.62,.98,-1.73,.045,.25,.09,M.carbon);
-      block(parent,side*1.005,1.11,-1.78,.035,.19,.35,M.fld);
-      block(parent,side*1.026,1.12,-1.78,.009,.017,.27,M.acid);
-      block(parent,side*.97,.44,-.02,.015,.024,1.30,M.pink);
-    }
-    for(let i=0;i<7;i++)block(parent,-.45+i*.15,.856,-1.84,.085,.016,.12,M.black);
-  } else {
-    block(parent,0,roof+.065,-.26,1.23,.06,.26,M.black);
-    for(const side of [-1,1]){
-      block(parent,side*.38,roof+.10,-.26,.38,.06,.20,M.chrome);
-      if(tall)block(parent,side*.62,roof+.045,-.43,.05,.045,1.43,M.chrome);
-      block(parent,side*.78,.53,2.05,.045,.30,.04,M.black);
-    }
-    block(parent,0,.45,2.065,1.63,.047,.032,M.black);
-    line(parent,[[.48,roof,-.81],[.48,roof+.12,-.82],[.50,roof+(tall?.51:.20),-.88]],.011,M.black);
-    // Rear red/fluorescent chevrons are modelled on a local patch, not projected into the lights.
-    for(const side of [-1,1])for(let i=0;i<6;i++) {
-      const x=side*(.15+i*.12);
-      const points=side>0?[[x-.045,.86,-2.050],[x+.035,.86,-2.050],[x+.115,1.0,-2.050],[x+.035,1.0,-2.050]]:[[x+.045,.86,-2.050],[x-.035,.86,-2.050],[x-.115,1.0,-2.050],[x-.035,1.0,-2.050]];
-      quad(parent,side>0?[...points].reverse():points,i%2?M.red:M.acid);
-    }
-  }
+function intake(root,z,x,y,w,h,f){
+ const inset=.027,d=.074,p=[[x-w/2,y-h/2,z],[x+w/2,y-h/2,z],[x+w/2,y+h/2,z],[x-w/2,y+h/2,z],[x-w/2+inset,y-h/2+inset,z-d],[x+w/2-inset,y-h/2+inset,z-d],[x+w/2-inset,y+h/2-inset,z-d],[x-w/2+inset,y+h/2-inset,z-d]];
+ mesh(root,patch(p,[[0,1,5,0,5,4],[1,2,6,1,6,5],[2,3,7,2,7,6],[3,0,4,3,4,7],[4,5,6,4,6,7]]),f.carbon,'Recessed intake');
+ for(let i=0;i<4;i++)block(root,x,y-h*.34+i*h*.22,z-d+.012,w-.045,.008,.018,M.dark);
 }
-function wheelParts(police) {
-  const key=police?'wheel-douane':'wheel-fld';if(templates.has(key))return templates.get(key);
-  const root=new T.Group();
-  const tyreProfile=[[.23,-.111],[.29,-.111],[.332,-.086],[.35,-.050],[.35,.05],[.332,.086],[.29,.111],[.23,.111]].map(p=>new T.Vector2(...p));
-  const tyre=mesh(root,new T.LatheGeometry(tyreProfile,32),M.rubber);tyre.rotation.z=-Math.PI/2;
-  for(const x of [-.112,.112]){
-    const lip=mesh(root,new T.TorusGeometry(.257,.018,6,28),M.chrome);lip.rotation.y=Math.PI/2;lip.position.x=x;
+function fascia(root,police,s,f){
+ const front=police?2.04:2.02,rear=-front,fy=police?.750:.643;
+ intake(root,front+.001,0,.50,.98,.20,f);for(const side of[-1,1])intake(root,front+.001,side*.705,.475,.21,.19,f);
+ panel(root,0,.294,front-.003,1.86,.056,.07,f.carbon,.025,'Front splitter');
+ for(const side of[-1,1]){
+  const broken=s.id==='wreck'&&side<0;
+  panel(root,side*.60,fy,front-.008,.48,.105,.036,M.dark,.023,'Lens housing');
+  for(let i=0;i<3;i++){
+   const m=panel(root,side*(.44+i*.105),fy+.005,front+.018,.066,.036,.008,broken&&i!==1?M.seal:s.id==='infernal'?M.amber:M.white,.008,'Projector');
+   if(broken&&i===1)m.rotation.z=.25;
   }
-  const barrel=mesh(root,new T.CylinderGeometry(.25,.25,.18,28,1,true),M.black);barrel.rotation.z=Math.PI/2;
-  const disc=mesh(root,new T.CylinderGeometry(.205,.205,.025,28),M.rotor);disc.rotation.z=Math.PI/2;disc.position.x=.077;
-  const spokes=police?5:7;
-  for(let i=0;i<spokes;i++) {
-    const a=i*Math.PI*2/spokes;
-    const spoke=block(root,.115,Math.sin(a)*.135,Math.cos(a)*.135,.035,.045,.22,M.chrome);spoke.rotation.x=-a;
-    if(!police){const slot=block(root,.137,Math.sin(a)*.155,Math.cos(a)*.155,.009,.010,.13,M.black);slot.rotation.x=-a;}
+  const led=panel(root,side*.60,fy-.057,front+.018,.43,.012,.008,s.id==='infernal'?f.secondary:s.kind==='fld'?f.secondary:M.white,.005,'LED blade');led.rotation.z=-side*.055;
+  block(root,side*.831,.36,front+.022,.035,.025,.008,M.amber);
+  panel(root,side*.57,.656,rear-.012,.60,.105,.032,M.dark,.023,'Tail housing');
+  for(let j=0;j<3;j++)block(root,side*(.37+j*.17),.668,rear-.034,.14,.022,.008,M.red);
+  const exhaust=mesh(root,primitive('exhaust',()=>new T.CylinderGeometry(.059,.063,.12,16,1,true)),M.chrome);exhaust.rotation.x=Math.PI/2;exhaust.position.set(side*.63,.267,rear+.025);
+  const hole=mesh(root,primitive('exhaust-hole',()=>new T.CircleGeometry(.051,16)),M.dark);hole.rotation.y=Math.PI;hole.position.set(side*.63,.267,rear-.037);
+ }
+ const tail=panel(root,0,.760,rear-.007,1.61,.015,.012,s.id==='seraph'?f.accent:police?M.red:f.secondary,.006,'Tail signature');
+ panel(root,0,.312,rear+.005,1.84,.075,.08,f.carbon,.032,'Rear bumper');
+ for(let i=-2;i<=2;i++){const fin=block(root,i*.21,.265,rear+.055,.014,.115,.13,f.carbon);fin.rotation.x=-.14;}
+ panel(root,0,.458,rear-.018,.85,.153,.015,M.dark,.015,'Plate surround');
+ mapped(root,[[.412,.390,rear-.037],[-.412,.390,rear-.037],[-.412,.526,rear-.037],[.412,.526,rear-.037]],'plate',f.paint);
+ mesh(root,grid(16,3,(u,v)=>{const x=.60-u*1.20,top=topY(police,rear,x)-.009;return[x,top-.125+.125*v,rear-.003];},(u,v)=>atlasUV('rear',u,v)),f.paint,'Integrated rear signature');
+ mapped(root,[[-.13,.628,front+.013],[.13,.628,front+.013],[.13,.687,front+.013],[-.13,.687,front+.013]],'front',f.paint);
+ for(const side of[-1,1])for(let i=0;i<4;i++){
+  const z=1.19+i*.095,x=side*.72,y=topY(police,z,x)+.004;
+  const vent=panel(root,x,y,z,.17,.022,.045,f.carbon,.009,'Bonnet extraction');vent.rotation.x=-Math.PI/2;
+ }
+ if(police){
+  for(const side of[-1,1]){block(root,side*.78,.46,front+.020,.032,.235,.035,M.dark);}
+  block(root,0,.394,front+.024,1.60,.035,.032,M.dark);
+  for(const side of[-1,1])for(let i=0;i<5;i++){
+   const x=side*(.18+i*.13),y=.87,p=[[x-.04,y,rear-.008],[x+.02,y,rear-.008],[x+.10,y+.105,rear-.008],[x+.04,y+.105,rear-.008]];mesh(root,patch(p,side>0?[[0,2,1],[0,3,2]]:[[0,1,2],[0,2,3]]),i%2?M.red:f.accent);
   }
-  const hub=mesh(root,new T.CylinderGeometry(.071,.071,.04,12),police?M.black:M.chrome);hub.rotation.z=Math.PI/2;hub.position.x=.134;
-  if(!police){const ring=mesh(root,new T.TorusGeometry(.278,.006,4,32),M.chrome);ring.rotation.y=Math.PI/2;ring.position.x=.112;}
-  // Two wheel passes: dark tyre/barrel, bright alloy/disc. No per-spoke draw calls.
-  root.traverse(o=>{if(o.isMesh){if(o.material===M.black)o.material=M.rubber;if(o.material===M.rotor)o.material=M.chrome;}});
-  mergeStatic(root);templates.set(key,root);return root;
+ }
 }
-function addWheels(vehicle,police) {
-  vehicle.userData.wheels=[];
-  for(const side of [-1,1])for(const z of wheelZ) {
-    const steering=new T.Group(),rolling=new T.Group(),face=new T.Group();steering.position.set(side*.885,wheelY,z);
-    face.rotation.y=side<0?Math.PI:0;face.add(wheelParts(police).clone(true));rolling.add(face);steering.add(rolling);
-    // The brake caliper steers with the hub, but correctly DOES NOT rotate with the tyre.
-    const caliper=block(steering,side*.080,.07,.18,.060,.15,.065,police?M.red:M.acid);
-    vehicle.add(steering);vehicle.userData.wheels.push({steering,rolling,caliper,front:z>0});
+function tapered(root,points,radius,material,name){
+ const curve=new T.CatmullRomCurve3(points.map(p=>new T.Vector3(...p))),frames=curve.computeFrenetFrames(12,false),p=[],idx=[];
+ for(let j=0;j<=12;j++){const centre=curve.getPointAt(j/12),r=radius*(1-j/12)+.002;
+  for(let i=0;i<8;i++){const a=i/8*Math.PI*2,pt=centre.clone().addScaledVector(frames.normals[j],Math.cos(a)*r).addScaledVector(frames.binormals[j],Math.sin(a)*r);p.push(pt.toArray());if(j){const n=(j-1)*8+i,k=(i+1)%8;idx.push([n,(j-1)*8+k,j*8+i],[(j-1)*8+k,j*8+k,j*8+i]);}}
+ }
+ mesh(root,patch(p,idx),material,name);
+}
+function aero(root,police,tall,roof,s,f){
+ if(!police){
+  mesh(root,grid(18,5,(u,v)=>{const x=(u*2-1)*.96,z=-1.69-v*.29+.08*Math.abs(u*2-1);return[x,1.04+.026*Math.sin(v*Math.PI)+.032*Math.abs(u*2-1),z];}),f.carbon,'Sculpted wing');
+  for(const side of[-1,1]){
+   const bracket=panel(root,side*.55,.96,-1.78,.10,.20,.035,f.carbon,.018);bracket.rotation.y=Math.PI/2;
+   const plate=mesh(root,patch([[side*.97,1.0,-1.95],[side*.97,1.13,-1.95],[side*.97,1.12,-1.64],[side*.97,1.02,-1.68]],side>0?[[0,1,2],[0,2,3]]:[[0,2,1],[0,3,2]]),f.paint,'Wing endplate');
+   tube(root,[[side*.974,1.10,-1.93],[side*.974,1.09,-1.70]],.006,f.accent);
   }
+ }
+ if(police){
+  panel(root,0,roof+.058,-.31,1.19,.047,.23,M.dark,.028,'Lightbar foundation');
+  tube(root,[[.48,roof,-.88],[.49,roof+.13,-.90],[.51,roof+(tall?.49:.19),-.96]],.008,M.dark,'Antenna');
+  if(tall)for(const side of[-1,1])tube(root,[[side*.63,roof+.04,-1.35],[side*.64,roof+.07,-.8],[side*.64,roof+.04,.14]],.014,M.chrome,'Roof rail');
+ }
+ if(s.id==='seraph'){
+  for(const side of[-1,1])for(let i=0;i<4;i++){
+   const x0=side*.30,x1=side*(.83+i*.045),z=-1.09-i*.19,y=1.08+i*.025;
+   const p=[[x0,y,z+.12],[x1,y+.11,z-.04],[x1,y+.08,z-.16],[x0,y-.014,z+.01]];
+   const top=side>0?[[0,1,2],[0,2,3]]:[[0,2,1],[0,3,2]],q=[...p,...p.map(([x,y,z])=>[x,y-.014,z])],indices=[...top,...top.map(t=>t.map(v=>v+4).reverse())];
+   for(let j=0;j<4;j++){const k=(j+1)%4;indices.push([j,k,k+4],[j,k+4,j+4]);}
+   mesh(root,patch(q,indices),f.alloy,'Seraph feather aero');tube(root,[[x0,y+.005,z+.12],[x1,y+.113,z-.04]],.005,f.accent);
+  }
+  const halo=mesh(root,new T.TorusGeometry(.34,.010,6,64),f.accent,'Seraph halo');halo.rotation.x=Math.PI/2;halo.position.set(0,1.49,-1.13);
+  for(const side of[-1,1])tube(root,[[side*.15,1.20,-1.12],[side*.18,1.45,-1.13]],.006,M.chrome,'Halo support');
+ }
+ if(s.id==='infernal'){
+  for(const side of[-1,1]){
+   tapered(root,[[side*.43,roof+.015,-.12],[side*.51,roof+.16,-.34],[side*.58,roof+.31,-.63],[side*.63,roof+.36,-.90]],.07,f.alloy,'Infernal horn');
+   for(let i=0;i<3;i++){const x=side*(.15+i*.17),p=[[x-.035,.60,2.047],[x+.035,.60,2.047],[x,.43,2.047]];mesh(root,patch(p,[[0,1,2]]),f.alloy,'Grille fang');}
+  }
+ }
+ if(s.id==='cursed')for(const side of[-1,1])for(let i=0;i<3;i++){
+  const z=.98+i*.20,p=[[side*.88,.48,z],[side*1.02,.65,z-.14],[side*.94,.53,z-.25]];mesh(root,patch(p,side>0?[[0,2,1]]:[[0,1,2]]),i%2?f.accent:f.carbon,'Cursed canard');
+ }
 }
-function flashGeometry(side,roof) {
-  const g=new T.Group();
-  for(let i=0;i<4;i++)block(g,side*(.23+i*.085),roof+.14,-.26,.062,.075,.20,M.blue);
-  block(g,side*.38,.55,2.075,.13,.047,.013,M.blue);
-  block(g,side*.48,.83,-2.061,.18,.045,.014,M.blue);
-  g.updateMatrixWorld(true);const parts=[];g.traverse(m=>{if(m.isMesh)parts.push({geometry:m.geometry,matrix:m.matrixWorld});});return mergeGeometry(parts);
+function wreckWarp(x,y,z){
+ const dent=Math.exp(-Math.pow((x-.65)/.42,2)-Math.pow((z-1.55)/.52,2)),crease=Math.sin(z*29+x*17)*Math.sin(x*13)*.052*Math.exp(-Math.pow((z-1.4)/.66,2))*Math.max(0,y-.48);
+ const door=Math.exp(-Math.pow((x-.92)/.12,2)-Math.pow((z+.30)/.48,2));
+ return[x-dent*.14-door*.10,y-dent*.14+crease,z-dent*.22];
 }
+function wheelParts(s,f){
+ if(wheelCache.has(s.id))return wheelCache.get(s.id);const root=new T.Group();
+ const shape=[[.235,-.107],[.29,-.109],[.344,-.087],[.363,-.045],[.363,.045],[.344,.087],[.29,.109],[.235,.107]].map(p=>new T.Vector2(...p));
+ const tyre=mesh(root,new T.LatheGeometry(shape,40),M.rubber);tyre.rotation.z=-Math.PI/2;
+ const barrel=mesh(root,new T.CylinderGeometry(.257,.257,.175,40,1,true),M.rubber);barrel.rotation.z=Math.PI/2;
+ const rotor=mesh(root,new T.CylinderGeometry(.214,.214,.023,40),f.alloy);rotor.rotation.z=Math.PI/2;rotor.position.x=.063;
+ const lip=mesh(root,new T.TorusGeometry(.267,.012,6,40),f.alloy);lip.rotation.y=Math.PI/2;lip.position.x=.109;
+ const count=s.kind==='cop'?5:7;
+ for(let i=0;i<count;i++){
+  const a=i/count*Math.PI*2;for(const split of[-1,1]){
+   const angle=a+split*.052,p=[];
+   for(const back of[false,true])for(const [r,t]of[[.068,-.018],[.068,.018],[.259,.009],[.259,-.009]])p.push([back?.089:.135-(r-.068)*.10,Math.sin(angle)*r+Math.cos(angle)*t,Math.cos(angle)*r-Math.sin(angle)*t]);
+   mesh(root,patch(p,[[0,1,2],[0,2,3],[4,6,5],[4,7,6],[0,4,5],[0,5,1],[1,5,6],[1,6,2],[2,6,7],[2,7,3],[3,7,4],[3,4,0]]),f.alloy,'Split forged spoke');
+  }
+  const bolt=mesh(root,primitive('hub-bolt',()=>new T.CylinderGeometry(.008,.008,.022,6)),f.alloy);bolt.rotation.z=Math.PI/2;bolt.position.set(.128,Math.sin(a)*.053,Math.cos(a)*.053);
+ }
+ const hub=mesh(root,new T.CylinderGeometry(.074,.079,.035,24),f.alloy);hub.rotation.z=Math.PI/2;hub.position.x=.124;
+ const badge=mesh(root,new T.CircleGeometry(.066,32),f.alloy,'Branded centre cap');badge.rotation.y=Math.PI/2;badge.position.x=.143;
+ const buv=badge.geometry.attributes.uv;for(let i=0;i<buv.count;i++)buv.setXY(i,...atlasUV('rim',buv.getX(i),buv.getY(i)));badge.geometry.userData.atlas=true;
+ root.traverse(o=>{if(o.isMesh&&o.material===f.alloy&&!o.geometry.userData.atlas){const g=o.geometry.clone(),uv=g.attributes.uv;for(let i=0;i<uv.count;i++)uv.setXY(i,704/1024,1-960/1024);o.geometry=g;}});
+ mergeStatic(root,null);wheelCache.set(s.id,root);return root;
+}
+function wheels(root,s,f){
+ root.userData.wheels=[];
+ for(const side of[-1,1])for(const z of wheelZ){
+  const steering=new T.Group(),rolling=new T.Group(),face=new T.Group();steering.position.set(side*.885,wheelY,z);face.rotation.y=side<0?Math.PI:0;face.add(wheelParts(s,f).clone(true));rolling.add(face);steering.add(rolling);root.add(steering);
+  const caliper=panel(steering,side*.067,.06,.19,.062,.14,.055,s.kind==='cop'?M.red:f.accent,.017,'Fixed brake caliper');root.userData.wheels.push({steering,rolling,caliper,front:z>0});
+ }
+}
+function strobes(roof,side,s){const g=new T.Group();for(let i=0;i<5;i++)panel(g,side*(.17+i*.071),roof+.095,-.31,.057,.052,.19,M.blue,.011);panel(g,side*.35,.548,2.043,.13,.032,.014,M.blue,.01);panel(g,side*.47,.716,-2.05,.16,.025,.012,M.blue,.008);mergeStatic(g,null,s.id==='wreck'?wreckWarp:null);return g.children[0].geometry;}
 const shadowMaterial=new T.MeshBasicMaterial({map:softTexture(),transparent:true,opacity:.78,depthWrite:false});
-const underglowMaterial=new T.MeshBasicMaterial({map:softTexture('glow'),color:'#ac4efa',transparent:true,opacity:.23,depthWrite:false,toneMapped:false,blending:T.AdditiveBlending});
-export function createDesignedVehicle(kind='fld',variant=0) {
-  const police=kind==='cop',tall=police&&variant%2===0,key=police?(tall?'patrol':'interceptor'):'nightrunner';
-  if(!templates.has(key)) {
-    const shell=new T.Group();body(shell,police);const roof=cabin(shell,police,tall);fascia(shell,police);extras(shell,police,tall,roof);
-    mergeStatic(shell);shell.userData.roof=roof;templates.set(key,shell);
-  }
-  const shell=templates.get(key),g=new T.Group();g.name=VEHICLE_DESIGNS[police?'cop':'fld'].name+(tall?' / PATROUILLE':'');g.add(shell.clone(true));
-  g.userData={kind,paint:police?M.cop:M.fld,designId:VEHICLE_DESIGNS[police?'cop':'fld'].id,staticBatched:true,wheelbase:2.52};
-  addWheels(g,police);
-  if(police)for(const [name,side] of [['blue',-1],['red',1]]) {
-    g.userData[name]=mesh(g,cached(key+'-flash-'+side,()=>flashGeometry(side,shell.userData.roof)),M.blue,'Blue strobes '+side);
-  }
-  g.userData.flame=block(g,0,.28,-2.18,.77,.07,.36,M.cyan);g.userData.flame.visible=false;
-  const shadow=mesh(g,cached('shadow-plane',()=>new T.PlaneGeometry(2.8,4.9)),shadowMaterial);shadow.rotation.x=-Math.PI/2;shadow.position.y=.012;shadow.userData.cpuTextureOnly=true;
-  if(!police){const glow=mesh(g,cached('underglow-plane',()=>new T.PlaneGeometry(2.7,4.4)),underglowMaterial);glow.rotation.x=-Math.PI/2;glow.position.y=.018;glow.userData.cpuTextureOnly=true;}
-  return g;
+const boostMaterial=new T.MeshBasicMaterial({vertexColors:true,transparent:true,opacity:.72,blending:T.AdditiveBlending,depthWrite:false,toneMapped:false});
+function boostGeometry(s,f){
+ const g=new T.Group();for(const side of[-1,1])for(const inner of[false,true]){const cone=mesh(g,new T.ConeGeometry(inner?.031:.058,inner?.20:.35,10),inner?M.white:f.secondary);cone.rotation.x=-Math.PI/2;cone.position.set(side*.63,.267,-(s.kind==='cop'?2.04:2.02)-(inner?.085:.13));}mergeStatic(g,null);return g.children[0].geometry;
+}
+export function createDesignedVehicle(kind='fld',variant=0,skinId=''){
+ const s=resolveSkin(kind,skinId),police=kind==='cop',tall=police&&variant%2===0,f=finish(s),key=s.id+':'+(tall?'estate':'coupe');
+ if(!templates.has(key)){
+  const shell=new T.Group();body(shell,police,f);const roof=cockpit(shell,police,tall,s,f);fascia(shell,police,s,f);aero(shell,police,tall,roof,s,f);mergeStatic(shell,f.paint,s.id==='wreck'?wreckWarp:null);shell.userData.roof=roof;templates.set(key,shell);
+ }
+ const shell=templates.get(key),g=new T.Group();g.name=VEHICLE_DESIGNS[kind].name+' / '+s.name;g.add(shell.clone(true));g.userData={kind,skin:s.id,paint:f.paint,designId:VEHICLE_DESIGNS[kind].id,staticBatched:true,wheelbase:2.52,wheelRadius:.363,cosmeticOnly:true};wheels(g,s,f);
+ if(police)for(const [name,side]of[['blue',-1],['red',1]])g.userData[name]=mesh(g,primitive(key+':flash:'+side,()=>strobes(shell.userData.roof,side,s)),M.blue,'Blue strobes');
+ g.userData.flame=mesh(g,primitive('boost:'+s.id,()=>boostGeometry(s,f)),boostMaterial,'Twin nitro plumes');g.userData.flame.visible=false;
+ const shadow=mesh(g,primitive('shadow',()=>new T.PlaneGeometry(2.8,4.9)),shadowMaterial);shadow.rotation.x=-Math.PI/2;shadow.position.y=.012;shadow.userData.cpuTextureOnly=true;
+ if(!police){const glow=mesh(g,primitive('underglow',()=>new T.PlaneGeometry(2.6,4.3)),f.underglow);glow.rotation.x=-Math.PI/2;glow.position.y=.017;glow.userData.cpuTextureOnly=true;}
+ return g;
 }

@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {vehicleData} from './assets/vehicle-data.js';
-import {surface,palette,softTexture} from './materials.js?v=pursuit3';
-import {createDesignedVehicle} from './vehicle-designs.js?v=pursuit3';
+import {surface,palette,softTexture} from './materials.js?v=atelier-002';
+import {createDesignedVehicle} from './vehicle-designs.js?v=atelier-002';
 // Civilian traffic retains Classic Muscle car, Alexus16, CC BY 4.0 (CREDITS.md).
 // Player and marked patrol/interceptor are original meshes in vehicle-designs.js.
 const geometryCache=new Map();
@@ -27,8 +27,8 @@ function paintFor(variant){
 }
 const wheelMeshes=vehicleData.wheel.map(part=>({geo:geometry(part,true),mat:part.material==='Material.002'?materials.rim:materials.rubber}));
 const shadowGeometry=new T.PlaneGeometry(2.85,5),shadowMaterial=new T.MeshBasicMaterial({map:softTexture(),transparent:true,opacity:.66,depthWrite:false});
-export function createVehicle(kind='fld',variant=0){
- if(kind==='fld'||kind==='cop')return createDesignedVehicle(kind,variant);
+export function createVehicle(kind='fld',variant=0,skin=''){
+ if(kind==='fld'||kind==='cop')return createDesignedVehicle(kind,variant,skin);
  const g=new T.Group();g.name='TRAFIC / BERLINE CIVILE';const paint=paintFor(variant),accent=surface('#262d3a',.45,.4);
  for(const part of vehicleData.body){
   const byName={BodyPaint:paint,BodyPaint_Accent:accent,Glass:materials.glass,Chrome:materials.chrome,HeadLight:glow.white,BrakeLight:glow.red,TurnSignal:glow.amber};
@@ -57,7 +57,7 @@ export function createVehicle(kind='fld',variant=0){
  g.userData.paint=paint;g.userData.kind=kind;return g;
 }
 export function animateVehicle(vehicle,race,dt){
- for(const wheel of vehicle.userData.wheels){wheel.rolling.rotation.x=(wheel.rolling.rotation.x+race.speed*dt/.33)%(Math.PI*2);if(wheel.front)wheel.steering.rotation.y=race.steer*.3;}
+ for(const wheel of vehicle.userData.wheels){wheel.rolling.rotation.x=(wheel.rolling.rotation.x+race.speed*dt/(vehicle.userData.wheelRadius||.33))%(Math.PI*2);if(wheel.front)wheel.steering.rotation.y=race.steer*.3;}
  vehicle.rotation.z=-race.steer*Math.min(race.speed/50,1)*.025;
  vehicle.userData.flame.visible=race.boosting&&race.state==='RACE';
 }

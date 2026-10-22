@@ -26,3 +26,25 @@ test('actual Three scene, track and instanced vehicles build without missing geo
   view.dispose();assert.equal(calls,15);assert.ok(maxDraws>50);
  } finally {for(const k of names){if(previous[k]===undefined)delete globalThis[k];else globalThis[k]=previous[k];}}
 });
+
+test('skin equipment and random marked liveries preserve the same two hidden civilian units',()=>{
+ const names=['document','devicePixelRatio','innerWidth','innerHeight','addEventListener','removeEventListener'];
+ const previous=Object.fromEntries(names.map(k=>[k,globalThis[k]]));let scene;
+ globalThis.document={createElement:canvasSink};globalThis.devicePixelRatio=1;globalThis.innerWidth=390;globalThis.innerHeight=844;globalThis.addEventListener=globalThis.removeEventListener=()=>{};
+ const sink={setPixelRatio(){},setSize(){},dispose(){},info:{},render(value){scene=value;}};
+ const canvas={dataset:{}},race=createRace();let view;
+ try{
+  view=createRenderer(canvas,true,()=>sink,'auto',{fld:'seraph',cop:'infernal'});view.render(race,1/60);
+  const hidden=[];scene.traverse(o=>{if(o.userData.kind==='undercover')hidden.push(o);});assert.equal(hidden.length,2);
+  const paint=hidden.map(o=>o.userData.paint),geometry=hidden.map(o=>o.getObjectByName('Chassis').geometry);
+  for(const [fld,cop]of [['cursed','wreck'],['nightrunner','patrol'],['seraph','mixed']])for(const seed of [0,1,2]){
+   view.setAppearance({fld,cop},seed);view.render(race,1/60);
+   assert.equal(canvas.dataset.vehicle,fld);assert.equal(canvas.dataset.patrols,(cop==='mixed'?['patrol','infernal','wreck'][seed]:cop)+',undercover,undercover');
+   for(const [i,unit]of hidden.entries()){
+    assert.equal(unit.parent,scene);assert.equal(unit.userData.paint,paint[i]);assert.equal(unit.getObjectByName('Chassis').geometry,geometry[i]);assert.equal(unit.userData.blue.visible,false);assert.equal(unit.userData.red.visible,false);
+   }
+  }
+  race.state='RACE';race.s=200;race.cops.forEach(c=>Object.assign(c,{s:180,active:true,undercover:false}));view.render(race,1/60);
+  for(const unit of hidden){assert.equal(unit.visible,true);assert.equal(unit.userData.blue.visible,true);}
+ }finally{view?.dispose();for(const k of names){if(previous[k]===undefined)delete globalThis[k];else globalThis[k]=previous[k];}}
+});
