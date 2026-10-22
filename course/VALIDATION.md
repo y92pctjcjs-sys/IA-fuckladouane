@@ -1,5 +1,7 @@
 # Validation — Route 02 / Swagistan 13K
 
+> Ce document conserve le compte rendu de la publication initiale. Pour la mise à jour des voitures, le garage et les vérifications WebGL du 23 octobre 2026, lire [VEHICLES.md](VEHICLES.md).
+
 Date : 22 octobre 2026. Branche : `feat/swagistan-night-run`.
 Référence de départ : `main` → `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`, revérifiée sur GitHub avant modification.
 

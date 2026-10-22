@@ -3,12 +3,13 @@ import assert from 'node:assert/strict';
 import {createRenderer} from '../renderer.js';
 import {createRace} from '../simulation.js';
 import {LENGTH} from '../track.js';
+import {testCanvas} from './helpers/canvas.js';
 
 test('actual Three scene, track and instanced vehicles build without missing geometry or invalid camera transforms', () => {
  const names=['document','devicePixelRatio','innerWidth','innerHeight','addEventListener','removeEventListener'];
  const previous=Object.fromEntries(names.map(k=>[k,globalThis[k]]));
  let calls=0, maxDraws=0;
- globalThis.document={createElement(){return {width:0,height:0,getContext(){return {fillRect(){},strokeRect(){},fillText(){}};}};}};
+ globalThis.document={createElement:testCanvas};
  globalThis.devicePixelRatio=3;globalThis.innerWidth=390;globalThis.innerHeight=844;globalThis.addEventListener=()=>{};globalThis.removeEventListener=()=>{};
  const fake={setPixelRatio(r){assert.equal(r,1.25);},setSize(w,h){assert.equal(w,390);assert.equal(h,844);},dispose(){},info:{},render(scene,camera){
   calls++;scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);

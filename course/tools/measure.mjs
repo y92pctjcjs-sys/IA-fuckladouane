@@ -3,6 +3,7 @@ import {performance} from 'node:perf_hooks';
 import {createRace,start,step,createClock,emptyInput} from '../simulation.js';
 import {LENGTH,BLOCKADES,curvature,sectorAt} from '../track.js';
 import {createRenderer} from '../renderer.js';
+import {testCanvas} from '../tests/helpers/canvas.js';
 function controls(r,boost=false){
  const row=BLOCKADES.find(b=>b.s>r.s-9&&b.s-r.s<210),traffic=r.traffic.filter(t=>t.s>r.s-6&&t.s-r.s<95);
  const candidates=[0,-5,5].filter(x=>(!row||row.xs.every(o=>Math.abs(o-x)>=2.7))&&traffic.every(t=>Math.abs(t.x-x)>2.1));
@@ -17,7 +18,7 @@ for(const boost of [false,true])for(const hz of [30,60,144]){
 }
 let maxVisibleMeshes=0,maxLiveGeometry=0,maxChunks=0;
 const live=new Set(),seen=new WeakSet();
-globalThis.document={createElement(){return {width:0,height:0,getContext(){return {fillRect(){},strokeRect(){},fillText(){}};}};}};
+globalThis.document={createElement:testCanvas};
 globalThis.innerWidth=390;globalThis.innerHeight=844;globalThis.devicePixelRatio=3;globalThis.addEventListener=globalThis.removeEventListener=()=>{};
 const sink={setPixelRatio(){},setSize(){},info:{},dispose(){},render(scene,camera){
  scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);let visible=0;

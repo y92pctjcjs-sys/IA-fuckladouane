@@ -55,7 +55,9 @@ function batch(root, exclude = new Set()) {
   }
 }
 function car(kind='fld',variant=0) {
-  const vehicle=createVehicle(kind,variant),exclude=new Set([vehicle.userData.flame,vehicle.userData.blue,vehicle.userData.red]);
+  const vehicle=createVehicle(kind,variant);
+  if(vehicle.userData.staticBatched)return vehicle;
+  const exclude=new Set([vehicle.userData.flame,vehicle.userData.blue,vehicle.userData.red]);
   for(const wheel of vehicle.userData.wheels)wheel.steering.traverse(n=>exclude.add(n));
   batch(vehicle,exclude);return vehicle;
 }

@@ -2,6 +2,8 @@
 
 Version 2 de la course autonome FLD. Une traversée nocturne de **13 km**, du Bureau des origines douteuses au Swagistan. Entrée inchangée : `/course.html`. Branche de revue : `feat/swagistan-night-run`, basée sur `main` au commit `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`.
 
+**Véhicules / 23 octobre 2026 :** la voiture joueur est désormais le coupé original **fld® / 89 NIGHTRUNNER**. Les poursuivants utilisent le modèle **DOUANE / D-89 INTERCEPTION**, en break haut et variante basse. Le [garage 3D](garage.html) permet de les examiner, au doigt ou au clavier, depuis le menu du jeu. Modèles, références et validation dans [VEHICLES.md](VEHICLES.md). Le trafic civil conserve son ancien modèle et ses crédits.
+
 Le 22 octobre 2026, l’utilisateur autorise l’application de cette version au site existant. La publication utilise GitHub Pages, sans changer le domaine du QR. `CNAME`, la racine, le bouton vert, le protocole de la veste, les autres jeux et leurs données restent inchangés. La version publique précédente est conservée dans `backup/pre-swagistan-13k-2026-10-22`.
 
 ## Tester la branche
@@ -65,7 +67,7 @@ Une interruption audio de Safari met la partie en pause ; le retour dans la page
 - `input.js` : zone analogique, boutons, clavier et cycle de vie des contacts.
 - `renderer.js` : dix emplacements de décor recyclés par tronçons de 80 m, géométries retirées libérées ; aucun décor complet de 13 km construit au démarrage.
 - `sky.js` : un atlas 320 × 48, une géométrie instanciée et une passe GPU ; profondeur conservée, moins de chiffres en économie et après la frontière, décor figé en mouvement réduit.
-- `models.js` : voiture FLD, intercepteur bas, patrouille haute originale ; roues de tous les véhicules mobiles animées séparément.
+- `models.js` : trafic civil, animation des roues et interface commune ; `vehicle-designs.js` : carrosseries FLD/DOUANE originales, vitrages, arches ouvertes, roues et freins ; `vehicle-livery.js` : atlas locaux et logo tribal exact. Les géométries statiques et les couleurs des feux sont regroupées par matériau.
 - `scenery.js`, `materials.js`, `effects.js` : architecture, cartes partagées et pools d’effets fixes (160 traces, 48 bouffées, 16 éléments de boost).
 - `quality.js` : résolution adaptative ×0,72 / ×1 / ×1,25, hystérésis, moins de décor lointain et de particules en économie. Les indications nécessaires à la conduite sont conservées.
 - `score.js`, `audio.js` : composition et synthèse ; 96 voix transitoires maximum, sept couches continues.

@@ -7,19 +7,21 @@ import {createVehicle,animateVehicle} from '../models.js';
 import {createDrivingEffects} from '../effects.js';
 import {asphaltMaterial,environmentTexture,softTexture} from '../materials.js';
 import {createRace} from '../simulation.js';
-function withCanvas(run){const original=globalThis.document;globalThis.document={createElement(){return{width:0,height:0,getContext(){return{fillRect(){},fillText(){}};}};}};try{run();}finally{if(original===undefined)delete globalThis.document;else globalThis.document=original;}}
+import {testCanvas} from './helpers/canvas.js';
+function withCanvas(run){const original=globalThis.document;globalThis.document={createElement:testCanvas};try{run();}finally{if(original===undefined)delete globalThis.document;else globalThis.document=original;}}
 
-test('adapted car has valid indexed geometry and a footprint matching the existing collisions',()=>withCanvas(()=>{
+test('custom FLD car has valid finite geometry and a footprint matching the existing collisions',()=>withCanvas(()=>{
  const car=createVehicle(),bounds=new T.Box3();car.updateMatrixWorld(true);let triangles=0;
  car.traverse(o=>{if(!o.isMesh||o.userData.cpuTextureOnly||!o.visible)return;
   o.geometry.computeBoundingBox();bounds.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld));
   const pos=o.geometry.attributes.position;assert.ok([...pos.array].every(Number.isFinite));
-  const index=o.geometry.index;if(index){for(const i of index.array)assert.ok(i>=0&&i<pos.count);triangles+=index.count/3;}
+  const index=o.geometry.index;if(index)for(const i of index.array)assert.ok(i>=0&&i<pos.count);triangles+=(index?index.count:pos.count)/3;
  });
  const size=bounds.getSize(new T.Vector3());assert.ok(size.x<2.12&&size.x>1.8);assert.ok(size.z<4.25&&size.z>3.8);assert.ok(triangles>3000&&triangles<12000);
 }));
-test('vehicles share decoded geometry; steering and wheel animation respect the paused step',()=>withCanvas(()=>{
- const first=createVehicle(),second=createVehicle('cop',1);const a=first.getObjectByName('Chassis'),b=second.getObjectByName('Chassis');assert.equal(a.geometry,b.geometry);assert.equal(first.userData.paint.isMeshPhysicalMaterial,true);
+test('custom vehicle instances share geometry; steering and wheel animation respect the paused step',()=>withCanvas(()=>{
+ const first=createVehicle(),second=createVehicle();const a=first.getObjectByName('Chassis'),b=second.getObjectByName('Chassis');assert.equal(a.geometry,b.geometry);assert.equal(first.userData.paint.isMeshPhysicalMaterial,true);
+ assert.notEqual(a.geometry,createVehicle('cop',1).getObjectByName('Chassis').geometry);
  first.updateMatrixWorld(true);for(const wheel of first.userData.wheels)wheel.rolling.traverse(mesh=>{if(mesh.isMesh)assert.ok(mesh.matrixWorld.determinant()>0,'mirrored wheels must remain compatible with instancing');});
  const r=createRace();r.state='RACE';r.speed=45;r.steer=.5;animateVehicle(first,r,1/60);const wheel=first.userData.wheels.find(w=>w.front);assert.ok(wheel.rolling.rotation.x>0);assert.equal(wheel.steering.rotation.y,.15);
  const angle=wheel.rolling.rotation.x;animateVehicle(first,r,0);assert.equal(wheel.rolling.rotation.x,angle);
