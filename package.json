@@ -1,10 +1,10 @@
 {
   "name": "fld-ia-garment-protocol",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "check": "node --check app.js && node --check matrix.js && node --check arcade.js && node --check core.js"
+    "check": "node --check app.js && node --check matrix.js && node --check arcade.js && node --check core.js && node --check drop.js"
   }
 }

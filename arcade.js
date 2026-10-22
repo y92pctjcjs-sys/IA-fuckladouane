@@ -1,10 +1,11 @@
-import {createRunner, stepRunner, createBreaker, launchBreaker, stepBreaker, shuffled} from "./core.js?v=4";
+import {createRunner, stepRunner, createBreaker, launchBreaker, stepBreaker} from "./core.js?v=5";
+import {createDrop, stepDrop, moveDrop, rotateDrop, hardDrop, softDrop, landingY, GARMENTS, DROP_COLS, DROP_ROWS} from "./drop.js?v=5";
 
 const $ = id => document.getElementById(id);
 const GAME_INFO = {
   runner: {name: "DOUANE RUN", title: "PASSEZ\nENTRE LES LIGNES.", copy: "Flèches, boutons ou toucher une voie.\nVisez les losanges. Évitez les barrières.", help: "3 vies · Touchez une voie ou utilisez ← →"},
   breaker: {name: "CASSE-FRONTIÈRE", title: "LA FRONTIÈRE\nEST FRAGILE.", copy: "Déplacez la raquette avec le doigt ou ← →.\n35 briques. Trois vies. Aucune douane.", help: "Glissez ou ← → · Touchez le terrain / espace pour relancer"},
-  memory: {name: "MÉMOIRE SAISIE", title: "RENDEZ-NOUS\nLES SOUVENIRS.", copy: "Retrouvez les huit paires de pièces saisies.\nMoins de coups. Plus d’Omerta.", help: "Retournez deux cartes · 8 paires · Record en coups"}
+  drop: {name: "FLD DROP", title: "TASSEZ\nLE STOCK.", copy: "Des vêtements, pas des briques. Emboîtez les coupes.\nUne ligne pleine disparaît. Si la pile déborde : saisie.", help: "← → déplacer · ↻ tourner · ↓ descendre · ⇓ poser"}
 };
 
 export class Arcade {
@@ -20,8 +21,10 @@ export class Arcade {
     this.last = 0;
     this.keys = new Set();
     this.hold = 0;
-    this.mismatchTimer = 0;
-    this.deck = [];
+    this.holdTime = 0;
+    this.touch = null;
+    this.soft = false;
+    this.lastLines = 0;
     this.state = createRunner();
     document.querySelectorAll("[data-game]").forEach(button => {
       button.addEventListener("click", () => this.select(button.dataset.game));
@@ -30,10 +33,13 @@ export class Arcade {
     $("pauseBtn").addEventListener("click", () => this.togglePause());
     for (const [id, direction] of [["leftBtn", -1], ["rightBtn", 1]]) {
       const button = $(id);
-      button.addEventListener("click", () => this.move(direction));
+      button.addEventListener("click", event => {
+        if (this.game !== "drop" || event.detail === 0) this.move(direction);
+      });
       button.addEventListener("pointerdown", event => {
-        if (this.game !== "breaker" || !this.running || this.paused) return;
+        if (!["breaker", "drop"].includes(this.game) || !this.running || this.paused) return;
         this.hold = direction;
+        if (this.game === "drop") { this.move(direction); this.holdTime = -.2; }
         button.setPointerCapture(event.pointerId);
       });
       button.addEventListener("pointerup", () => { this.hold = 0; });
@@ -44,13 +50,52 @@ export class Arcade {
       if (!this.running || this.paused) return;
       this.canvas.setPointerCapture(event.pointerId);
       const x = this.localX(event);
+      if (this.game === "drop") {
+        this.touch = {x: event.clientX, y: event.clientY, lastX: event.clientX, moved: false};
+      }
       if (this.game === "runner") this.state.lane = Math.min(2, Math.floor(x / 120));
       else if (this.game === "breaker") {
         this.state.paddle = Math.max(43, Math.min(317, x));
         launchBreaker(this.state);
       }
     });
+    this.canvas.addEventListener("pointerup", event => {
+      if (this.game === "drop" && this.touch && this.running && !this.paused) {
+        const rect = this.canvas.getBoundingClientRect();
+        const dy = (event.clientY - this.touch.y) * 360 / rect.width;
+        if (dy > 65) this.slam();
+        else if (!this.touch.moved && Math.abs(dy) < 12) this.rotate();
+      }
+      this.touch = null;
+    });
+    this.canvas.addEventListener("pointercancel", () => { this.touch = null; });
+    $("rotateBtn").addEventListener("click", () => this.rotate());
+    $("slamBtn").addEventListener("click", () => this.slam());
+    $("softBtn").addEventListener("pointerdown", event => {
+      if (!this.running || this.paused || this.game !== "drop") return;
+      this.soft = true; $("softBtn").setPointerCapture(event.pointerId);
+      softDrop(this.state); this.draw(); this.hud();
+    });
+    for (const event of ["pointerup", "pointercancel", "lostpointercapture"]) {
+      $("softBtn").addEventListener(event, () => { this.soft = false; });
+    }
+    $("softBtn").addEventListener("click", event => {
+      if (event.detail === 0 && this.game === "drop" && this.running && !this.paused) {
+        softDrop(this.state); this.draw(); this.hud();
+      }
+    });
     this.canvas.addEventListener("pointermove", event => {
+      if (this.game === "drop" && this.touch && this.running && !this.paused) {
+        const size = this.canvas.getBoundingClientRect().width / 360 * 20;
+        const dx = event.clientX - this.touch.lastX;
+        if (Math.abs(dx) >= size) {
+          const direction = Math.sign(dx), count = Math.min(10, Math.floor(Math.abs(dx) / size));
+          for (let i = 0; i < count; i++) this.move(direction);
+          this.touch.lastX += direction * count * size;
+          this.touch.moved = true;
+        }
+        if (Math.abs(event.clientY - this.touch.y) > 12) this.touch.moved = true;
+      }
       if (this.game === "breaker" && this.running && !this.paused && (event.buttons || event.pointerType === "touch")) {
         this.state.paddle = Math.max(43, Math.min(317, this.localX(event)));
       }
@@ -61,15 +106,21 @@ export class Arcade {
         if (this.running && !event.repeat) { event.preventDefault(); this.togglePause(); }
         return;
       }
-      if (!this.running || this.paused || this.game === "memory") return;
+      if (!this.running || this.paused) return;
       if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
         event.preventDefault();
         this.keys.add(event.key);
-        if (!event.repeat && this.game === "runner") this.move(event.key === "ArrowLeft" ? -1 : 1);
+        if (this.game === "drop" || (!event.repeat && this.game === "runner")) this.move(event.key === "ArrowLeft" ? -1 : 1);
+      }
+      if (this.game === "drop" && ["ArrowUp", "ArrowDown", "x", "X"].includes(event.key)) {
+        event.preventDefault();
+        if (event.key === "ArrowDown") this.keys.add(event.key);
+        else if (!event.repeat) this.rotate();
       }
       if (event.code === "Space" && event.target === this.canvas) {
         event.preventDefault();
         if (this.game === "breaker") launchBreaker(this.state);
+        if (this.game === "drop" && !event.repeat) this.slam();
       }
     });
     document.addEventListener("keyup", event => this.keys.delete(event.key));
@@ -89,32 +140,45 @@ export class Arcade {
   select(game, force = false) {
     if (!GAME_INFO[game] || (!force && this.game === game)) return;
     cancelAnimationFrame(this.frame);
-    this.resolveMismatch();
     this.keys.clear();
     this.hold = 0;
     this.running = this.paused = false;
     this.game = game;
-    this.state = game === "breaker" ? createBreaker() : createRunner();
-    this.moves = this.pairs = 0;
+    this.state = this.freshState();
+    this.lastLines = 0;
+    this.soft = false;
+    this.touch = null;
     $("gameName").textContent = GAME_INFO[game].name;
     $("gameHelp").textContent = GAME_INFO[game].help;
     $("gameStatus").textContent = "PRÊT";
-    $("memoryBoard").hidden = game !== "memory";
-    this.canvas.hidden = game === "memory";
+    this.canvas.hidden = false;
+    $("dropControls").hidden = game !== "drop";
     this.canvas.setAttribute("aria-label", game === "runner"
-      ? "Douane Run. Changez de voie avec les flèches gauche et droite. Évitez les barrières."
-      : "Casse-frontière. Déplacez la raquette avec les flèches ou le doigt. Espace pour lancer.");
-    $("memoryBoard").replaceChildren();
+      ? "Douane Run. Flèches gauche et droite pour changer de voie."
+      : game === "drop" ? "FLD Drop. Flèches gauche droite pour déplacer, haut pour tourner, bas pour descendre, espace pour poser."
+      : "Casse-frontière. Flèches ou doigt pour déplacer la raquette. Espace pour lancer.");
     document.querySelectorAll("[data-game]").forEach(button => {
       const selected = button.dataset.game === game;
       button.classList.toggle("selected", selected);
       button.setAttribute("aria-pressed", String(selected));
     });
-    $("leftBtn").disabled = $("rightBtn").disabled = game === "memory";
+    $("leftBtn").disabled = $("rightBtn").disabled = false;
     $("pauseBtn").disabled = true;
     this.overlay("ZONE FRANCHE / " + GAME_INFO[game].name, GAME_INFO[game].title, GAME_INFO[game].copy, "JOUER");
     this.hud();
     this.draw();
+  }
+  freshState() {
+    return this.game === "drop" ? createDrop() : this.game === "breaker" ? createBreaker() : createRunner();
+  }
+  rotate() {
+    if (this.game !== "drop" || !this.running || this.paused || !this.active) return;
+    if (rotateDrop(this.state)) this.onSound(360);
+    this.draw();
+  }
+  slam() {
+    if (this.game !== "drop" || !this.running || this.paused || !this.active) return;
+    hardDrop(this.state); this.onSound(180); this.draw(); this.hud();
   }
   overlay(eyebrow, title, copy, action) {
     $("overlayEyebrow").textContent = eyebrow;
@@ -126,16 +190,16 @@ export class Arcade {
   }
   play() {
     if (!this.active) return;
-    if (!this.ctx && this.game !== "memory") {
-      this.notify("Le canvas n’est pas disponible dans ce navigateur. Mémoire saisie reste jouable.");
+    if (!this.ctx) {
+      this.notify("Le navigateur ne rend pas le terrain. Ouvrez le site dans Safari ou Chrome.");
       return;
     }
     const resume = this.paused;
     if (resume) this.paused = false;
     else {
-      this.state = this.game === "breaker" ? createBreaker() : createRunner();
+      this.state = this.freshState();
+      this.lastLines = 0;
       this.running = true;
-      if (this.game === "memory") this.startMemory();
       if (this.game === "breaker") launchBreaker(this.state);
     }
     $("gameOverlay").hidden = true;
@@ -146,28 +210,23 @@ export class Arcade {
     this.onSound(440);
     this.last = 0;
     this.hud();
-    if (this.game !== "memory") {
-      this.canvas.focus({preventScroll: true});
-      cancelAnimationFrame(this.frame);
-      this.frame = requestAnimationFrame(this.loop);
-    } else {
-      this.setMemoryDisabled(false);
-      $("memoryBoard").querySelector("button:not(:disabled)")?.focus({preventScroll: true});
-    }
+    if (matchMedia("(max-width: 700px)").matches) $("cabinet").scrollIntoView({block: "start", behavior: "instant"});
+    this.canvas.focus({preventScroll: true});
+    cancelAnimationFrame(this.frame);
+    this.frame = requestAnimationFrame(this.loop);
   }
   move(direction) {
     if (!this.running || this.paused || !this.active) return;
+    if (this.game === "drop") moveDrop(this.state, direction);
     if (this.game === "runner") this.state.lane = Math.max(0, Math.min(2, this.state.lane + direction));
     if (this.game === "breaker") this.state.paddle = Math.max(43, Math.min(317, this.state.paddle + direction * 25));
   }
   pause() {
     this.keys.clear();
-    this.hold = 0;
+    this.hold = 0; this.soft = false; this.touch = null;
     if (!this.running || this.paused) return;
     cancelAnimationFrame(this.frame);
     this.paused = true;
-    this.resolveMismatch();
-    if (this.game === "memory") this.setMemoryDisabled(true);
     $("gameStatus").textContent = "EN PAUSE";
     $("pauseBtn").textContent = "REPRENDRE";
     $("pauseBtn").setAttribute("aria-label", "Reprendre le jeu");
@@ -183,6 +242,15 @@ export class Arcade {
     const dt = this.last ? Math.min(.04, (now - this.last) / 1000) : 0;
     this.last = now;
     if (this.game === "runner") stepRunner(this.state, dt);
+    else if (this.game === "drop") {
+      if (this.hold) {
+        this.holdTime += dt;
+        if (this.holdTime >= .08) { this.move(this.hold); this.holdTime = 0; }
+      }
+      stepDrop(this.state, dt, this.soft || this.keys.has("ArrowDown"));
+      if (this.state.lines > this.lastLines) { this.onSound(600); this.lastLines = this.state.lines; }
+      if (this.state.lines >= 8) this.onUnlock("drop");
+    }
     else stepBreaker(this.state, dt, this.hold || Number(this.keys.has("ArrowRight")) - Number(this.keys.has("ArrowLeft")));
     this.draw();
     this.hud();
@@ -191,6 +259,9 @@ export class Arcade {
       const score = Math.floor(this.state.score);
       this.onRecord(this.game, score);
       if (this.game === "breaker" && this.state.won) this.onUnlock("breaker");
+      if (this.game === "drop") {
+        this.finish("STOCK\nSAISI.", score + " points · " + this.state.lines + " lignes expédiées. Le dépôt déborde, la douane jubile."); return;
+      }
       this.finish(this.state.won ? "FRONTIÈRE ABOLIE." : "COLIS INTERCEPTÉ.", "Score : " + score + (this.state.won ? ". Les 35 briques ont disparu." : ". Le bureau vous attend au prochain passage."));
       return;
     }
@@ -199,94 +270,125 @@ export class Arcade {
   finish(title, copy) {
     this.running = this.paused = false;
     this.keys.clear();
-    this.hold = 0;
+    this.hold = 0; this.soft = false; this.touch = null;
     cancelAnimationFrame(this.frame);
-    $("gameStatus").textContent = this.game === "memory" || this.state.won ? "TERMINÉ" : "INTERCEPTÉ";
+    $("gameStatus").textContent = this.state.won ? "TERMINÉ" : "INTERCEPTÉ";
     $("pauseBtn").disabled = true;
     this.overlay("DOSSIER SANS SUITE", title, copy, "REJOUER");
     $("playBtn").focus({preventScroll: true});
     this.onSound(220);
   }
   hud() {
-    const score = this.game === "memory" ? this.moves : Math.floor(this.state.score);
-    const scoreLabel = this.game === "memory" ? String(score).padStart(2, "0") + " COUPS" : String(score).padStart(5, "0");
+    const scoreLabel = String(Math.floor(this.state.score)).padStart(5, "0");
     if ($("gameScore").textContent !== scoreLabel) $("gameScore").textContent = scoreLabel;
-    const lives = this.game === "memory" ? this.pairs + "/8 PAIRES" : Array.from({length: this.state.lives}, () => "●").join(" ");
+    const lives = this.game === "drop" ? this.state.lines + " L / NIV " + this.state.level : Array.from({length: this.state.lives}, () => "●").join(" ");
     if ($("gameLives").textContent !== lives) {
       $("gameLives").textContent = lives;
-      $("gameLives").setAttribute("aria-label", this.game === "memory" ? this.pairs + " paires sur 8" : this.state.lives + " vies");
+      $("gameLives").setAttribute("aria-label", this.game === "drop" ? this.state.lines + " lignes, niveau " + this.state.level : this.state.lives + " vies");
     }
     if (this.game === "breaker") {
       const help = this.state.waiting && this.running ? "Balle perdue · Touchez le terrain ou espace pour relancer" : GAME_INFO.breaker.help;
       if ($("gameHelp").textContent !== help) $("gameHelp").textContent = help;
     }
   }
-  startMemory() {
-    clearTimeout(this.mismatchTimer);
-    this.flipped = [];
-    this.moves = this.pairs = 0;
-    this.deck = shuffled(["IA", "FLD", "404", "QR", "€€", "0%", "Ø", "88"].flatMap(symbol => [symbol, symbol]))
-      .map(symbol => ({symbol, matched: false, revealed: false}));
-    const board = $("memoryBoard");
-    board.replaceChildren();
-    this.deck.forEach((card, index) => {
-      const button = document.createElement("button");
-      button.className = "memory-card";
-      button.type = "button";
-      button.setAttribute("aria-label", "Carte " + (index + 1) + ", face cachée");
-      const face = document.createElement("span");
-      face.className = "card-face";
-      face.textContent = card.symbol;
-      button.append(face);
-      button.addEventListener("click", () => this.flip(index));
-      board.append(button);
-    });
-  }
-  flip(index) {
-    const card = this.deck[index];
-    if (!this.running || this.paused || card.matched || card.revealed || this.flipped.length === 2) return;
-    card.revealed = true;
-    this.renderCard(index);
-    this.onSound(330 + index * 18);
-    this.flipped.push(index);
-    if (this.flipped.length !== 2) return;
-    this.moves++;
-    const [a, b] = this.flipped;
-    if (this.deck[a].symbol === this.deck[b].symbol) {
-      this.deck[a].matched = this.deck[b].matched = true;
-      this.renderCard(a);
-      this.renderCard(b);
-      this.flipped = [];
-      this.pairs++;
-      if (this.pairs === 8) {
-        this.onRecord("memory", this.moves);
-        this.onUnlock("memory");
-        this.hud();
-        this.finish("SAISIE\nLEVÉE.", "Huit paires récupérées en " + this.moves + " coups. La mémoire n’a pas de frontière.");
+  fabric(points, type, x, y, size, ghost = false) {
+    const ctx = this.ctx, garment = GARMENTS[type];
+    const contains = (a, b) => points.some(([px, py]) => px === a && py === b);
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = garment.color;
+    ctx.strokeStyle = ghost ? "#d3b6ff" : "#120c1c";
+    ctx.lineWidth = ghost ? 1 : 1.2;
+    if (ghost) { ctx.globalAlpha = .38; ctx.setLineDash([3,3]); }
+    for (const [px, py] of points) {
+      const a = px * size, b = py * size;
+      if (!ghost) {
+        ctx.fillStyle = garment.color; ctx.fillRect(a, b, size, size);
+        ctx.fillStyle = "#ffffff16"; ctx.fillRect(a + 2, b + 2, size - 4, 2);
+        ctx.strokeStyle = "#150b2338"; ctx.setLineDash([1,2]);
+        ctx.strokeRect(a + 3, b + 3, size - 6, size - 6);
+        ctx.setLineDash([]); ctx.strokeStyle = "#160e24";
       }
-    } else this.mismatchTimer = setTimeout(() => this.resolveMismatch(), 750);
-    this.hud();
-  }
-  renderCard(index) {
-    const card = this.deck[index], button = $("memoryBoard").children[index];
-    if (!button) return;
-    button.classList.toggle("revealed", card.revealed);
-    button.classList.toggle("matched", card.matched);
-    button.disabled = card.matched || this.paused;
-    button.setAttribute("aria-label", "Carte " + (index + 1) + (card.revealed ? " : " + card.symbol + (card.matched ? ", paire trouvée" : "") : ", face cachée"));
-  }
-  resolveMismatch() {
-    clearTimeout(this.mismatchTimer);
-    if (this.flipped?.length === 2) {
-      this.flipped.forEach(index => { this.deck[index].revealed = false; this.renderCard(index); });
-      this.flipped = [];
+      ctx.beginPath();
+      if (!contains(px, py - 1)) { ctx.moveTo(a, b); ctx.lineTo(a + size, b); }
+      if (!contains(px + 1, py)) { ctx.moveTo(a + size, b); ctx.lineTo(a + size, b + size); }
+      if (!contains(px, py + 1)) { ctx.moveTo(a + size, b + size); ctx.lineTo(a, b + size); }
+      if (!contains(px - 1, py)) { ctx.moveTo(a, b + size); ctx.lineTo(a, b); }
+      ctx.stroke();
+      if (!ghost && size >= 14) {
+        ctx.strokeStyle = "#1c113c75"; ctx.lineWidth = .8;
+        ctx.beginPath();
+        if (garment.detail === "zip") {
+          ctx.moveTo(a + size / 2, b + 1); ctx.lineTo(a + size / 2, b + size - 1);
+          ctx.strokeRect(a + size / 2 - 1, b + 5, 3, 4);
+        } else if (garment.detail === "denim") {
+          ctx.moveTo(a + 4, b + 3); ctx.lineTo(a + size - 4, b + 3);
+          ctx.lineTo(a + size - 5, b + size / 2); ctx.lineTo(a + 5, b + size / 2); ctx.closePath();
+        } else if (garment.detail === "parcel") {
+          ctx.moveTo(a + size / 2, b); ctx.lineTo(a + size / 2, b + size);
+        } else if (garment.detail === "scarf" || garment.detail === "knit") {
+          for (let line = 5; line < size - 2; line += 4) {
+            ctx.moveTo(a + 3, b + line); ctx.lineTo(a + size - 3, b + line);
+          }
+        }
+        ctx.stroke();
+      }
     }
+    if (!ghost && points.length >= 3 && size >= 14) {
+      const top = Math.min(...points.map(([,y]) => y)), topRow = points.filter(([,y]) => y === top);
+      if (["tee","zip"].includes(garment.detail) && topRow.length > 1) {
+        const mid = (Math.min(...topRow.map(([x]) => x)) + Math.max(...topRow.map(([x]) => x)) + 1) / 2;
+        ctx.strokeStyle = "#180c2b"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.arc(mid * size, top * size + 1, size * .32, 0, Math.PI); ctx.stroke();
+      }
+      const [px, py] = points[Math.floor(points.length / 2)];
+      ctx.fillStyle = "#100b1e"; ctx.font = "italic bold " + Math.round(size * .39) + "px Arial";
+      ctx.textAlign = "center"; ctx.fillText("fld", (px + .5) * size, (py + .7) * size);
+    }
+    ctx.restore();
   }
-  setMemoryDisabled(paused) {
-    this.deck.forEach((card, index) => {
-      const button = $("memoryBoard").children[index];
-      if (button) button.disabled = paused || card.matched;
+  piecePoints(cells) {
+    return cells.flatMap((row, y) => row.flatMap((filled, x) => filled ? [[x,y]] : []));
+  }
+  drawDrop() {
+    const ctx = this.ctx, state = this.state, size = 20, ox = 15, oy = 36;
+    ctx.textAlign = "left"; ctx.font = "8px monospace"; ctx.fillStyle = "#b89bcf";
+    ctx.fillText("ENTREPÔT 04 / SANS INVENTAIRE", 15, 19);
+    ctx.strokeStyle = "#54376c"; ctx.strokeRect(ox - 1, oy - 1, 202, 362);
+    ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, 200, 360); ctx.clip();
+    ctx.fillStyle = "#130c1f"; ctx.fillRect(ox, oy, 200, 360);
+    ctx.strokeStyle = "#a67bdc13"; ctx.lineWidth = .5;
+    for (let x = 0; x <= DROP_COLS; x++) { ctx.beginPath(); ctx.moveTo(ox + x * size, oy); ctx.lineTo(ox + x * size, oy + 360); ctx.stroke(); }
+    for (let y = 0; y <= DROP_ROWS; y++) { ctx.beginPath(); ctx.moveTo(ox, oy + y * size); ctx.lineTo(ox + 200, oy + y * size); ctx.stroke(); }
+    const groups = new Map();
+    state.board.forEach((row, y) => row.forEach((cell, x) => {
+      if (!cell) return;
+      if (!groups.has(cell.group)) groups.set(cell.group, {type: cell.type, points: []});
+      groups.get(cell.group).points.push([x,y]);
+    }));
+    groups.forEach(group => this.fabric(group.points, group.type, ox, oy, size));
+    if (!state.over && !state.clearing.length) {
+      const piece = state.current, points = this.piecePoints(piece.cells);
+      this.fabric(points, piece.type, ox + piece.x * size, oy + landingY(state) * size, size, true);
+      this.fabric(points, piece.type, ox + piece.x * size, oy + piece.y * size, size);
+    }
+    if (state.clearing.length) {
+      ctx.fillStyle = "#e5d4ff99";
+      state.clearing.forEach(row => ctx.fillRect(ox, oy + row * size, 200, size));
+    }
+    ctx.restore();
+    ctx.fillStyle = "#d6b9ff"; ctx.font = "8px monospace"; ctx.fillText("ARRIVAGES", 235, 43);
+    state.queue.slice(0, 3).forEach((type, i) => {
+      const garment = GARMENTS[type], y = 63 + i * 75;
+      this.fabric(this.piecePoints(garment.cells), type, 238, y, 16);
+      ctx.fillStyle = "#bfaacc"; ctx.font = "7px monospace"; ctx.fillText(garment.name, 235, y + 51);
     });
+    ctx.fillStyle = "#8e749f"; ctx.font = "7px monospace"; ctx.fillText("LIGNES", 235, 308);
+    ctx.fillStyle = "#e2ccff"; ctx.font = "26px monospace"; ctx.fillText(String(state.lines).padStart(2,"0"), 233, 336);
+    ctx.fillStyle = "#8e749f"; ctx.font = "7px monospace"; ctx.fillText("NIVEAU " + state.level, 235, 356);
+    ctx.fillStyle = "#c6a1ff"; ctx.fillText(state.clearing.length ? "STOCK ÉVACUÉ" : "NE RIEN DÉCLARER", 235, 383);
+    ctx.font = "7px monospace"; ctx.fillStyle = "#a386b6"; ctx.textAlign = "center";
+    ctx.fillText("COUPE COURTE. STOCK INFINI.", 180, 417);
   }
   draw() {
     const ctx = this.ctx;
@@ -297,6 +399,7 @@ export class Arcade {
     ctx.strokeStyle = "#2b193d";
     ctx.lineWidth = 1;
     ctx.font = "9px monospace";
+    if (this.game === "drop") { this.drawDrop(); return; }
     if (this.game === "runner") {
       const state = this.state;
       ctx.setLineDash([9, 11]);

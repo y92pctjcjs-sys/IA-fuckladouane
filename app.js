@@ -1,6 +1,6 @@
-import {MatrixRain} from "./matrix.js?v=4";
-import {Arcade} from "./arcade.js?v=4";
-import {SCAN_DURATION, SCAN_STEPS, scanState, improvedRecord} from "./core.js?v=4";
+import {MatrixRain} from "./matrix.js?v=5";
+import {Arcade} from "./arcade.js?v=5";
+import {SCAN_DURATION, SCAN_STEPS, scanState, improvedRecord} from "./core.js?v=5";
 
 const $ = id => document.getElementById(id);
 const STORAGE_KEY = "fld.ia.protocol.v4";
@@ -12,7 +12,7 @@ const ACHIEVEMENTS = [
   {id: "swagistan", name: "Sans frontière", hint: "Un territoire tient dans un mot.", detail: "Visa accordé. Le pays n’a jamais demandé de passeport."},
   {id: "runner", name: "Colis introuvable", hint: "Atteignez 600 points dans Douane Run.", detail: "Le bureau cherche encore dans quelle voie vous êtes."},
   {id: "breaker", name: "Abolition du poste", hint: "Effacez les 35 briques de la frontière.", detail: "Plus de mur. Le personnel est en pause indéfinie."},
-  {id: "memory", name: "Mémoire restituée", hint: "Récupérez les huit paires saisies.", detail: "Toutes les pièces ont retrouvé leur double."}
+  {id: "drop", name: "Stock fantôme", hint: "Évacuez huit lignes dans FLD Drop.", detail: "Huit lignes de vêtements sorties sans déclaration."}
 ];
 const VALID_IDS = new Set(ACHIEVEMENTS.map(item => item.id));
 function readSaved() {
@@ -24,7 +24,7 @@ function readSaved() {
 const saved = readSaved();
 const data = {
   unlocked: new Set(Array.isArray(saved.unlocked) ? saved.unlocked.filter(id => VALID_IDS.has(id)) : []),
-  records: Object.fromEntries(["runner", "breaker", "memory"].map(id => [id, Math.max(0, Math.floor(Number(saved.records?.[id]) || 0))])),
+  records: Object.fromEntries(["runner", "breaker", "drop"].map(id => [id, Math.max(0, Math.floor(Number(saved.records?.[id]) || 0))])),
   scans: Math.min(999999, Math.max(0, Math.floor(Number(saved.scans) || 0))),
   motion: typeof saved.motion === "boolean" ? saved.motion : !matchMedia("(prefers-reduced-motion: reduce)").matches
 };
@@ -33,7 +33,7 @@ function persist() {
     // Merge another open tab's discoveries rather than erasing them with an older session.
     const latest = readSaved();
     if (Array.isArray(latest.unlocked)) latest.unlocked.filter(id => VALID_IDS.has(id)).forEach(id => data.unlocked.add(id));
-    for (const game of ["runner", "breaker", "memory"]) data.records[game] = improvedRecord(game, data.records[game], latest.records?.[game]);
+    for (const game of ["runner", "breaker", "drop"]) data.records[game] = improvedRecord(game, data.records[game], latest.records?.[game]);
     localStorage.setItem(STORAGE_KEY, JSON.stringify({...data, unlocked: [...data.unlocked]}));
   } catch { /* Session state stays usable when storage is unavailable. */ }
 }
@@ -70,8 +70,8 @@ function unlock(id) {
   notify("ARCHIVE OUVERTE / " + ACHIEVEMENTS.find(item => item.id === id).name);
 }
 function refreshRecords() {
-  ["runner", "breaker", "memory"].forEach(id => {
-    $(id + "Record").textContent = data.records[id] ? "RECORD " + data.records[id] + (id === "memory" ? " COUPS" : " PTS") : "RECORD —";
+  ["runner", "breaker", "drop"].forEach(id => {
+    $(id + "Record").textContent = data.records[id] ? "RECORD " + data.records[id] + " PTS" : "RECORD —";
   });
 }
 function record(game, score) {
@@ -157,7 +157,10 @@ function showView(view, focus = true) {
     window.scrollTo({top: 0, behavior: "instant"});
   }
 }
-document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => showView(button.dataset.view)));
+document.querySelectorAll("[data-view]").forEach(button => button.addEventListener("click", () => {
+  if (button.dataset.targetGame) arcade.select(button.dataset.targetGame);
+  showView(button.dataset.view);
+}));
 
 function stage(name) {
   $("introStage").hidden = name !== "intro";
@@ -185,10 +188,18 @@ function renderScan() {
     $("progressTrack").setAttribute("aria-valuenow", String(state.progress));
     $("swagValue").textContent = (state.ratio * 99.9).toFixed(1).padStart(4, "0");
     $("humanValue").textContent = (100 - state.progress) + "%";
+    $("scanner").style.setProperty("--scan-y", (16 + state.ratio * 67).toFixed(1) + "%");
+    $("lensCounter").textContent = String(state.progress).padStart(3,"0") + " / 100";
     $("territoryValue").textContent = state.ratio >= .52 ? "SWAGISTAN" : state.ratio >= .25 ? "EN TRANSIT" : "INCONNU";
   }
   if (scan.phase !== state.phase) {
     scan.phase = state.phase;
+    $("scanner").dataset.phase = String(state.phase);
+    $("lensMode").textContent = ["01 / MICRO-TRAME", "02 / PATRONAGE", "03 / GÉOLOCALISATION", "04 / CORRÉLATION"][state.phase];
+    $("scanReadout").textContent = ["FIBRES : SUSPECTES / ZOOM ×4", "COUTURES : 12 TRACES / COUPE COURTE", "ORIGINE : SWAGISTAN / AUCUN VISA", "ALIBI HUMAIN : REJETÉ / SCELLAGE"][state.phase];
+    const targets = [[39,68],[51,49],[53,30],[50,48]];
+    $("scanner").style.setProperty("--target-x", targets[state.phase][0] + "%");
+    $("scanner").style.setProperty("--target-y", targets[state.phase][1] + "%");
     $("phaseTitle").textContent = phaseTitles[state.phase];
     $("phaseCounter").textContent = "PHASE 0" + (state.phase + 1) + " / 04";
     $("systemStatus").textContent = ["CONTACT ÉTABLI", "COUTURES SOUS SURVEILLANCE", "TERRITOIRE NON RECONNU", "VERDICT EN PRÉPARATION"][state.phase];
@@ -217,6 +228,9 @@ function beginScan() {
   cancelAnimationFrame(scan.frame);
   scan = {running: true, elapsed: 0, last: 0, frame: 0, step: -1, progress: -1, phase: -1};
   $("logBox").replaceChildren();
+  $("inspectionCaption").textContent = "Le bureau passe vos fibres à l’interrogatoire.";
+  $("humanBtn").classList.remove("claimed");
+  $("humanBtn").textContent = "JE SUIS HUMAIN [ ? ]";
   currentSerial = "FLD-" + String(data.scans + 1).padStart(4, "0");
   $("serialLabel").textContent = currentSerial;
   $("scannerTag").textContent = "SOUS SURVEILLANCE";
@@ -235,6 +249,12 @@ function finishScan() {
   currentSerial = "FLD-" + String(data.scans).padStart(4, "0");
   reportDate = new Date().toISOString().slice(0, 10);
   $("serialLabel").textContent = currentSerial;
+  $("resultSerial").textContent = currentSerial;
+  $("resultDate").textContent = reportDate + " / SCELLÉ AU SWAGISTAN";
+  $("lensMode").textContent = "PIÈCE À CONVICTION / 001";
+  $("lensCounter").textContent = "SCELLÉ";
+  $("scanReadout").textContent = "ORIGINE SYNTHÉTIQUE / 99.8 %";
+  $("inspectionCaption").textContent = "Pièce conservée. Vous pouvez circuler.";
   $("scannerTag").textContent = "IA CONFIRMÉE";
   $("systemStatus").textContent = "DOSSIER CLASSÉ / IA CONFIRMÉE";
   stage("result");
@@ -251,6 +271,10 @@ function resetScan() {
   stage("intro");
   $("systemStatus").textContent = "EN ATTENTE DU SUJET";
   $("scannerTag").textContent = "PRÊTE À SUSPECTER";
+  $("lensMode").textContent = "FLD / OPTICAL UNIT 05";
+  $("lensCounter").textContent = "STANDBY";
+  $("scanReadout").textContent = "ACQUISITION / EN ATTENTE";
+  $("inspectionCaption").textContent = "Touchez les trois points. La veste a des choses à cacher.";
   $("scanHeading").focus({preventScroll: true});
   window.scrollTo({top: 0, behavior: "instant"});
 }
@@ -372,14 +396,20 @@ $("receiptDialog").addEventListener("close", () => {
 });
 $("downloadBtn").addEventListener("click", () => {
   // All variable content is constrained to a numeric serial and an ISO date.
-  const certificate = '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">' +
-    '<rect width="900" height="1200" fill="#08050d"/><path d="M45 45H855V1155H45Z" fill="none" stroke="#bd94ff"/>' +
-    '<g fill="#bd94ff" font-family="monospace"><text x="80" y="105" font-size="18">SWAGISTAN NETWORK / BUREAU DES ORIGINES DOUTEUSES</text>' +
-    '<text x="80" y="210" font-size="24">' + currentSerial + ' / ' + reportDate + '</text></g>' +
-    '<g fill="#f3eff8" font-family="Arial,sans-serif" font-weight="900" font-size="79"><text x="80" y="400">THIS GARMENT</text><text x="80" y="495">HAS BEEN</text><text x="80" y="590">MADE BY</text>' +
-    '<text x="70" y="830" font-size="250" fill="#bd94ff">IA.</text></g>' +
-    '<path d="M80 910H820" stroke="#bd94ff"/><g fill="#bd94ff" font-family="monospace"><text x="80" y="965" font-size="22">ORIGINE SYNTHÉTIQUE : 99.8%</text><text x="80" y="1005" font-size="18">HUMAN ALIBI : 0% / SHAME ON UR ASS</text>' +
-    '<text x="80" y="1095" font-size="16">FUCKLADOUANE® / EXPÉRIENCE SATIRIQUE</text></g></svg>';
+  const certificate = `<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200" viewBox="0 0 900 1200">
+    <defs><pattern id="barcode" width="17" height="50" patternUnits="userSpaceOnUse"><path d="M1 0V50M5 0V50M11 0V50" stroke="#24162e" stroke-width="2"/></pattern><pattern id="bars" width="12" height="50" patternUnits="userSpaceOnUse"><rect width="7" height="50" fill="#6931a3"/></pattern></defs>
+    <rect width="900" height="1200" fill="#0b0612"/>
+    <path d="M40 35H860V1150L850 1160 840 1150 830 1160 820 1150 810 1160 800 1150 790 1160 780 1150 770 1160 760 1150 750 1160 740 1150 730 1160 720 1150 710 1160 700 1150 690 1160 680 1150 670 1160 660 1150 650 1160 640 1150 630 1160 620 1150 610 1160 600 1150 590 1160 580 1150 570 1160 560 1150 550 1160 540 1150 530 1160 520 1150 510 1160 500 1150 490 1160 480 1150 470 1160 460 1150 450 1160 440 1150 430 1160 420 1150 410 1160 400 1150 390 1160 380 1150 370 1160 360 1150 350 1160 340 1150 330 1160 320 1150 310 1160 300 1150 290 1160 280 1150 270 1160 260 1150 250 1160 240 1150 230 1160 220 1150 210 1160 200 1150 190 1160 180 1150 170 1160 160 1150 150 1160 140 1150 130 1160 120 1150 110 1160 100 1150 90 1160 80 1150 70 1160 60 1150 50 1160 40 1150Z" fill="#e9e4ef"/>
+    <g font-family="monospace" fill="#261733"><text x="80" y="97" font-size="19">FLD® / PIÈCE À CONVICTION</text><text x="815" y="97" text-anchor="end" font-size="19">${currentSerial}</text></g>
+    <path d="M40 130H860M40 1005H860" stroke="#766382" stroke-dasharray="5 5"/>
+    <text x="80" y="195" font-family="monospace" fill="#715c80" font-size="17" letter-spacing="2">ORIGINE IDENTIFIÉE / DOSSIER CLASSÉ</text>
+    <g font-family="Arial,sans-serif" font-weight="900" fill="#24162f"><text x="78" y="292" font-size="73">THIS GARMENT</text><text x="78" y="374" font-size="73">HAS BEEN MADE BY</text><text x="60" y="651" font-size="290" fill="#6931a3">IA<tspan fill="#24162f">.</tspan></text></g>
+    <g transform="translate(680 510) rotate(-13)" fill="#764899" font-family="monospace" font-size="24" font-weight="bold" text-anchor="middle"><rect x="-92" y="-58" width="184" height="116" fill="none" stroke="#764899" stroke-width="5"/><text y="-8">ALIBI</text><text y="28">REFUSÉ</text></g>
+    <g font-family="monospace" font-size="17" fill="#493155"><path d="M80 710H820M80 865H820" stroke="#9782a7"/><text x="80" y="749">01 / CONSTRUCTION</text><text x="820" y="749" text-anchor="end">COUPE COURTE. DOSSIER LONG.</text><text x="80" y="797">02 / PROVENANCE</text><text x="820" y="797" text-anchor="end">MADE IN SWAGISTAN</text><text x="80" y="845">03 / ALIBI HUMAIN</text><text x="820" y="845" text-anchor="end">AUCUN TÉMOIN FIABLE.</text><text x="80" y="905" font-size="14">INDICE SYNTHÉTIQUE</text><text x="76" y="972" font-size="60" fill="#6931a3">99.8%</text></g>
+    <rect x="475" y="915" width="345" height="50" fill="url(#bars)"/>
+    <rect x="80" y="1043" width="270" height="52" fill="url(#barcode)"/>
+    <g font-family="monospace" fill="#715c80" font-size="16"><text x="400" y="1062">${reportDate}</text><text x="400" y="1090">SCELLÉ AU SWAGISTAN</text><text x="80" y="1131" font-size="13">FUCKLADOUANE® / EXPÉRIENCE SATIRIQUE / AUCUN DROIT DE DOUANE</text></g>
+  </svg>`;
   if (receiptURL) URL.revokeObjectURL(receiptURL);
   receiptURL = URL.createObjectURL(new Blob([certificate], {type: "image/svg+xml;charset=utf-8"}));
   $("receiptImage").src = receiptURL;
@@ -388,6 +418,15 @@ $("downloadBtn").addEventListener("click", () => {
   $("receiptDialog").showModal();
 });
 
+const cloud = $("fiberCloud");
+for (let y = 100; y < 287; y += 13) {
+  for (let x = 45; x < 338; x += 13) {
+    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot.setAttribute("cx", x); dot.setAttribute("cy", y);
+    dot.setAttribute("r", ((x + y) % 3 === 0) ? "1.1" : ".55");
+    cloud.append(dot);
+  }
+}
 $("serialLabel").textContent = currentSerial;
 refreshRecords();
 refreshArchives();

@@ -8,8 +8,8 @@
   <meta name="description" content="Le vêtement vous observe. Protocole IA, archives classifiées et arcade clandestine du Swagistan. Une expérience fuckladouane®.">
   <title>IA / FLD® — Bureau des origines douteuses</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2308050d'/%3E%3Ctext x='7' y='47' fill='%23bd94ff' font-family='monospace' font-size='39' font-weight='bold'%3EIA%3C/text%3E%3C/svg%3E">
-  <link rel="stylesheet" href="./styles.css?v=4">
-  <script type="module" src="./app.js?v=4"></script>
+  <link rel="stylesheet" href="./styles.css?v=5">
+  <script type="module" src="./app.js?v=5"></script>
 </head>
 <body data-motion="on">
   <a class="skip-link" href="#main">Aller au protocole</a>
@@ -38,7 +38,7 @@
 
   <main id="main">
     <section id="scanView" class="view" aria-labelledby="scanHeading">
-      <div class="section-topline"><span>PORTAIL VESTE / IA–04</span><span id="systemStatus" role="status">EN ATTENTE DU SUJET</span></div>
+      <div class="section-topline"><span>PORTAIL VESTE / IA–05</span><span id="systemStatus" role="status">EN ATTENTE DU SUJET</span></div>
       <div class="scan-layout" id="scanExperience" data-stage="intro">
         <div class="narrative">
           <div id="introStage">
@@ -69,12 +69,25 @@
           </div>
 
           <div id="resultStage" hidden>
-            <div class="eyebrow">VERDICT IRRÉVOCABLE, MAIS REJOUABLE.</div>
-            <h2 class="verdict" id="resultHeading" tabindex="-1">THIS GARMENT<br>HAS BEEN<br>MADE BY <b>IA<span>.</span></b></h2>
+            <div class="eyebrow">LE BUREAU A STATUÉ. ÇA VA DOUILLER.</div>
+            <article class="result-ticket" aria-label="Dossier de saisie du vêtement">
+              <header class="ticket-head"><span>FLD® / PIÈCE À CONVICTION</span><span id="resultSerial">FLD-0001</span></header>
+              <div class="ticket-body">
+                <div class="ticket-kicker">ORIGINE IDENTIFIÉE <i aria-hidden="true">↙</i></div>
+                <h2 class="verdict" id="resultHeading" tabindex="-1"><span>THIS GARMENT<br>HAS BEEN MADE BY</span><b>IA<span>.</span></b></h2>
+                <div class="ticket-stamp" aria-hidden="true">ALIBI<br>REFUSÉ</div>
+                <dl class="evidence-list">
+                  <div><dt>01 / CONSTRUCTION</dt><dd>COUPE COURTE. DOSSIER LONG.</dd></div>
+                  <div><dt>02 / PROVENANCE</dt><dd>MADE IN SWAGISTAN</dd></div>
+                  <div><dt>03 / TÉMOIN HUMAIN</dt><dd>AUCUN NE S’EST PRÉSENTÉ.</dd></div>
+                </dl>
+                <div class="ticket-confidence"><span>INDICE SYNTHÉTIQUE<strong>99.8<small>%</small></strong></span><div class="confidence-bars" aria-hidden="true"></div></div>
+              </div>
+              <footer class="ticket-foot"><div class="ticket-barcode" aria-hidden="true"></div><span id="resultDate"></span><span>EXPÉRIENCE SATIRIQUE / AUCUN DROIT DE DOUANE</span></footer>
+            </article>
             <p class="result-joke">Shame on ur ass 😂🫵</p>
-            <div class="verdict-strip"><span>ORIGINE SYNTHÉTIQUE</span><strong>99.8%</strong><span>HUMAN ALIBI: 0%</span></div>
             <div class="result-actions">
-              <button class="button primary" data-view="arcade">FUIR VERS L’ARCADE <span aria-hidden="true">↗</span></button>
+              <button class="button primary" data-view="arcade" data-target-game="drop">ÉCOULER LE STOCK <span aria-hidden="true">↗</span></button>
               <button class="button secondary" id="downloadBtn">GARDER LE VERDICT ↓</button>
               <button class="text-button" id="restartBtn">Contester. Refaire le scan.</button>
             </div>
@@ -83,7 +96,9 @@
 
         <div class="scanner-wrap">
           <div class="scanner-caption"><span>OBJET 001 / ZIP JACKET</span><span id="scannerTag">PRÊTE À SUSPECTER</span></div>
-          <div class="scanner" id="scanner">
+          <div class="scanner" id="scanner" data-phase="0">
+            <div class="lens-header" aria-hidden="true"><span id="lensMode">FLD / OPTICAL UNIT 05</span><span id="lensCounter">STANDBY</span></div>
+            <div class="origin-map" aria-hidden="true"><svg viewBox="0 0 400 300"><path d="M90 141 115 97 148 110 166 61 203 81 214 47 260 66 253 101 294 114 307 144 278 165 295 200 254 229 221 213 193 246 163 219 125 231 103 193 74 173Z"/><path d="M90 141 166 61 278 165 125 231 214 47M103 193 260 66 221 213 115 97 295 200"/><circle cx="193" cy="145" r="65"/><circle cx="193" cy="145" r="99"/><text x="146" y="163">SWAGISTAN</text></svg></div>
             <div class="coordinate top-left">X: 048<br>Y: 026</div>
             <div class="coordinate bottom-right">FLD–S/N<br><span id="serialLabel">0001</span></div>
             <div class="target-cross cross-one" aria-hidden="true"></div><div class="target-cross cross-two" aria-hidden="true"></div>
@@ -95,9 +110,10 @@
               <defs>
                 <pattern id="fabricGrid" width="9" height="9" patternUnits="userSpaceOnUse"><path d="M9 0H0V9" fill="none" stroke="#ab7cf8" stroke-opacity=".17" stroke-width=".5"/></pattern>
                 <linearGradient id="jacketFill" x1="0" x2="1"><stop stop-color="#180d29"/><stop offset=".5" stop-color="#29143f"/><stop offset="1" stop-color="#120b20"/></linearGradient>
+                <clipPath id="garmentMask"><use href="#garmentOutline"/></clipPath>
               </defs>
               <g class="garment-body">
-                <path class="jacket-fill" d="M151 85 123 95 89 109Q80 113 77 124L43 267 83 279 115 174 116 263Q190 277 264 263L265 174 297 279 337 267 303 124Q300 113 291 109L257 95 229 85Z"/>
+                <path id="garmentOutline" class="jacket-fill" d="M151 85 123 95 89 109Q80 113 77 124L43 267 83 279 115 174 116 263Q190 277 264 263L265 174 297 279 337 267 303 124Q300 113 291 109L257 95 229 85Z"/>
                 <path class="jacket-grid" d="M151 85 123 95 89 109Q80 113 77 124L43 267 83 279 115 174 116 263Q190 277 264 263L265 174 297 279 337 267 303 124Q300 113 291 109L257 95 229 85Z"/>
                 <path class="jacket-fill hood" d="M151 88Q130 72 147 45Q161 26 190 27Q219 26 233 45Q250 72 229 88L213 106H167Z"/>
                 <path d="M151 88Q163 60 190 59Q217 60 229 88M167 106Q190 121 213 106M190 111V271M185 116V267M116 251Q190 264 264 251M121 251V269M128 254V271M135 256V272M142 257V273M149 258V274M231 258V274M238 257V273M245 256V272M252 254V271M259 252V269"/>
@@ -111,13 +127,21 @@
                 <rect x="131" y="231" width="18" height="13" rx="1" class="label-patch"/>
                 <path d="M134 234H146M134 237H142M134 240H146" class="patch-lines"/>
               </g>
+              <g class="scan-evidence" clip-path="url(#garmentMask)" aria-hidden="true">
+                <rect class="xray-wash" x="35" y="85" width="310" height="210"/>
+                <g id="fiberCloud"></g>
+                <path class="scan-seam" d="M118 172 124 119M262 172 256 119M143 188 132 224 159 222M237 188 248 224 221 222M116 251Q190 264 264 251M190 111V278M48 248 89 262M291 262 332 248"/>
+                <path class="scan-weave" d="M40 130H340M40 155H340M40 180H340M40 205H340M40 230H340M40 255H340M85 100V285M110 100V285M135 100V285M160 100V285M185 100V285M210 100V285M235 100V285M260 100V285M285 100V285"/>
+              </g>
               <g class="measure-lines" aria-hidden="true"><path d="M104 108H94M99 108V279M94 279H104M118 303H263M118 298V308M263 298V308"/><text x="113" y="325">CROPPED FIT / LONG SLEEVES</text></g>
             </svg>
+            <div class="lens-reticle" aria-hidden="true"><span></span><i></i><b>+</b></div>
+            <div class="scan-readout" aria-hidden="true"><span id="scanReadout">ACQUISITION / EN ATTENTE</span><div class="signal-trace"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
             <button class="hotspot hotspot-label" data-seam="label" aria-label="Inspecter l’étiquette"><span>01</span></button>
             <button class="hotspot hotspot-chest" data-seam="chest" aria-label="Inspecter la poitrine"><span>02</span></button>
             <button class="hotspot hotspot-hem" data-seam="hem" aria-label="Inspecter l’ourlet court"><span>03</span></button>
             <div class="inspection-caption" id="inspectionCaption" role="status">Touchez les trois points. La veste a des choses à cacher.</div>
-            <div class="verdict-stamp" aria-hidden="true">IA<br><small>CONFIRMED</small></div>
+            <div class="verdict-stamp" aria-hidden="true">IA<br><small>ORIGIN CONFIRMED</small><strong>99.8%</strong></div>
           </div>
           <div class="scanner-footer"><span><i class="status-dot"></i> AUCUNE CAMÉRA NÉCESSAIRE</span><span id="seamCount">COUTURES 0/3</span></div>
         </div>
@@ -132,20 +156,24 @@
         <div class="game-menu" role="group" aria-label="Choisir un jeu">
           <button class="game-card selected" data-game="runner" aria-pressed="true"><span class="game-index">01 / ESQUIVE</span><strong>DOUANE<br>RUN</strong><span>Trois voies. Zéro déclaration.</span><b class="record" id="runnerRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
           <button class="game-card" data-game="breaker" aria-pressed="false"><span class="game-index">02 / CASSE-BRIQUES</span><strong>CASSE<br>FRONTIÈRE</strong><span>Démanteler le poste de contrôle.</span><b class="record" id="breakerRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
-          <button class="game-card" data-game="memory" aria-pressed="false"><span class="game-index">03 / MÉMOIRE</span><strong>MÉMOIRE<br>SAISIE</strong><span>Huit paires avant l’oubli.</span><b class="record" id="memoryRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
+          <button class="game-card" data-game="drop" aria-pressed="false"><span class="game-index">03 / STOCK INFINI</span><strong>FLD<br>DROP</strong><span>Faites disparaître les lignes.</span><b class="record" id="dropRecord">RECORD —</b><span class="game-arrow" aria-hidden="true">↗</span></button>
         </div>
         <div class="cabinet" id="cabinet">
           <div class="cabinet-top"><span id="gameName">DOUANE RUN</span><span id="gameStatus" role="status">PRÊT</span></div>
           <div class="game-hud"><span id="gameScore">00000</span><span id="gameLives" aria-label="3 vies">● ● ●</span></div>
           <div class="playfield">
             <canvas id="gameCanvas" width="360" height="430" tabindex="0" aria-label="Douane Run. Changez de voie avec les flèches gauche et droite. Évitez les barrières."></canvas>
-            <div id="memoryBoard" class="memory-board" hidden aria-label="Cartes de Mémoire saisie"></div>
             <div id="gameOverlay" class="game-overlay"><span id="overlayEyebrow">CONTRÔLE NON AUTORISÉ</span><h3 id="overlayTitle">PASSEZ<br>ENTRE LES LIGNES.</h3><p id="overlayCopy">Flèches, boutons ou toucher une voie.<br>Visez les losanges. Évitez les barrières.</p><button class="button primary" id="playBtn">JOUER <span aria-hidden="true">↗</span></button></div>
           </div>
           <div class="cabinet-controls">
             <button id="leftBtn" class="direction-button" aria-label="Aller à gauche">←</button>
             <button id="pauseBtn" class="pause-button" aria-label="Mettre le jeu en pause" disabled>PAUSE</button>
             <button id="rightBtn" class="direction-button" aria-label="Aller à droite">→</button>
+          </div>
+          <div class="drop-controls" id="dropControls" hidden>
+            <button id="rotateBtn" aria-label="Tourner le vêtement"><b aria-hidden="true">↻</b> TOURNER</button>
+            <button id="softBtn" aria-label="Descendre plus vite"><b aria-hidden="true">↓</b> DESCENDRE</button>
+            <button id="slamBtn" aria-label="Poser immédiatement"><b aria-hidden="true">⇓</b> POSER</button>
           </div>
           <p id="gameHelp" class="game-help">3 vies · Touchez une voie ou utilisez ← →</p>
         </div>

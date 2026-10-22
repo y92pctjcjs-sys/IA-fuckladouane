@@ -1,50 +1,42 @@
-# Validation de la refonte IA / FLD v4
+# Validation IA / FLD v5 — 22 octobre 2026
 
-Contrôles effectués le 22 octobre 2026, sur le code de cette branche.
+## Changements
 
-## Contrôles automatiques
+Memory remplacé par FLD Drop. Silhouettes de vêtements sur grille 10 × 18, rotation avec dégagement près des murs et du sol, arrivée par lots mélangés de sept, pose fantôme, pose immédiate, descente accélérée, pause, lignes, combos, niveaux et record local. Le scan conserve 16,2 secondes actives mais change visuellement à chacune de ses quatre phases. Verdict et reçu SVG présentés comme pièce à conviction.
 
-- Vérification de syntaxe des quatre modules JavaScript : réussie.
-- 14 tests Node : réussis.
-- Couverture des règles : bornes et seuils du scan, mélange des huit paires, voie libre garantie, collisions de la course, invulnérabilité, arrêt après fin de partie, rebond de raquette, destruction des briques, victoire, perte des trois vies, rebond sur mur, limites de raquette et sens des records.
-- Diff sans erreur d’espacement.
-- CNAME existant conservé. Les deux fichiers WAV existants restent inchangés.
+## Vérification automatique
 
-## Contrôles navigateur
+- Syntaxe des cinq modules JavaScript validée.
+- 28 tests Node réussis : scan, course, casse-briques, records et moteur FLD Drop.
+- Drop : ordre des arrivages, masse conservée, pose exacte, rotations, dégagement mur/sol, collision bloquée sans mutation, dégagement de quatre lignes, suppression de deux lignes sans perte des autres, délai de fixation, limite de réinitialisation, descente accélérée sans téléportation, combo, changement de niveau, débordement et arrêt définitif.
+- Fichiers originaux CNAME et sons inchangés.
 
-Prévisualisation HTTP du code source dans Chrome ; formats mobiles reproduits dans des cadres de largeur 320, 390 et 768 px.
+## Vérification navigateur
 
-| Parcours | Résultat observé |
+Chrome de prévisualisation ; cadres de largeur 320, 390 et 768 px.
+
+| Parcours | Résultat |
 | --- | --- |
-| Intro / veste | Veste courte à manches longues ; pluie de chiffres visible |
-| Trois points de la veste | Trois inspections et archive débloquée |
-| Scan complet mobile | Progression jusqu’au verdict final |
-| Alibi humain | Réponse satirique et archive débloquée |
-| Navigation pendant un jeu | Partie mise en pause ; reprise explicite |
-| Douane Run | Lancement, boutons de direction, pause et reprise |
-| Casse-frontière | Lancement, commandes clavier, pause |
-| Mémoire saisie | 16 cartes ; pause pendant un échec ; fin complète en 9 coups |
-| Record de mémoire | 9 coups affichés et retrouvés après rechargement |
-| Commandes SWAGISTAN / OMERTA | Réponses et archives débloquées |
-| Texte ressemblant à du HTML dans le terminal | Affiché comme texte ; aucune image injectée |
-| Cinq pressions sur le sceau | Archive Omerta et message secret |
-| Mouvement réduit simulé | FLUX désactivé au chargement |
-| Stockage bloqué simulé | Scan, archives et bascule de mouvement restent utilisables |
-| Son | Élément audio chargé, prêt et en lecture après activation |
-| Reçu | Fenêtre de prévisualisation et image SVG 900 × 1200 chargée |
-| Largeurs 320 / 390 / 768 | Aucun débordement horizontal dans les trois rubriques |
+| Scan complet | Quatre phases et arrivée au nouveau verdict |
+| Scan mobile 320 / 390 | Aucun débordement ; verdict atteint |
+| Verdict 320 / 390 / 768 | Reçu lisible, aucune largeur débordante |
+| Bouton Écouler le stock | Ouvre directement FLD Drop |
+| FLD Drop | Rotation, gauche/droite, pose par bouton et clavier, score |
+| Descente | Bouton fonctionnel, accélération et pose |
+| Pause / reprise | Score conservé ; commandes suspendues |
+| Navigation pendant Drop | Retour à une partie en pause, reprise explicite |
+| Fin de partie | Stock saisi ; record de 134 points enregistré puis retrouvé après rechargement |
+| Arcade 320 / 390 / 768 | Aucun débordement horizontal |
+| Mouvement réduit et stockage bloqué | FLUX OFF initial ; verdict, reçu et Drop utilisables en session |
+| Reçu SVG | Prévisualisation chargée, 900 × 1200 px |
 
-## Limites de ces contrôles
+## Limites
 
-- Ce navigateur de prévisualisation n’est pas Safari iOS. Le contrôle final sur un véritable iPhone reste à faire.
-- Le lien de téléchargement du reçu est présent et pointe vers le SVG généré. Le navigateur de test ne remonte pas d’événement de téléchargement : la récupération du fichier sur Safari n’est pas déclarée vérifiée.
-- Les moteurs des jeux sont testés automatiquement. La victoire au casse-briques et un score de 600 à la course n’ont pas été joués manuellement dans le navigateur de test.
-- Aucun déploiement sur la branche main ni changement de DNS n’a été effectué pendant ces contrôles.
+- Aucun test sur un véritable Safari iPhone ; les commandes tactiles ont été actionnées dans Chrome et les gestes restent à confirmer sur l’appareil réel.
+- Le SVG est généré et chargé correctement. Le téléchargement dans Fichiers sur iOS n’est pas déclaré vérifié.
+- Les dégagements de lignes et le seuil d’archive sont couverts par le moteur testé ; aucune partie manuelle de huit lignes n’a été accomplie.
+- Un clic dans le cadre mobile du navigateur distant a expiré pendant une longue série d’actions. L’interface restait jouable, et la même partie a été terminée au clavier avec un record sauvegardé.
 
-## Publication
+## Publication et retour arrière
 
-La refonte est destinée à la branche main et conserve le domaine du QR et les sons existants. Une sauvegarde de la version précédente est disponible sur backup/ia-before-v4-20261022, au commit acccac45f1713d7faa7d279b6e99f637712a1dad.
-
-Le blocage initial HTTP 403 de l’intégration a été résolu par l’installation de l’application GitHub sur le compte propriétaire. La publication utilise un commit enfant de la version précédente et une mise à jour de main sans réécriture de son historique.
-
-Après déploiement, tester depuis le QR de la veste une partie, le son et l’enregistrement du reçu sur un véritable Safari iPhone.
+Publication sur main par commit enfant de 00f11f31933a7532379f16a98821a43d9a1f3dd6, sans changement de domaine. Le QR existant reste valable. Les ressources de cette version portent ?v=5. La V4 demeure dans l’historique Git et sur la sauvegarde backup/ia-before-v5-20261022.
