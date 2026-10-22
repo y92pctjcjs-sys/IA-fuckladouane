@@ -1,0 +1,28 @@
+{
+  "browser": "Chromium 153 / software GL; no claim of iPhone performance",
+  "checks": [
+    "Garage creates a real WebGL context",
+    "Switching design updates model and specifications",
+    "Night lighting toggles independently",
+    "Dragging changes the actual rendered viewpoint",
+    "No horizontal overflow at 390×844",
+    ".selector stays reachable at 390×844",
+    ".toolbar stays reachable at 390×844",
+    ".back stays reachable at 390×844",
+    "No horizontal overflow at 844×390",
+    ".selector stays reachable at 844×390",
+    ".toolbar stays reachable at 844×390",
+    ".back stays reachable at 844×390",
+    "No horizontal overflow at 320×700",
+    ".selector stays reachable at 320×700",
+    ".toolbar stays reachable at 320×700",
+    ".back stays reachable at 320×700",
+    "The course menu exposes the garage",
+    "A real race starts with the new FLD mesh",
+    "The integrated game still pauses",
+    "The QR landing page loads no vehicle or 3D engine assets",
+    "No JavaScript, WebGL or missing-resource errors",
+    "The garage offers a return link when WebGL is unavailable"
+  ],
+  "errors": []
+}

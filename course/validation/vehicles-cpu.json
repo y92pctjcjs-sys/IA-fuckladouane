@@ -1,0 +1,74 @@
+{
+  "kind": "CPU_ONLY_NOT_GPU_OR_IPHONE",
+  "routeMetres": 13000,
+  "runs": [
+    {
+      "hz": 30,
+      "boost": false,
+      "won": true,
+      "time": 273.96666666658183,
+      "health": 67,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 389
+    },
+    {
+      "hz": 60,
+      "boost": false,
+      "won": true,
+      "time": 273.96666666658183,
+      "health": 67,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 420
+    },
+    {
+      "hz": 144,
+      "boost": false,
+      "won": true,
+      "time": 273.96666666658183,
+      "health": 67,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 281
+    },
+    {
+      "hz": 30,
+      "boost": true,
+      "won": true,
+      "time": 270.5833333332516,
+      "health": 78,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 372
+    },
+    {
+      "hz": 60,
+      "boost": true,
+      "won": true,
+      "time": 270.5833333332516,
+      "health": 78,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 323
+    },
+    {
+      "hz": 144,
+      "boost": true,
+      "won": true,
+      "time": 270.5833333332516,
+      "health": 78,
+      "drifts": 0,
+      "sectors": 5,
+      "cpuMs": 302
+    }
+  ],
+  "scene": {
+    "initialBuildMs": 256,
+    "twoTraversalsCpuMs": 679,
+    "maxVisibleMeshes": 332,
+    "maxLiveGeometry": 163,
+    "maxChunks": 10,
+    "remainingSharedGeometryAfterChunkDisposal": 89
+  }
+}

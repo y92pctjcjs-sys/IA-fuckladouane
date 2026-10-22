@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b12"><meta name="description" content="Les deux voitures originales de la course FLD, en 3D : 89 Nightrunner et D-89 Interception.">
+<title>FLD® — GARAGE / SWAGISTAN MOTOR CLUB</title>
+<link rel="icon" href="data:,"><link rel="stylesheet" href="./garage.css"><script type="module" src="./garage.js"></script>
+</head>
+<body>
+<canvas id="garage" tabindex="0" aria-label="Voiture 3D. Glissez pour tourner, pincez pour zoomer. Au clavier, utilisez les flèches et les touches plus ou moins."></canvas>
+<header><a class="wordmark" href="../course.html">fld<sup>®</sup><span>SWAGISTAN<br>MOTOR CLUB</span></a><a class="back" href="../course.html">RETOUR À LA COURSE ↗</a></header>
+<main>
+<div class="edition">ATELIER 89 / SÉRIE 001 <span>VÉHICULES 3D</span></div>
+<nav class="selector" aria-label="Choisir le véhicule"><button data-kind="fld" aria-pressed="true"><span>01</span> fld® / NIGHTRUNNER</button><button data-kind="cop" aria-pressed="false"><span>02</span> DOUANE / INTERCEPTION</button></nav>
+<section class="description" aria-live="polite"><p class="kicker" id="role">ORIGINE NON DÉCLARÉE</p><h1 id="model">89<br>NIGHTRUNNER<span>fld®</span></h1><p id="copy">Un coupé en fuite. Carrosserie prune, ailes larges, jantes polies, livrée acide. Direction : le Swagistan.</p><dl><div><dt>LONGUEUR</dt><dd id="length">4,15 <small>M</small></dd></div><div><dt>LARGEUR</dt><dd>2,10 <small>M</small></dd></div><div><dt>EMPATTEMENT</dt><dd>2,52 <small>M</small></dd></div></dl></section>
+<div class="detail"><b id="detailNumber">01 / 02</b><span id="detailText">TRIBAL FLD® / KIT LARGE / 7 BRANCHES</span></div>
+<section class="toolbar" aria-label="Réglages de la vue"><div class="views" aria-label="Angle de vue"><button data-view="front" aria-pressed="true">¾ AVANT</button><button data-view="rear" aria-pressed="false">¾ ARRIÈRE</button><button data-view="side" aria-pressed="false">PROFIL</button></div><div class="toggles"><button id="lighting" aria-pressed="false">VUE DE NUIT</button><button id="rotate" aria-pressed="true">ROTATION 360°</button></div></section>
+<p class="gesture">GLISSER POUR TOURNER <span>·</span> PINCER POUR ZOOMER</p>
+</main>
+<aside id="unavailable" hidden><h2>LE GARAGE EST FERMÉ.</h2><p>La vue 3D demande WebGL. Le protocole FLD reste accessible.</p><a href="../course.html">RETOUR À LA COURSE ↗</a></aside>
+<footer><span>RÉPUBLIQUE DU SWAGISTAN</span><span>RIEN À DÉCLARER. TOUT À MONTRER.</span><a href="./credits.html">RÉFÉRENCES ↗</a></footer>
+</body>
+</html>

@@ -1,6 +1,8 @@
 # Crédits 3D et réutilisation
 
-## Modèle de véhicule
+## Modèle du trafic civil
+
+Depuis la mise à jour des véhicules du 23 octobre 2026, cette géométrie et ses roues ne servent qu’au trafic civil. Le coupé FLD et les deux variantes de DOUANE sont des géométries originales, décrites dans [VEHICLES.md](VEHICLES.md). Le logo tribal FLD vient du fichier de marque déjà publié par le propriétaire ; il n’a pas été redessiné. Les références visuelles consultées ne sont pas des sources de géométrie importée.
 
 **Classic Muscle car — Alexus16**
 
