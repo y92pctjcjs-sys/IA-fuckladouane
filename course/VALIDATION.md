@@ -91,3 +91,13 @@ Sur la prévisualisation de la branche, puis sur Safari iPhone accessible :
 ## Retour arrière
 
 Aucune action nécessaire avant fusion : le domaine public sert toujours main. Après une intégration ultérieure approuvée, revert du merge (`git revert -m 1 SHA_DU_MERGE`) ou du squash (`git revert SHA_DU_SQUASH`), puis publication par GitHub Pages existant. Référence de départ : `ed6d9f01fbc3474a74010b00ce15c94ef35826f5`. Ne pas faire de reset forcé, modifier CNAME ou effacer le stockage. Les nouvelles clés sont sans effet sur la version précédente.
+
+## Livraison et hébergement de test
+
+PR de brouillon : https://github.com/y92pctjcjs-sys/IA-fuckladouane/pull/2. Le code testé a été poussé sous le commit `250d68b099a2e94e5b3ad45cf38dc67eb932d139` ; l’arbre Git distant a été comparé à l’arbre local testé. Les éventuels commits suivants de cette livraison ne changent que ce rapport.
+
+Contrôles d’interface complémentaires après les essais ci-dessus : écran INTERCEPTÉ obtenu, résultat romantique et souvenir AMOUR NON DÉCLARÉ affichés dans la copie locale de diagnostic. Ces présentations utilisent uniquement les moyens de test exclus du livrable et ne constituent toujours pas une validation 3D.
+
+L’hébergement de test Vercel n’est pas livré comme un lien jouable : le premier envoi d’un nouveau projet a été classé `production`, y compris sur une tentative portant `target: staging`. Les projets de test ont été mis en pause. Le contrôle automatique d’approbation a ensuite explicitement rejeté une réactivation, au motif qu’elle rétablirait un déploiement classé production malgré la restriction de l’utilisateur. Aucun contournement de ce refus n’est utilisé. Le mode de test par serveur HTTP depuis la branche reste complet et autonome.
+
+Ressources de test laissées désactivées : `fld-swagistan-review-13k` (`prj_PoTi7mlC0mqP7UGjE33pimUZByjn`) et `fld-swagistan-staging-13k` (`prj_fESLbuLfGWmvEmZ0v4ltOzqvnQGr`). Elles n’ont aucun domaine personnalisé ni raccord au QR. Une éventuelle autorisation ultérieure devrait viser explicitement la réactivation d’une instance de test isolée malgré l’étiquette Vercel production ; elle ne donnerait pas autorisation de fusionner main ou de publier GitHub Pages.
