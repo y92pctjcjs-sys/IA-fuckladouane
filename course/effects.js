@@ -2,8 +2,8 @@
 // Copyright 2021 pmdrs, contributors. License: licenses/pmndrs-MIT.txt.
 // Ported to vanilla Three.js, fixed simulation time, bounded reusable pools and FLD colors.
 import * as T from './vendor/three.module.min.js';
-import {sample} from './track.js';
-import {softTexture} from './materials.js';
+import {sample} from './track.js?v=pursuit3';
+import {softTexture} from './materials.js?v=pursuit3';
 export function createDrivingEffects(scene,reduced=false){
   const o=new T.Object3D(),v=new T.Vector3(),q=new T.Quaternion(),zero=new T.Matrix4().makeScale(0,0,0);
   const marks=new T.InstancedMesh(new T.PlaneGeometry(.23,1.4).rotateX(-Math.PI/2),new T.MeshBasicMaterial({color:'#07080d',transparent:true,opacity:.66,depthWrite:false}),160);

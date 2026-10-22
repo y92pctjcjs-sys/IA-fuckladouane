@@ -7,8 +7,8 @@
 <meta name="description" content="Treize kilomètres jusqu’au Swagistan. Une voiture FLD. Rien à déclarer aux poursuivants. Course arcade 3D indépendante.">
 <title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="./course/style.css">
-<script type="module" src="./course/boot.js"></script>
+<link rel="stylesheet" href="./course/style.css?v=pursuit3">
+<script type="module" src="./course/boot.js?v=pursuit3"></script>
 </head>
 <body>
 <canvas id="world" aria-label="Circuit 3D nocturne vers le Swagistan"></canvas>
@@ -17,16 +17,16 @@
 <section id="hud" class="hud" hidden aria-label="Tableau de bord">
 <div class="route"><span id="sector">01 / BUREAU DES ORIGINES DOUTEUSES</span><strong id="time">0:00.00</strong><div class="route-track" id="routeTrack"><i id="progress"></i></div><small id="remaining">SWAGISTAN / 13,0 KM</small></div>
 <div class="telemetry"><div class="speed"><strong id="speed">000</strong><span>KM/H</span></div><div class="meters"><label for="nitro">NITRO <b id="nitroValue">100</b></label><meter id="nitro" min="0" max="100" value="100"></meter><label for="health">RÉSISTANCE <b id="healthValue">100</b></label><meter id="health" min="0" max="100" value="100"></meter></div></div>
-<div class="pursuit"><span>DOUANE <b id="pressureValue">0%</b></span><meter id="pressure" min="0" max="100" value="0"></meter></div>
+<div class="pursuit"><span>DOUANE <b id="pressureValue">0%</b></span><meter id="pressure" min="0" max="100" value="0"></meter><div class="rear-radar" role="img" aria-label="Position des douaniers proches derrière la voiture"><i class="radar-player"></i><i id="copDot0" hidden></i><i id="copDot1" hidden></i><i id="copDot2" hidden></i></div><small id="rearThreat">RÉTRO / LIBRE</small></div>
 <p id="alert" class="alert" role="status"></p>
 </section>
 <main id="overlay" class="overlay">
 <section id="menu" class="panel menu">
-<div class="eyebrow">FLD® / ORIGINE NON DÉCLARÉE / PARCOURS 02</div>
+<div class="eyebrow">FLD® / RECHERCHÉ / PARCOURS 03</div>
 <h1>FUITE<br>DOUANIÈRE<span>SWAGISTAN MOTOR CLUB</span></h1>
 <p class="intro">Le protocole dit : MADE IN SWAGISTAN.<br>Il reste à retrouver l’origine de la veste.</p>
 <div class="race-meta"><span>13 KM<br><b>ROUTE DE NUIT</b></span><span>4–6 MIN<br><b>AUCUNE FORMALITÉ</b></span><span>01 AUTO<br><b>fld® / 89</b></span></div>
-<p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Glissez à gauche. Drift et nitro à droite.</p>
+<p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Patrouilles et douanes banalisées. Gardez de la nitro.</p>
 <button id="start" class="primary">PRENDRE LA ROUTE <span>↗</span></button>
 <button id="menuHelp" class="text-button">VOIR LES COMMANDES</button>
 <a class="credits-link" href="./course/garage.html">EXAMINER LES VOITURES / GARAGE 3D ↗</a>
@@ -34,7 +34,16 @@
 <a class="credits-link" href="./course/credits.html" target="_blank" rel="noopener">SOURCES & MUSIQUE ↗</a>
 </section>
 <section id="pausePanel" class="panel centered" hidden><div class="eyebrow">LE TEMPS NE VOUS CONTRÔLE PLUS.</div><h2>EN PAUSE<span>LA DOUANE AUSSI.</span></h2><p>La simulation, le chronomètre et le son sont suspendus.</p><button id="resume" class="primary">REPRENDRE ↗</button><button id="pauseHelp" class="text-button">COMMANDES</button><button id="pauseSettings" class="text-button">SON & CONDUITE</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
-<section id="results" class="panel centered" hidden><div class="eyebrow" id="resultKicker">DOSSIER DE FUITE</div><h2 id="resultTitle">FRONTIÈRE<br>FRANCHIE.</h2><p id="resultCopy"></p><dl class="result-grid"><div><dt>CHRONO</dt><dd id="resultTime"></dd></div><div><dt>SCORE</dt><dd id="resultScore"></dd></div><div><dt>RÉSISTANCE</dt><dd id="resultHealth"></dd></div><div><dt>DRIFTS VALIDÉS</dt><dd id="resultDrifts"></dd></div></dl><p id="bestResult" class="record"></p><p id="souvenir" class="souvenir" hidden>✦ AMOUR NON DÉCLARÉ / SOUVENIR DÉBLOQUÉ</p><button id="replay" class="primary">REPRENDRE LA FUITE ↗</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
+<section id="results" class="panel centered result-panel" tabindex="-1" hidden>
+ <div class="eyebrow" id="resultKicker">DOSSIER DE FUITE</div><div id="resultRules" class="result-rules"></div>
+ <h2 id="resultTitle">FRONTIÈRE<br>FRANCHIE.</h2>
+ <div class="result-badge"><b id="resultRank"></b><span id="resultBadge"></span></div>
+ <div class="result-score"><span>SCORE DE FUITE</span><strong id="resultScore"></strong></div>
+ <dl class="result-grid"><div><dt>CHRONO</dt><dd id="resultTime"></dd></div><div><dt>RÉSISTANCE</dt><dd id="resultHealth"></dd></div><div><dt>PASSAGES AU RAS</dt><dd id="resultNearMisses"></dd></div><div><dt>ÉCHAPPÉES</dt><dd id="resultEscapes"></dd></div></dl><p class="result-drifts">DRIFTS VALIDÉS / <b id="resultDrifts"></b></p>
+ <p id="resultCopy"></p><p id="bestResult" class="record"></p><p id="souvenir" class="souvenir" hidden>✦ AMOUR NON DÉCLARÉ / SOUVENIR DÉBLOQUÉ</p>
+ <button id="proof" class="primary proof-button" hidden>GARDER LA PREUVE ↗</button><p id="proofStatus" class="record" aria-live="polite" hidden></p>
+ <button id="replay" class="primary">REPRENDRE LA FUITE ↗</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a>
+</section>
 <section id="failure" class="panel centered" hidden><div class="eyebrow">MOTEUR INDISPONIBLE</div><h2>LA ROUTE<br>EST FERMÉE.</h2><p id="failureMessage">Ce navigateur ne fournit pas de contexte WebGL. Essayez avec l’accélération graphique active.</p><a class="primary" href="./index.html">RETOUR AU PROTOCOLE ↗</a></section>
 </main>
 <div id="countdown" class="countdown" aria-live="assertive" hidden>3</div>
@@ -43,18 +52,21 @@
  <div class="steering-zone"><div data-steering-pad role="group" aria-label="Direction analogique : glissez le pouce à gauche ou à droite" class="steering-pad"><span class="pad-line"></span><i class="stick"></i><span class="pad-label">← GLISSER →</span></div><div class="steering-buttons"><button data-control="left" aria-label="Tourner à gauche">←</button><button data-control="right" aria-label="Tourner à droite">→</button></div></div>
  <div class="actions"><button data-control="brake" class="brake">FREIN</button><button data-control="drift" class="drift">DRIFT</button><button data-control="nitro" class="nitro">NITRO ↗</button></div>
 </div>
-<dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Le signal de barrage tient compte de votre vitesse et annonce au moins trois secondes de trajectoire. La voie ouverte est indiquée ; gardez les yeux sur la route.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>Glisser à gauche / boutons</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + pouce gauche</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse. Relâchez-le pour reprendre l’adhérence. Un drift propre recharge le nitro. Freinez sans tourner pour ralentir franchement.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir avant l’interception. Une collision seule ne vous arrête pas.</p><p>Deux contacts suffisent : direction à gauche, une action à droite. Dans RÉGLAGES, vous pouvez choisir une direction par boutons et ajuster la sensibilité. Le portrait est jouable ; le paysage ouvre la vue. Son désactivé au départ ; activez-le avec SON OFF. Quitter l’onglet met le jeu en pause et exige une reprise explicite.</p><button class="primary">COMPRIS ↗</button></form></dialog>
+<dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Le signal annonce au moins trois secondes de trajectoire et indique le côté ouvert à l’écran.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>Pouce gauche / boutons</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + pouce gauche</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse et recharge la nitro. Relâchez-le pour reprendre l’adhérence. Gardez une réserve pour décrocher les poursuivants. Les véhicules banalisés roulent parmi les civils : leurs feux bleus révèlent la douane et font monter la pression. Leurs attaques commencent après une phase d’approche.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir. Une collision seule ne vous arrête pas. Une victoire donne un rang C à S selon le score et la résistance ; les passages au ras, échappées et drifts propres rapportent des points, avec des bonus plafonnés.</p><p>Deux contacts suffisent : direction à gauche, une action à droite. RÉGLAGES permet les boutons et la sensibilité, ainsi que la coupure du moteur sans retirer musique, sirènes et autres bruitages. Le portrait reste jouable. Activez le son explicitement ; quitter l’onglet met en pause et exige une reprise.</p><button class="primary">COMPRIS ↗</button></form></dialog>
 <dialog id="preferences" aria-labelledby="preferencesTitle"><form method="dialog"><button class="close" aria-label="Fermer les réglages">FERMER ×</button><div class="eyebrow">SWAGISTAN NETWORK / RÉCEPTEUR</div><h2 id="preferencesTitle">À VOTRE<br>MESURE.</h2>
  <p id="audioStatus">Le son reste silencieux jusqu’à votre activation avec SON.</p>
  <label class="setting" for="masterVolume">VOLUME GÉNÉRAL <input id="masterVolume" type="range" min="0" max="100" step="1"></label>
  <label class="setting" for="musicVolume">MUSIQUE / 108 BPM <input id="musicVolume" type="range" min="0" max="100" step="1"></label>
- <label class="setting" for="effectsVolume">MOTEUR & EFFETS <input id="effectsVolume" type="range" min="0" max="100" step="1"></label>
+ <label class="setting" for="effectsVolume">BRUITAGES / HORS MOTEUR <input id="effectsVolume" type="range" min="0" max="100" step="1"></label>
+ <label class="setting" for="engineSound">MOTEUR ACTIVÉ <input id="engineSound" type="checkbox" checked></label>
+ <label class="setting" for="engineVolume">VOLUME DU MOTEUR <input id="engineVolume" type="range" min="0" max="100" step="1"></label>
  <label class="setting" for="steeringMode">DIRECTION <select id="steeringMode"><option value="analog">Zone analogique</option><option value="buttons">Boutons gauche / droite</option></select></label>
  <label class="setting" for="sensitivity">SENSIBILITÉ DU POUCE <input id="sensitivity" type="range" min="60" max="150" step="5"></label>
  <label class="setting" for="quality">GRAPHISMES <select id="quality"><option value="auto">Adaptatifs</option><option value="eco">Économiques</option><option value="high">Détaillés</option></select></label>
  <label class="setting" for="motion">MOUVEMENT DÉCORATIF <select id="motion"><option value="auto">Selon l’appareil</option><option value="reduced">Réduit</option></select></label>
- <p id="renderStats" class="record"></p><p class="record">Les anciens chronos de 5,2 km restent conservés. Les records de cette route de 13 km sont séparés.</p><button class="primary">ENREGISTRÉ / FERMER ↗</button>
+ <p id="renderStats" class="record"></p><p class="record">Les records précédents sont conservés. Le classement local RECHERCHÉ V3 est séparé ; votre souvenir amoureux reste acquis.</p><button class="primary">ENREGISTRÉ / FERMER ↗</button>
 </form></dialog>
+<dialog id="scoreProof" aria-labelledby="proofTitle"><form method="dialog"><button class="close" aria-label="Fermer la preuve">FERMER ×</button><h2 id="proofTitle">ORIGINE<br>RETROUVÉE.</h2><img id="proofImage" alt="Carte du score FLD avec rang, chronomètre, résistance et échappées" width="1080" height="1440"><a id="proofDownload" class="primary" download>ENREGISTRER L’IMAGE ↗</a><button type="button" id="proofShare" class="primary" hidden>PARTAGER LA PREUVE ↗</button><p id="proofHint">Sur iPhone, vous pouvez aussi maintenir le doigt sur l’image pour l’enregistrer.</p><button class="text-button">RETOUR AU SCORE</button></form></dialog>
 <noscript><div class="noscript">Activez JavaScript pour prendre la route. <a href="./index.html">Retour au protocole</a></div></noscript>
 </body>
 </html>

@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {vehicleData} from './assets/vehicle-data.js';
-import {surface,palette,softTexture} from './materials.js';
-import {createDesignedVehicle} from './vehicle-designs.js';
+import {surface,palette,softTexture} from './materials.js?v=pursuit3';
+import {createDesignedVehicle} from './vehicle-designs.js?v=pursuit3';
 // Civilian traffic retains Classic Muscle car, Alexus16, CC BY 4.0 (CREDITS.md).
 // Player and marked patrol/interceptor are original meshes in vehicle-designs.js.
 const geometryCache=new Map();
@@ -19,7 +19,7 @@ function geometry(part,wheel=false){
 const box=new T.BoxGeometry(1,1,1);
 function block(parent,x,y,z,w,h,d,mat){const m=new T.Mesh(box,mat);m.position.set(x,y,z);m.scale.set(w,h,d);parent.add(m);return m;}
 const basic=color=>new T.MeshBasicMaterial({color,toneMapped:false});
-const glow={purple:basic(palette.purple),acid:basic(palette.acid),white:basic('#f1f0dd'),red:basic('#ff324f'),amber:basic('#ffad4f')};
+const glow={purple:basic(palette.purple),acid:basic(palette.acid),white:basic('#f1f0dd'),red:basic('#ff324f'),amber:basic('#ffad4f'),blue:basic('#4b9eff')};
 const materials={glass:new T.MeshPhysicalMaterial({color:palette.glass,metalness:.35,roughness:.12,clearcoat:1,envMapIntensity:1.5}),rubber:surface('#0b0d12',.92),rim:surface('#9b9bad',.23,.86),dark:surface('#11141b',.6,.35),chrome:surface('#9fabc2',.22,.9)};
 const paintCache=new Map();
 function paintFor(variant){
@@ -29,7 +29,7 @@ const wheelMeshes=vehicleData.wheel.map(part=>({geo:geometry(part,true),mat:part
 const shadowGeometry=new T.PlaneGeometry(2.85,5),shadowMaterial=new T.MeshBasicMaterial({map:softTexture(),transparent:true,opacity:.66,depthWrite:false});
 export function createVehicle(kind='fld',variant=0){
  if(kind==='fld'||kind==='cop')return createDesignedVehicle(kind,variant);
- const g=new T.Group();g.name='TRAFIC / BERLINE CIVILE';const paint=paintFor(variant),accent=surface(palette.purple,.35,.52);
+ const g=new T.Group();g.name='TRAFIC / BERLINE CIVILE';const paint=paintFor(variant),accent=surface('#262d3a',.45,.4);
  for(const part of vehicleData.body){
   const byName={BodyPaint:paint,BodyPaint_Accent:accent,Glass:materials.glass,Chrome:materials.chrome,HeadLight:glow.white,BrakeLight:glow.red,TurnSignal:glow.amber};
   const m=new T.Mesh(geometry(part),byName[part.material]||materials.dark);m.name=part.name;g.add(m);
@@ -41,8 +41,16 @@ export function createVehicle(kind='fld',variant=0){
   g.userData.wheels.push({steering,rolling,front:z>0});
  }
  for(const side of [-1,1]){
-  block(g,side*.88,.33,0,.03,.045,2.35,glow.acid);
   const pipe=new T.Mesh(new T.CylinderGeometry(.085,.085,.28,10),materials.chrome);pipe.rotation.x=Math.PI/2;pipe.position.set(side*.62,.32,-1.97);g.add(pipe);
+ }
+ if(kind==='undercover'){
+  g.userData.blue=new T.Group();g.userData.red=new T.Group();g.add(g.userData.blue,g.userData.red);
+  for(const [index,side] of [-1,1].entries()){
+   const signals=index?g.userData.red:g.userData.blue;
+   block(signals,side*.44,.60,2.01,.22,.075,.025,glow.blue);
+   block(signals,side*.35,1.14,-1.02,.25,.075,.06,glow.blue);
+  }
+  g.userData.blue.visible=false;g.userData.red.visible=false;
  }
  g.userData.flame=block(g,0,.32,-2.2,.75,.1,.25,glow.purple);g.userData.flame.visible=false;
  const shadow=new T.Mesh(shadowGeometry,shadowMaterial);shadow.rotation.x=-Math.PI/2;shadow.position.y=.015;shadow.userData.cpuTextureOnly=true;g.add(shadow);

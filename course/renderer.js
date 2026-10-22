@@ -1,11 +1,12 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js';
-import {createVehicle,animateVehicle} from './models.js';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js';
-import {createDrivingEffects} from './effects.js';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js';
-import {createDigitalSky} from './sky.js';
-import {createQuality} from './quality.js';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=pursuit3';
+import {createVehicle,animateVehicle} from './models.js?v=pursuit3';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=pursuit3';
+import {createDrivingEffects} from './effects.js?v=pursuit3';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=pursuit3';
+import {createDigitalSky} from './sky.js?v=pursuit3';
+import {createQuality} from './quality.js?v=pursuit3';
+import {addRoadPosters} from './posters.js?v=pursuit3';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
 const mats = new Map();
@@ -58,6 +59,7 @@ function car(kind='fld',variant=0) {
   const vehicle=createVehicle(kind,variant);
   if(vehicle.userData.staticBatched)return vehicle;
   const exclude=new Set([vehicle.userData.flame,vehicle.userData.blue,vehicle.userData.red]);
+  for(const signal of [vehicle.userData.blue,vehicle.userData.red]){if(signal?.isGroup)batch(signal);signal?.traverse(n=>exclude.add(n));}
   for(const wheel of vehicle.userData.wheels)wheel.steering.traverse(n=>exclude.add(n));
   batch(vehicle,exclude);return vehicle;
 }
@@ -171,6 +173,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     const inscriptions={0:'SWAGISTAN NETWORK',8:'SAV / 6 H À 6 H 20',19:'BUREAU DES ORIGINES DOUTEUSES',36:'FROM ELSEWHERE',64:'OMERTA',77:'RIEN À DÉCLARER',108:'CONTRÔLE DU SWAG',142:'MADE IN SWAGISTAN'};
     const text=inscriptions[s/80];
     if(text){const sign=new T.Group();g.add(sign);positionOn(sign,s+30,stage.kind==='tunnel'?-9.55:-18,stage.kind==='tunnel'?3.5:5);const p=plate(sign,text,0,0,0,stage.kind==='tunnel'?5:12,1.4);p.rotation.y=Math.PI;}
+    addRoadPosters(g,s,cube,positionOn);
     batch(g);
   }
   function stream(s){
@@ -236,9 +239,9 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   const warm = new T.PointLight('#f4ca94', 22, 30, 2); warm.position.set(-2, 4.5, -6); station.add(warm);
   const movingStation=new Set();for(const object of[waitingCar,stranger,playerPerson])object.traverse(n=>movingStation.add(n));batch(station,movingStation);
   const player = car(); scene.add(player);
-  const cops = Array.from({length: 3}, (_,i) => { const c = car('cop',i);  scene.add(c); return c; });
+  const cops = Array.from({length: 3}, (_,i) => { const c = car(i?'undercover':'cop',i);  scene.add(c); return c; });
   let trafficVariant=0;
-  const traffic = Array.from({length: 9}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
+  const traffic = Array.from({length: 7}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
   const effects=createDrivingEffects(scene,reduced);
   let initialized=false;
   const glow=new T.PointLight('#956bf1',10,12,2);scene.add(glow);
@@ -262,10 +265,10 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       player.userData.flame.visible = r.boosting && r.state === 'RACE';
       player.userData.flame.scale.z=reduced?1:.8+Math.sin(r.time*40)*.25;
       for (let i = 0; i < cops.length; i++) {
-        const c = r.cops[i], m = cops[i]; m.visible = c.active && c.s>0 && Math.abs(c.s - r.s) < 260 && (!ending||r.result.won&&r.cinematic<3);
+        const c = r.cops[i], m = cops[i]; m.visible = (c.active||c.undercover) && c.s>0 && c.s-r.s<300 && c.s-r.s>-100 && (!ending||r.result.won&&r.cinematic<3);
         positionOn(m, Math.max(0,c.s+(ending?Math.min(r.cinematic,2)*c.speed*.3:0)), c.x);
         animateVehicle(m,{...r,speed:c.speed,steer:c.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0);
-        m.userData.blue.visible = reduced || Math.sin(r.time * 6 + i) > 0; m.userData.red.visible = reduced || !m.userData.blue.visible;
+        m.userData.blue.visible = c.active&&(reduced || Math.sin(r.time * 6 + i) > 0); m.userData.red.visible = c.active&&(reduced || !m.userData.blue.visible);
       }
       for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0); }
       for (const {s:start,g} of chunks)g.visible=start>s-160&&start<s+(quality.level===0?300:380);

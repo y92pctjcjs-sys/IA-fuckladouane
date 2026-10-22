@@ -1,13 +1,14 @@
-import {ROUTE_ID} from './track.js';
+import {ROUTE_ID} from './track.js?v=pursuit3';
 export const LEGACY_KEY='fld.course.v1';
-export const SAVE_KEY='fld.course.v2';
+export const PREVIOUS_KEY='fld.course.v2';
+export const SAVE_KEY='fld.course.v3';
 export const PREFS_KEY='fld.course.preferences.v2';
 const load=(storage,key)=>{try{return JSON.parse(storage?.getItem(key)||'null');}catch{return null;}};
 const persist=(storage,key,data)=>{try{storage?.setItem(key,JSON.stringify(data));}catch{/* Session memory remains usable. */}};
 export function createSave(storage){
-  const legacy=load(storage,LEGACY_KEY),saved=load(storage,SAVE_KEY);
-  const data={version:2,route:ROUTE_ID,wins:0,runs:0,bestTime:null,bestScore:0,love:legacy?.love===true};
-  if(saved?.version===2&&saved.route===ROUTE_ID){
+  const legacy=load(storage,LEGACY_KEY),previous=load(storage,PREVIOUS_KEY),saved=load(storage,SAVE_KEY);
+  const data={version:3,route:ROUTE_ID,wins:0,runs:0,bestTime:null,bestScore:0,love:legacy?.love===true||previous?.love===true};
+  if(saved?.version===3&&saved.route===ROUTE_ID){
     for(const key of ['wins','runs','bestScore'])if(Number.isFinite(saved[key])&&saved[key]>=0)data[key]=Math.floor(saved[key]);
     if(Number.isFinite(saved.bestTime)&&saved.bestTime>0)data.bestTime=saved.bestTime;
     data.love ||= saved.love===true;
@@ -20,11 +21,12 @@ export function createSave(storage){
     persist(storage,SAVE_KEY,data);return {...data};
   }};
 }
-export const DEFAULT_PREFERENCES=Object.freeze({master:.75,music:.65,effects:.7,quality:'auto',steering:'analog',sensitivity:1,motion:'auto'});
+export const DEFAULT_PREFERENCES=Object.freeze({master:.75,music:.72,effects:.7,engine:.28,engineEnabled:true,quality:'auto',steering:'analog',sensitivity:1,motion:'auto'});
 export function createPreferences(storage){
   let data={...DEFAULT_PREFERENCES};
   function clean(update){
-    for(const key of ['master','music','effects'])if(Number.isFinite(update?.[key]))data[key]=Math.min(1,Math.max(0,update[key]));
+    for(const key of ['master','music','effects','engine'])if(Number.isFinite(update?.[key]))data[key]=Math.min(1,Math.max(0,update[key]));
+    if(typeof update?.engineEnabled==='boolean')data.engineEnabled=update.engineEnabled;
     if(Number.isFinite(update?.sensitivity))data.sensitivity=Math.min(1.5,Math.max(.6,update.sensitivity));
     for(const [key,choices] of Object.entries({quality:['auto','eco','high'],steering:['analog','buttons'],motion:['auto','reduced']}))if(choices.includes(update?.[key]))data[key]=update[key];
   }

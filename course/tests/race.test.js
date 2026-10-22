@@ -4,6 +4,7 @@ import {createRace, start, step, pause, resume, finish, hit, overlaps, emptyInpu
 import {drawEnding} from '../ending.js';
 import {createSave, SAVE_KEY} from '../storage.js';
 import {BLOCKADES, LENGTH, STAGES, sectorAt, sample, curvature} from '../track.js';
+import {driver} from '../tools/driver.mjs';
 function running(ending = () => 'escape') { const r = createRace(ending); start(r); for (let i = 0; i < 361; i++) step(r, 1 / 120); assert.equal(r.state, 'RACE'); return r; }
 function advance(r, time, input = emptyInput()) { for (let t = 0; t < time - 1e-8; t += 1 / 120) step(r, 1 / 120, input); }
 
@@ -13,8 +14,8 @@ test('menu requires launch, countdown precedes driving, fresh race resets all st
 });
 test('progressive steering is continuous; drift releases into grip and earns nitro', () => {
  const r = running(); r.speed = 45; r.nitro = 40;
- step(r, 1 / 120, {...emptyInput(), steer: .3, drift: true}); assert.ok(r.steer > 0 && r.steer < .3);
- advance(r, 1.2, {...emptyInput(), steer: .25, drift: true}); assert.equal(r.drifting, true); assert.ok(r.nitro > 40); assert.ok(r.x > 0 && r.x < 7);
+ step(r, 1 / 120, {...emptyInput(), steer: .3, drift: true}); assert.ok(r.steer < 0 && r.steer > -.3);
+ advance(r, 1.2, {...emptyInput(), steer: .25, drift: true}); assert.equal(r.drifting, true); assert.ok(r.nitro > 40); assert.ok(r.x < 0 && r.x > -7);
  advance(r, .5); assert.equal(r.drifting, false); assert.equal(r.drifts, 1); assert.ok(Math.abs(r.yaw) < .2);
 });
 test('nitro gives measurable speed advantage, drains and recharges; brake slows', () => {
@@ -43,7 +44,7 @@ test('road has left and right turns, elevation, and continuous world coordinates
 test('pursuers accelerate, move laterally and never teleport to the player', () => {
  const r = running(); r.speed = 40; const s = r.cops[0].s; advance(r, 3, {...emptyInput(), steer: .15});
  assert.ok(r.cops[0].speed > 20); assert.ok(r.cops[0].s > s); assert.ok(Math.abs(r.cops[0].x) < 7);
- r.s = STAGES[3].start+150; step(r, .01); assert.ok(r.cops.every(c => c.active)); assert.ok(r.cops.every(c => c.s < r.s));
+ assert.equal(r.cops[0].active,true);assert.equal(r.cops.filter(c=>c.undercover).length,2);assert.ok(r.cops.filter(c=>c.undercover).every(c=>!c.active));
 });
 test('pause freezes driving and clock, countdown and cinematic; resume is explicit', () => {
  for (const state of ['COUNTDOWN','RACE','ARRIVAL','INTERCEPTION']) {
@@ -87,14 +88,7 @@ test('complete controller-driven run crosses all sectors and can be replayed', (
   const r=running(),seen=new Set();
   while(r.state==='RACE'&&r.time<400) {
    seen.add(sectorAt(r.s));
-   const row=BLOCKADES.find(b=>b.s>r.s-9&&b.s-r.s<150);
-   let target=0;
-   const traffic=r.traffic.filter(t=>t.s>r.s-5&&t.s-r.s<95);
-   const candidates=[0,-5,5].filter(x=>(!row||row.xs.every(o=>Math.abs(o-x)>=2.55))&&traffic.every(t=>Math.abs(t.x-x)>2));
-   if(candidates.length) target=candidates.reduce((a,b)=>Math.abs(a-r.x)<Math.abs(b-r.x)?a:b);
-   else if(row) target=[-5,0,5].find(x=>row.xs.every(o=>Math.abs(o-x)>=2.55));
-   const steer=Math.max(-1,Math.min(1,(target-r.x)*.38-r.vx*.12+curvature(r.s)*r.speed*r.speed*.065));
-   step(r,1/120,{...emptyInput(),steer,nitro:r.pressure>45&&r.nitro>30});
+   step(r,1/120,driver(r));
   }
   assert.equal(r.result?.won,true,`run ${run}: ${r.result?.reason}, s=${r.s}, health=${r.health}`);assert.equal(seen.size,5);assert.ok(r.time>240&&r.time<360);advance(r,7.1);assert.equal(r.state,'RESULTS');
  }
@@ -108,5 +102,5 @@ test('depleted nitro does not strobe while held and requires releasing the actio
 
 test('sustained guardrail rubbing is one contact, not a new impact at every step',()=>{
  const r=running();r.s=1000;r.x=8.5;r.speed=48;
- advance(r,4,{...emptyInput(),steer:1});assert.ok(r.health>=95);assert.ok(r.hitSerial<=1);
+ advance(r,4,{...emptyInput(),steer:-1});assert.ok(r.health>=95);assert.ok(r.hitSerial<=1);
 });

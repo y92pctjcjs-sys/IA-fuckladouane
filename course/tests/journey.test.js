@@ -4,6 +4,8 @@ import {LENGTH,STAGES,SECTORS,BEATS,ROUTE_ID,BLOCKADES,HALF_WIDTH,sectorAt,sampl
 import {createRace,start,step,emptyInput,createClock,pause,resume} from '../simulation.js';
 import {createSave,createPreferences,LEGACY_KEY,SAVE_KEY,PREFS_KEY} from '../storage.js';
 import {createQuality} from '../quality.js';
+import {PURSUIT} from '../pursuit.js';
+import {driver} from '../tools/driver.mjs';
 
 test('five contiguous stages and nine distinct situations share one 13 km route',()=>{
  assert.equal(LENGTH,13000);assert.equal(STAGES.length,5);assert.equal(SECTORS.length,5);
@@ -42,12 +44,7 @@ test('quality changes have hysteresis, preserve economy selection and ignore pau
  const paused=createQuality();for(let i=0;i<1000;i++)paused.update(.08,false);assert.equal(paused.level,2);
  q.setMode('eco');for(let i=0;i<3000;i++)q.update(.01,true);assert.equal(q.level,0);assert.equal(q.ratio,.72);
 });
-function controller(r){
- const row=BLOCKADES.find(b=>b.s>r.s-9&&b.s-r.s<210),traffic=r.traffic.filter(t=>t.s>r.s-6&&t.s-r.s<95);
- let candidates=[0,-5,5].filter(x=>(!row||row.xs.every(o=>Math.abs(o-x)>=2.7))&&traffic.every(t=>Math.abs(t.x-x)>2.1));
- const target=candidates.length?candidates.reduce((a,b)=>Math.abs(a-r.x)<Math.abs(b-r.x)?a:b):row?row.gap:0;
- return {...emptyInput(),steer:Math.max(-1,Math.min(1,(target-r.x)*.38-r.vx*.12+curvature(r.s)*r.speed*r.speed*.065)),nitro:r.pressure>55&&r.nitro>30};
-}
+const controller=r=>driver(r);
 export function traverse(hz=60){
  const r=createRace(()=> 'escape');start(r);const clock=createClock(r,()=>controller(r));const sectors=new Set();
  for(let frames=0;frames<hz*400&&!r.result;frames++){clock.advance(1/hz);if(r.state==='RACE')sectors.add(sectorAt(r.s));}
@@ -61,7 +58,7 @@ test('pursuers have bounded acceleration and phases without contact teleports; p
  const r=createRace();r.state='RACE';r.s=8500;r.speed=48;r.time=44;r.cops.forEach((c,i)=>Object.assign(c,{s:8480-i*4,speed:46,active:true}));
  for(let n=0;n<120*24;n++){
   const positions=r.cops.map(c=>[c.s,c.speed]);step(r,1/120,controller(r));
-  r.cops.forEach((c,i)=>{assert.ok(c.s>=positions[i][0]);assert.ok(c.s-positions[i][0]<.5);assert.ok(c.speed-positions[i][1]<=7.5/120+1e-9);});
+  r.cops.forEach((c,i)=>{assert.ok(c.s>=positions[i][0]);assert.ok(c.s-positions[i][0]<=PURSUIT.maxSpeed/120+1e-9);assert.ok(c.speed-positions[i][1]<=PURSUIT.acceleration/120+1e-9);});
   if(r.result)break;
  }
  const phases=new Set();r.result=null;r.state='RACE';

@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {createVehicle} from './models.js';
-import {environmentTexture} from './materials.js';
+import {createVehicle} from './models.js?v=pursuit3';
+import {environmentTexture} from './materials.js?v=pursuit3';
 const $=id=>document.getElementById(id),canvas=$('garage');
 let renderer;
 try{renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});}catch{$('unavailable').hidden=false;}
