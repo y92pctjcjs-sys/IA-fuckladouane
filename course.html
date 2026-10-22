@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0a1c">
+<meta name="description" content="Une route vers le Swagistan. Une compacte FLD. Rien à déclarer aux poursuivants. Course arcade 3D indépendante.">
+<title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="./course/style.css">
+<script type="module" src="./course/boot.js"></script>
+</head>
+<body>
+<canvas id="world" aria-label="Circuit 3D nocturne vers le Swagistan"></canvas>
+<div class="vignette" aria-hidden="true"></div>
+<header class="topbar"><a class="brand" href="./index.html" aria-label="Retour au protocole FLD">fld<sup>®</sup><span>MOTOR CLUB<br>SWAGISTAN / 89</span></a><div class="tools"><button id="sound" aria-pressed="false">SON OFF</button><button id="help" aria-label="Consulter les commandes">?</button><button id="pause" aria-label="Mettre en pause" disabled>Ⅱ</button></div></header>
+<section id="hud" class="hud" hidden aria-label="Tableau de bord">
+<div class="route"><span id="sector">01 / ZONE INDUSTRIELLE</span><strong id="time">0:00.00</strong><div class="route-track"><i id="progress"></i><b></b><b></b></div></div>
+<div class="telemetry"><div class="speed"><strong id="speed">000</strong><span>KM/H</span></div><div class="meters"><label for="nitro">NITRO <b id="nitroValue">100</b></label><meter id="nitro" min="0" max="100" value="100"></meter><label for="health">RÉSISTANCE <b id="healthValue">100</b></label><meter id="health" min="0" max="100" value="100"></meter></div></div>
+<div class="pursuit"><span>DOUANE <b id="pressureValue">0%</b></span><meter id="pressure" min="0" max="100" value="0"></meter></div>
+<p id="alert" class="alert" role="status"></p>
+</section>
+<main id="overlay" class="overlay">
+<section id="menu" class="panel menu">
+<div class="eyebrow">FLD® / COURSE CLANDESTINE 001</div>
+<h1>FUITE<br>DOUANIÈRE<span>SWAGISTAN MOTOR CLUB</span></h1>
+<p class="intro">Une frontière. Trois secteurs.<br>Le contrôle n’était pas sollicité.</p>
+<div class="race-meta"><span>5,2 KM<br><b>ROUTE DE NUIT</b></span><span>~ 2 MIN<br><b>AUCUNE FORMALITÉ</b></span><span>01 AUTO<br><b>fld® COMPACTE</b></span></div>
+<p class="short-help">Accélération auto · Tournez en continu.<br>Drift pour recharger. Nitro pour les distancer.</p>
+<button id="start" class="primary">PRENDRE LA ROUTE <span>↗</span></button>
+<button id="menuHelp" class="text-button">VOIR LES COMMANDES</button>
+<div id="recordMenu" class="record"></div>
+</section>
+<section id="pausePanel" class="panel centered" hidden><div class="eyebrow">LE TEMPS NE VOUS CONTRÔLE PLUS.</div><h2>EN PAUSE<span>LA DOUANE AUSSI.</span></h2><p>La simulation, le chronomètre et le son sont suspendus.</p><button id="resume" class="primary">REPRENDRE ↗</button><button id="pauseHelp" class="text-button">COMMANDES</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
+<section id="results" class="panel centered" hidden><div class="eyebrow" id="resultKicker">DOSSIER DE FUITE</div><h2 id="resultTitle">FRONTIÈRE<br>FRANCHIE.</h2><p id="resultCopy"></p><dl class="result-grid"><div><dt>CHRONO</dt><dd id="resultTime"></dd></div><div><dt>SCORE</dt><dd id="resultScore"></dd></div><div><dt>RÉSISTANCE</dt><dd id="resultHealth"></dd></div><div><dt>DRIFTS VALIDÉS</dt><dd id="resultDrifts"></dd></div></dl><p id="bestResult" class="record"></p><p id="souvenir" class="souvenir" hidden>✦ AMOUR NON DÉCLARÉ / SOUVENIR DÉBLOQUÉ</p><button id="replay" class="primary">REPRENDRE LA FUITE ↗</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
+<section id="failure" class="panel centered" hidden><div class="eyebrow">MOTEUR INDISPONIBLE</div><h2>LA ROUTE<br>EST FERMÉE.</h2><p id="failureMessage">Ce navigateur ne fournit pas de contexte WebGL. Essayez avec l’accélération graphique active.</p><a class="primary" href="./index.html">RETOUR AU PROTOCOLE ↗</a></section>
+</main>
+<div id="countdown" class="countdown" aria-live="assertive" hidden>3</div>
+<div id="cinema" class="cinema" aria-live="polite" hidden><span id="cinemaKicker"></span><strong id="cinemaText"></strong></div>
+<div id="controls" class="controls" hidden aria-label="Commandes tactiles"><div class="steering"><button data-control="left" aria-label="Tourner à gauche">←</button><button data-control="right" aria-label="Tourner à droite">→</button></div><div class="actions"><button data-control="brake" class="brake">FREIN</button><button data-control="drift" class="drift">DRIFT</button><button data-control="nitro" class="nitro">NITRO ↗</button></div></div>
+<dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Les panneaux les annoncent à 100 mètres.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>← →</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + ← ou →</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse. Relâchez-le pour reprendre l’adhérence. Un drift propre recharge le nitro. Freinez sans tourner pour ralentir franchement.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir avant l’interception. Une collision seule ne vous arrête pas.</p><p>Sur mobile, maintenez plusieurs boutons simultanément. Son désactivé au départ ; activez-le avec SON OFF. Quitter l’onglet met le jeu en pause et exige une reprise explicite.</p><button class="primary">COMPRIS ↗</button></form></dialog>
+<noscript><div class="noscript">Activez JavaScript pour prendre la route. <a href="./index.html">Retour au protocole</a></div></noscript>
+</body>
+</html>
