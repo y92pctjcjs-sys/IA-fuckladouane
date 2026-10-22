@@ -19,7 +19,7 @@ test('adapted car has valid indexed geometry and a footprint matching the existi
  const size=bounds.getSize(new T.Vector3());assert.ok(size.x<2.12&&size.x>1.8);assert.ok(size.z<4.25&&size.z>3.8);assert.ok(triangles>3000&&triangles<12000);
 }));
 test('vehicles share decoded geometry; steering and wheel animation respect the paused step',()=>withCanvas(()=>{
- const first=createVehicle(),second=createVehicle('cop');const a=first.getObjectByName('Chassis'),b=second.getObjectByName('Chassis');assert.equal(a.geometry,b.geometry);assert.equal(first.userData.paint.isMeshPhysicalMaterial,true);
+ const first=createVehicle(),second=createVehicle('cop',1);const a=first.getObjectByName('Chassis'),b=second.getObjectByName('Chassis');assert.equal(a.geometry,b.geometry);assert.equal(first.userData.paint.isMeshPhysicalMaterial,true);
  first.updateMatrixWorld(true);for(const wheel of first.userData.wheels)wheel.rolling.traverse(mesh=>{if(mesh.isMesh)assert.ok(mesh.matrixWorld.determinant()>0,'mirrored wheels must remain compatible with instancing');});
  const r=createRace();r.state='RACE';r.speed=45;r.steer=.5;animateVehicle(first,r,1/60);const wheel=first.userData.wheels.find(w=>w.front);assert.ok(wheel.rolling.rotation.x>0);assert.equal(wheel.steering.rotation.y,.15);
  const angle=wheel.rolling.rotation.x;animateVehicle(first,r,0);assert.equal(wheel.rolling.rotation.x,angle);
@@ -44,3 +44,13 @@ test('redistributed source models and attribution match the reviewed upstream as
  const credits=readFileSync(new URL('../CREDITS.md',import.meta.url),'utf8');assert.match(credits,/Alexus16/);assert.match(credits,/creativecommons.org\/licenses\/by\/4.0/);assert.match(credits,/Skid.tsx/);
  const license=readFileSync(new URL('../licenses/pmndrs-MIT.txt',import.meta.url),'utf8');assert.match(license,/Copyright 2021 pmdrs, contributors/);
 });
+
+test('high patrol and low interceptor have distinct silhouettes within the collision envelope',()=>withCanvas(()=>{
+ const sizes=[];
+ for(const variant of[0,1]){
+  const vehicle=createVehicle('cop',variant),bounds=new T.Box3();vehicle.updateMatrixWorld(true);
+  vehicle.traverse(o=>{if(o.isMesh&&o.visible&&!o.userData.cpuTextureOnly){o.geometry.computeBoundingBox();bounds.union(o.geometry.boundingBox.clone().applyMatrix4(o.matrixWorld));}});
+  const size=bounds.getSize(new T.Vector3());sizes.push(size);assert.ok(size.x<2.12);assert.ok(size.z<4.3);assert.ok(vehicle.userData.wheels.length===4);assert.equal(vehicle.userData.blue.material.color.getHex(),vehicle.userData.red.material.color.getHex());
+ }
+ assert.ok(sizes[0].y>sizes[1].y+.4);
+}));

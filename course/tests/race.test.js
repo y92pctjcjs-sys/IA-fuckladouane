@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createRace, start, step, pause, resume, finish, hit, overlaps, emptyInput, createClock} from '../simulation.js';
 import {drawEnding} from '../ending.js';
 import {createSave, SAVE_KEY} from '../storage.js';
-import {BLOCKADES, LENGTH, sample, curvature} from '../track.js';
+import {BLOCKADES, LENGTH, STAGES, sectorAt, sample, curvature} from '../track.js';
 function running(ending = () => 'escape') { const r = createRace(ending); start(r); for (let i = 0; i < 361; i++) step(r, 1 / 120); assert.equal(r.state, 'RACE'); return r; }
 function advance(r, time, input = emptyInput()) { for (let t = 0; t < time - 1e-8; t += 1 / 120) step(r, 1 / 120, input); }
 
@@ -43,7 +43,7 @@ test('road has left and right turns, elevation, and continuous world coordinates
 test('pursuers accelerate, move laterally and never teleport to the player', () => {
  const r = running(); r.speed = 40; const s = r.cops[0].s; advance(r, 3, {...emptyInput(), steer: .15});
  assert.ok(r.cops[0].speed > 20); assert.ok(r.cops[0].s > s); assert.ok(Math.abs(r.cops[0].x) < 7);
- r.s = 3600; step(r, .01); assert.ok(r.cops.every(c => c.active)); assert.ok(r.cops.every(c => c.s < r.s));
+ r.s = STAGES[3].start+150; step(r, .01); assert.ok(r.cops.every(c => c.active)); assert.ok(r.cops.every(c => c.s < r.s));
 });
 test('pause freezes driving and clock, countdown and cinematic; resume is explicit', () => {
  for (const state of ['COUNTDOWN','RACE','ARRIVAL','INTERCEPTION']) {
@@ -68,7 +68,7 @@ test('resistance loss stops the run; no score, damage or ending mutation after t
 });
 test('finish requires a drivable vehicle and fixes exactly one ending draw', () => {
  let calls=0; const r=running(()=>{calls++;return 'love';}); r.s=LENGTH-.1;r.speed=40;step(r,.01);
- assert.equal(r.state,'ARRIVAL');assert.equal(calls,1);const result=r.result;for(let i=0;i<20;i++) finish(r,true);advance(r,14);
+ assert.equal(r.state,'ARRIVAL');assert.equal(calls,1);const result=r.result;for(let i=0;i<20;i++) finish(r,true);advance(r,14.1);
  assert.equal(r.result,result);assert.equal(calls,1);assert.equal(r.state,'RESULTS');assert.equal(result.ending,'love');
  const failed=running(()=>{throw Error('defeat must not draw');}); failed.health=0;step(failed,.01);assert.equal(failed.result.won,false);
 });
@@ -84,8 +84,9 @@ test('blocked/corrupt storage remains playable in memory; records save only to o
 });
 test('complete controller-driven run crosses all sectors and can be replayed', () => {
  for(let run=0;run<2;run++) {
-  const r=running();
-  while(r.state==='RACE'&&r.time<190) {
+  const r=running(),seen=new Set();
+  while(r.state==='RACE'&&r.time<400) {
+   seen.add(sectorAt(r.s));
    const row=BLOCKADES.find(b=>b.s>r.s-9&&b.s-r.s<150);
    let target=0;
    const traffic=r.traffic.filter(t=>t.s>r.s-5&&t.s-r.s<95);
@@ -95,6 +96,17 @@ test('complete controller-driven run crosses all sectors and can be replayed', (
    const steer=Math.max(-1,Math.min(1,(target-r.x)*.38-r.vx*.12+curvature(r.s)*r.speed*r.speed*.065));
    step(r,1/120,{...emptyInput(),steer,nitro:r.pressure>45&&r.nitro>30});
   }
-  assert.equal(r.result?.won,true,`run ${run}: ${r.result?.reason}, s=${r.s}, health=${r.health}`);assert.ok(r.time>70&&r.time<160);advance(r,5);assert.equal(r.state,'RESULTS');
+  assert.equal(r.result?.won,true,`run ${run}: ${r.result?.reason}, s=${r.s}, health=${r.health}`);assert.equal(seen.size,5);assert.ok(r.time>240&&r.time<360);advance(r,7.1);assert.equal(r.state,'RESULTS');
  }
+});
+
+test('depleted nitro does not strobe while held and requires releasing the action',()=>{
+ const r=running();r.nitro=2;r.speed=48;advance(r,.2,{...emptyInput(),nitro:true});assert.equal(r.boostDepleted,true);
+ advance(r,1.5,{...emptyInput(),nitro:true});assert.equal(r.boosting,false);assert.ok(r.nitro>5);
+ step(r,1/120,emptyInput());step(r,1/120,{...emptyInput(),nitro:true});assert.equal(r.boosting,true);
+});
+
+test('sustained guardrail rubbing is one contact, not a new impact at every step',()=>{
+ const r=running();r.s=1000;r.x=8.5;r.speed=48;
+ advance(r,4,{...emptyInput(),steer:1});assert.ok(r.health>=95);assert.ok(r.hitSerial<=1);
 });

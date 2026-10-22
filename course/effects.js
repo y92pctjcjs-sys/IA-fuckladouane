@@ -14,7 +14,7 @@ export function createDrivingEffects(scene,reduced=false){
   const puffs=Array.from({length:48},()=>({age:2,x:0,y:0,z:0,side:0}));
   let markIndex=0,puffIndex=0,lastS=0,lastTime=0;
   function clear(){for(const pool of[marks,smoke,boost]){for(let i=0;i<pool.count;i++)pool.setMatrixAt(i,zero);pool.instanceMatrix.needsUpdate=true;}for(const p of puffs)p.age=2;lastS=0;lastTime=0;markIndex=puffIndex=0;}
-  return{clear,update(r,camera){
+  return{clear,setReduced(value){reduced=value;},dispose(){for(const pool of[marks,smoke,boost]){pool.removeFromParent();pool.dispose();pool.geometry.dispose();pool.material.dispose();}},update(r,camera){
     const dt=Math.max(0,Math.min(.1,r.time-lastTime));lastTime=r.time;
     if(r.state!=='RACE'){boost.visible=smoke.visible=false;return;}boost.visible=r.boosting&&!reduced;smoke.visible=!reduced;
     if(r.drifting&&Math.abs(r.s-lastS)>.95){
