@@ -62,6 +62,13 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 - Premier contrôle de préférence : `AssertionError: '75' !== '80'`. Cause : le test supposait 80 % alors que le réglage existant est 75 %. Test corrigé, réglage du jeu inchangé ; contrôle complet réussi ensuite.
 - Premier appel d'arbre GitHub : `tool call rejected because the catalog changed after codex_apps/github.create_tree was prepared`. Catalogue relu et écritures séparées entre code et données ; sauvegarde distante ensuite vérifiée.
 
+## Incident de déploiement du journal
+
+- Le commit de documentation `c26b996e13ac049d1c068f7a05757cb88152b1e9` contient les mêmes fichiers exécutables que le code public vérifié `264ddc7`.
+- Exécution Pages `40812643442` : construction et transfert de l'archive réussis, création du déploiement refusée côté GitHub. Erreur exacte : `HttpError: Server Error` puis `Failed to create deployment (status: 502) with build version c26b996e13ac049d1c068f7a05757cb88152b1e9`.
+- Cause localisée à l'API de déploiement Pages ; aucun échec de compilation ni erreur du jeu. Le jeu public vérifié reste servi par le déploiement précédent réussi.
+- Relance limitée aux tâches en échec demandée et acceptée, restée en file pendant plusieurs minutes. Passage ensuite à une publication complète du journal d’incident à jour par le mécanisme main / Pages existant. Aucune modification des sources du jeu pour traiter cette erreur serveur.
+
 ## Reprise après livraison
 
 Les jalons de design, fonctionnement, tests disponibles et publication sont terminés. Pour une correction ultérieure, partir de la branche ci-dessus ou de main, relire ce fichier puis vérifier l'état distant. Ne pas reprendre l'ancien import direct du GLB.
