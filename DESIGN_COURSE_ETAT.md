@@ -3,7 +3,9 @@
 Date : 29 octobre 2026. Branche : `feat/swagistan-design-prototype-20261029`.
 Base initiale : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec`. Base actuelle intégrée : `764dcc90c33fcc5577fff29ea2499aaab6f064d9` (main a évolué pendant la mission). Aucun changement local préexistant, aucun AGENTS.md dans le dépôt.
 
-Sauvegardes distantes : audit `9510abca036631aa3a2dcb6333f8db97ee385363` ; premier prototype `c8bb47d55495ce12f947eda7c8288cab4b8d8a32`. Le jalon de raccord réunit ce prototype et la nouvelle base OCULAIRE, avec leurs deux historiques conservés.
+Sauvegardes distantes : audit `9510abca036631aa3a2dcb6333f8db97ee385363` ; premier prototype `c8bb47d55495ce12f947eda7c8288cab4b8d8a32`. Raccord sauvegardé et vérifié : `90d270f57621f450e8a0e7bad5106fc5b968eb1d`, arbre `db3ea581ef4ba34b7ec5f6179674b5691c9bdcce`, avec les deux historiques conservés.
+
+Revue en brouillon créée et relue : https://github.com/y92pctjcjs-sys/IA-fuckladouane/pull/6 . Aucun merge ni déploiement du prototype. Les tests et mesures ci-dessous portent sur ce commit de code ; cette dernière mise à jour ne change que le journal.
 
 ## Jalon 1 — audit
 
