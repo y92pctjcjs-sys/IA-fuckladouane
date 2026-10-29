@@ -3,7 +3,7 @@
 Branche : `feat/oculaire-chevelure-presence-20261029`.
 Base intégrée et vérifiée : `f118e32b56f46c2435e2d26bade3f2228cb29149` (nouveaux véhicules, panneau de pause et quai industriel conservés).
 Brief exécuté : `course/OCULAIRE_CHEVEUX_PRESENCE.md`.
-Statut : implémenté et contrôlé en calcul / rastérisation CPU ; publication en cours.
+Statut : implémenté et publié ; calculs, rastérisation CPU, déploiement et octets publics vérifiés. WebGL du navigateur de contrôle et iPhone physique non validés dans cette session.
 
 ## Modifications de cette mise à jour
 
@@ -35,7 +35,14 @@ Statut : implémenté et contrôlé en calcul / rastérisation CPU ; publication
 
 ## Publication et reprise
 
-Vérifier le SHA distant de main avant publication, publier le correctif sans écraser de nouveaux changements, puis vérifier le déploiement et les ressources servies. Conserver le dernier résultat sur cette branche.
+- Commit de code publié : `0d69230fc42385fe8d55aa890e528788e20de384`, arbre testé `07e29495a67e5907a2a7636b5d5b3eb3ddcbec56`.
+- Déploiement Pages `40818807531` : `completed / success`, sur ce même commit. Main et branche de travail vérifiés à distance après sauvegarde.
+- Treize ressources publiques téléchargées : chaque ressource répond sans erreur HTTP et possède les mêmes octets que le fichier testé, y compris les modules OCULAIRE, les véhicules, le style, le portrait source, le prompt maître et la planche CPU.
+- Jeu : https://ia.fuckladouane.com/course.html . Planche de contrôle : https://ia.fuckladouane.com/course/validation/oculaire-cheveux-cpu.html . Planche ouverte et observée dans le navigateur public.
+- L'entrée publique du jeu est accessible ; le navigateur de contrôle y échoue avant le chargement de la tête, lors de `new THREE.WebGLRenderer`, avec `GL_RENDERER = Disabled`. Cet échec d'environnement reste distinct d'une validation du comportement du jeu sur téléphone.
+- Rapport public : `course/validation/oculaire-cheveux-public.json`. Le dernier compte rendu est conservé sur cette branche sans déclencher un nouveau déploiement documentaire.
+
+Pour reprendre : partir du commit publié ou de cette branche, lire ce fichier, vérifier l'état distant puis conserver les limites de validation indiquées. Les changements de coiffure, cadence et réaction aux patrouilles sont livrés.
 
 ---
 

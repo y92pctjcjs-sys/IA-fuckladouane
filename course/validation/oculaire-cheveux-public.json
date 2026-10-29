@@ -1,0 +1,114 @@
+{
+  "codeCommit": "0d69230fc42385fe8d55aa890e528788e20de384",
+  "deployment": 40818807531,
+  "deploymentStatus": "success",
+  "files": [
+    {
+      "path": "course.html",
+      "exit": 0,
+      "bytes": 11591,
+      "sha256": "7f265e1e20c183d79b80b1cde3fd54665657222622977b9a232026e822714409",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/boot.js",
+      "exit": 0,
+      "bytes": 571,
+      "sha256": "767cdae7df1a9a1ac8cba9a8c7430c71e0c8b412d189b7476e8823e2f6467146",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/main.js",
+      "exit": 0,
+      "bytes": 13458,
+      "sha256": "727e90f64d7d1e2f57258024d51fc2eb7dd45efee0c44d0cb5a91eba0bbc76ca",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/renderer.js",
+      "exit": 0,
+      "bytes": 25293,
+      "sha256": "ac4124c674f7ec2146b72896ac78f6cbb6c920b9f70d184eb0322f9bdc647f53",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/oculaire.js",
+      "exit": 0,
+      "bytes": 11735,
+      "sha256": "517e0d0cd5d40afcb0997a37c026c3e531e7dac39076cb62cdd4c999ce74f98c",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "exit": 0,
+      "bytes": 8762,
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "exit": 0,
+      "bytes": 9138,
+      "sha256": "1b48423ed0b23e03067cdbab9cd7fc6699d69b4c8daa8b28f60aafabc365e99a",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/validation/oculaire-cheveux-report.json",
+      "exit": 0,
+      "bytes": 1325,
+      "sha256": "318d6e778d49f913ee8a98405740abc08b2e7655d48d375cb453517da9135d78",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/validation/oculaire-cheveux-cpu.html",
+      "exit": 0,
+      "bytes": 684487,
+      "sha256": "3cd203754c62ec85c3d5225bd1bfac6cbff5ef709cd77b0c298a41ce6476c9a1",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "exit": 0,
+      "bytes": 1717474,
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/design-system.css",
+      "exit": 0,
+      "bytes": 3491,
+      "sha256": "d6e90c4af783ecadf688ff3b1c74d333ee6b59228525f98f73fdd7b0cc47ba06",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/road-vehicles.js",
+      "exit": 0,
+      "bytes": 12903,
+      "sha256": "8196fc3f08733889f28cd7494d7c13a9997391fda443159ab6ea7fb2990bca40",
+      "matchesLocal": true,
+      "error": ""
+    },
+    {
+      "path": "course/OCULAIRE_CHEVEUX_PRESENCE.md",
+      "exit": 0,
+      "bytes": 3289,
+      "sha256": "bafe928dfd9edcad77e727f354f372dad5b9e3d21f6fc0a6b05c530aa663ea8e",
+      "matchesLocal": true,
+      "error": ""
+    }
+  ],
+  "passed": true,
+  "browserWebGLVerified": false,
+  "nativeCpuGeometryViewsVerified": true
+}
