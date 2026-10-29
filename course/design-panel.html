@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>FLD / Composant de pause</title>
+<link rel="stylesheet" href="./style.css?v=atelier-002"><link rel="stylesheet" href="./design-system.css?v=atelier-002">
+<body><main id="overlay" class="overlay is-centered"><p id="loading">Chargement du composant…</p></main>
+<script type="module">
+// Deliberately no game boot, fake race, saved score, or WebGL fallback in this fixture.
+try{
+ const response=await fetch('../course.html');if(!response.ok)throw Error('HTML '+response.status);
+ const page=new DOMParser().parseFromString(await response.text(),'text/html'),panel=page.getElementById('pausePanel');panel.hidden=false;
+ document.getElementById('overlay').replaceChildren(panel);
+ panel.querySelector('.return').href='../index.html';
+ for(const id of ['instructions','preferences'])document.body.append(page.getElementById(id));
+ for(const [id,dialog]of [['pauseHelp','instructions'],['pauseSettings','preferences']])document.getElementById(id).addEventListener('click',()=>document.getElementById(dialog).showModal());
+ for(const id of ['instructions','preferences'])document.getElementById(id).addEventListener('close',()=>document.getElementById(id==='instructions'?'pauseHelp':'pauseSettings').focus());
+ document.getElementById('resume').addEventListener('click',()=>{document.getElementById('overlay').replaceChildren();const label=document.createElement('p');label.textContent='APERÇU UNIQUEMENT / La reprise en course reste à vérifier avec le moteur réel.';const button=document.createElement('button');button.className='primary';button.textContent='REVOIR LE PANNEAU';button.addEventListener('click',()=>{document.getElementById('overlay').replaceChildren(panel);document.getElementById('resume').focus();});const section=document.createElement('section');section.className='panel';section.append(label,button);document.getElementById('overlay').append(section);button.focus();});
+}catch(error){document.getElementById('loading').textContent='Composant indisponible : '+error.message;}
+</script></body></html>

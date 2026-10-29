@@ -8,6 +8,7 @@
 <title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
 <link rel="icon" href="data:,">
 <link rel="stylesheet" href="./course/style.css?v=atelier-002">
+<link rel="stylesheet" href="./course/design-system.css?v=atelier-002">
 <script type="module" src="./course/boot.js?v=atelier-002"></script>
 </head>
 <body>
@@ -33,7 +34,7 @@
 <div id="recordMenu" class="record"></div>
 <a class="credits-link" href="./course/credits.html" target="_blank" rel="noopener">SOURCES & MUSIQUE ↗</a>
 </section>
-<section id="pausePanel" class="panel centered" hidden><div class="eyebrow">LE TEMPS NE VOUS CONTRÔLE PLUS.</div><h2>EN PAUSE<span>LA DOUANE AUSSI.</span></h2><p>La simulation, le chronomètre et le son sont suspendus.</p><button id="resume" class="primary">REPRENDRE ↗</button><button id="pauseHelp" class="text-button">COMMANDES</button><button id="pauseSettings" class="text-button">SON & CONDUITE</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
+<section id="pausePanel" class="panel centered" aria-labelledby="pauseTitle" hidden><div class="eyebrow">FLD® / SWAGISTAN MOTOR CLUB</div><h2 id="pauseTitle">EN PAUSE<span>LE TEMPS VOUS APPARTIENT.</span></h2><p>La simulation, le chronomètre et le son sont suspendus. Reprenez quand vous êtes prêt.</p><div class="pause-index"><span>PARCOURS <b>13 KM</b></span><span><b>05</b> ÉTAPES</span><span>ROUTE DE NUIT</span></div><button id="resume" class="primary">REPRENDRE LA FUITE <span aria-hidden="true">↗</span></button><div class="pause-secondary"><button id="pauseHelp" class="text-button">COMMANDES</button><button id="pauseSettings" class="text-button">RÉGLAGES</button></div><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a></section>
 <section id="results" class="panel centered result-panel" tabindex="-1" hidden>
  <div class="eyebrow" id="resultKicker">DOSSIER DE FUITE</div><div id="resultRules" class="result-rules"></div>
  <h2 id="resultTitle">FRONTIÈRE<br>FRANCHIE.</h2>

@@ -1,0 +1,83 @@
+{
+  "date": "2026-10-29",
+  "branch": "feat/swagistan-design-prototype-20261029",
+  "base": "e40304b73d5127b7d6be2b5daa5b701ed0b984ec",
+  "auditCommit": "9510abca036631aa3a2dcb6333f8db97ee385363",
+  "status": {
+    "designed": "B01, C01, one pause panel, one industrial yard",
+    "implemented": true,
+    "raceWebGLObserved": false,
+    "uiComponentObserved": true,
+    "gpuOrPhoneMeasured": false,
+    "published": false
+  },
+  "environment": {
+    "cpu": "Linux-6.18.55-x86_64-with-glibc2.39",
+    "node": "v24.22.1",
+    "browser": "Chrome cloud; WebGL unavailable",
+    "uiFramesCssPixels": [
+      [
+        390,
+        844
+      ],
+      [
+        320,
+        568
+      ],
+      [
+        844,
+        390
+      ]
+    ]
+  },
+  "checks": {
+    "testsPassed": 98,
+    "testsFailed": 0,
+    "javascriptFilesChecked": 57,
+    "protectedBytesEqual": {
+      "CNAME": true,
+      "index.html": true,
+      "app.js": true,
+      "styles.css": true,
+      "matrix.js": true,
+      "arcade.js": true,
+      "core.js": true,
+      "drop.js": true,
+      "course/ending.js": true,
+      "course/simulation.js": true,
+      "course/track.js": true,
+      "course/pursuit.js": true,
+      "course/input.js": true,
+      "course/audio.js": true,
+      "course/storage.js": true,
+      "course/main.js": true,
+      "course/vehicle-skins.js": true,
+      "course/vehicle-designs.js": true,
+      "course/assets/fld-tribal.png": true,
+      "course/sky.js": true
+    },
+    "sameSixReferenceRuns": true,
+    "sameTwelveSeededEncounters": true
+  },
+  "cpuOnlyScene": {
+    "baseline": {
+      "initialBuildMs": 1075,
+      "twoTraversalsCpuMs": 2546,
+      "maxVisibleMeshes": 346,
+      "maxLiveGeometry": 170,
+      "maxChunks": 10,
+      "remainingSharedGeometryAfterChunkDisposal": 96
+    },
+    "prototype": {
+      "initialBuildMs": 421,
+      "twoTraversalsCpuMs": 1150,
+      "maxVisibleMeshes": 325,
+      "maxLiveGeometry": 200,
+      "maxChunks": 10,
+      "remainingSharedGeometryAfterChunkDisposal": 126
+    },
+    "timingCaveat": "Single runs, process load not controlled. Do not infer mobile FPS or speedup."
+  },
+  "blocker": "Error creating WebGL context. GL_VENDOR = Disabled, GL_RENDERER = Disabled; BindToCurrentSequence failed.",
+  "nextGate": "Real chase-camera observation at normal speed, curves, portrait and landscape; reveal, braking, blockades and timing profiles. No production merge until this passes."
+}

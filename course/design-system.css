@@ -1,0 +1,27 @@
+/* Milestone 2: one pause panel. Other screens retain their current working layout. */
+:root{--fld-bg:#090b12;--fld-panel:#151b26;--fld-text:#f2f1ea;--fld-muted:#b6c0cf;--fld-action:#d0ff50;--fld-info:#62dfff;--fld-brand:#ff3bc8;--fld-warning:#ffb54c;--fld-danger:#ff626b}
+#pausePanel{position:relative;width:min(520px,100%);padding:30px;background:var(--fld-panel);border:1px solid #495366;border-top:3px solid var(--fld-action);color:var(--fld-text);text-align:left;box-shadow:0 20px 70px #0006;animation:fld-panel-in 180ms ease-out both}
+#pausePanel::after{content:"";position:absolute;width:16px;height:16px;top:-1px;right:-1px;background:linear-gradient(45deg,transparent 48%,var(--fld-bg) 50%);pointer-events:none}
+#pausePanel .eyebrow{font:700 10px/1.5 monospace;letter-spacing:1.6px;color:var(--fld-info)}
+#pausePanel h2{font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(44px,8vw,66px);font-weight:900;letter-spacing:-1px;line-height:.96;margin:22px 0 18px}
+#pausePanel h2 span{font:700 10px/1.6 monospace;letter-spacing:2px;margin-top:12px;color:var(--fld-muted)}
+#pausePanel p{font:13px/1.65 Arial,sans-serif;color:var(--fld-muted);max-width:38ch;margin:0 0 18px}
+#pausePanel .pause-index{display:flex;justify-content:space-between;gap:12px;border-block:1px solid #414a59;padding:11px 0;font:10px/1.5 monospace;color:var(--fld-muted);font-variant-numeric:tabular-nums}
+#pausePanel .pause-index b{color:var(--fld-text);font-weight:700}
+#pausePanel .primary{min-height:60px;justify-content:space-between;margin-top:22px;background:var(--fld-action);border:1px solid var(--fld-action);color:var(--fld-bg);font:900 13px/1.4 monospace;padding:16px 18px;letter-spacing:.8px}
+#pausePanel .primary span{font-size:22px}
+#pausePanel .pause-secondary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+#pausePanel .text-button{width:100%;min-height:48px;margin:0;padding:12px 7px;border:1px solid #566176;background:#111722;color:var(--fld-text);font:700 10px/1.4 monospace;letter-spacing:.5px}
+#pausePanel .return{display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px 0 0;margin-top:8px;color:var(--fld-muted);font:10px/1.5 monospace;text-underline-offset:4px}
+#pausePanel :is(button,a):focus-visible{outline:3px solid var(--fld-info);outline-offset:3px}
+@keyframes fld-panel-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+@media(max-width:600px){#pausePanel{padding:24px 20px}.overlay.is-centered{padding-inline:max(14px,env(safe-area-inset-left));padding-bottom:calc(20px + env(safe-area-inset-bottom))}}
+@media(max-width:350px){#pausePanel{padding:20px 16px}#pausePanel .pause-secondary{gap:8px}}
+@media(orientation:landscape) and (max-height:540px){
+ #pausePanel{padding:20px 24px;width:min(650px,100%);display:grid;grid-template-columns:1.15fr 1fr;gap:12px 24px}
+ #pausePanel .eyebrow{grid-column:1/-1}#pausePanel h2{grid-column:1;grid-row:2;font-size:38px;margin:0}#pausePanel h2 span{margin-top:8px}
+ #pausePanel p{grid-column:1;grid-row:3;font-size:12px;margin:0}#pausePanel .pause-index{grid-column:1;grid-row:4;padding:8px 0;font-size:8px;gap:8px}
+ #pausePanel .primary{grid-column:2;grid-row:2;min-height:52px;margin:0;font-size:11px;padding:12px;align-self:start}
+ #pausePanel .pause-secondary{grid-column:2;grid-row:3;margin:0;align-self:start;gap:8px}#pausePanel .return{grid-column:2;grid-row:4;margin:0;padding:0}
+}
+@media(prefers-reduced-motion:reduce){#pausePanel{animation:none}}
