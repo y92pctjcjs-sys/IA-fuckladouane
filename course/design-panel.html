@@ -1,14 +1,19 @@
 <!doctype html>
 <html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>FLD / Composant de pause</title>
-<link rel="stylesheet" href="./style.css?v=fld-design-001"><link rel="stylesheet" href="./design-system.css?v=fld-design-001">
+<link rel="stylesheet" href="./style.css?v=fld-world-002"><link rel="stylesheet" href="./design-system.css?v=fld-world-002">
+<link rel="stylesheet" href="./atlas-shell.css?v=fld-world-002">
 <body><main id="overlay" class="overlay is-centered"><p id="loading">Chargement du composant…</p></main>
 <script type="module">
+import {createAtlasDialog} from './atlas-dialog.js?v=fld-world-002';
 // Deliberately no game boot, fake race, saved score, or WebGL fallback in this fixture.
 try{
  const response=await fetch('../course.html');if(!response.ok)throw Error('HTML '+response.status);
  const page=new DOMParser().parseFromString(await response.text(),'text/html'),panel=page.getElementById('pausePanel');panel.hidden=false;
  document.getElementById('overlay').replaceChildren(panel);
  panel.querySelector('.return').href='../index.html';
+ const header=page.querySelector('.topbar');header.querySelector('.brand').href='../index.html';for(const button of header.querySelectorAll('button'))button.disabled=button.id!=='map';document.body.append(header,page.getElementById('routeAtlas'));
+ const atlas=createAtlasDialog(document.getElementById('routeAtlas'),document.getElementById('atlasFrame'));document.getElementById('map').addEventListener('click',()=>atlas.open(3760));
+ document.getElementById('routeAtlas').addEventListener('close',()=>document.getElementById('map').focus());
  for(const id of ['instructions','preferences'])document.body.append(page.getElementById(id));
  for(const [id,dialog]of [['pauseHelp','instructions'],['pauseSettings','preferences']])document.getElementById(id).addEventListener('click',()=>document.getElementById(dialog).showModal());
  for(const id of ['instructions','preferences'])document.getElementById(id).addEventListener('close',()=>document.getElementById(id==='instructions'?'pauseHelp':'pauseSettings').focus());

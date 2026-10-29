@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {createVehicle} from './models.js?v=fld-design-001';
-import {VEHICLE_SKINS,skinsFor,resolveSkin,createAppearance} from './vehicle-skins.js?v=fld-design-001';
-import {studioEnvironment} from './vehicle-studio.js?v=fld-design-001';
+import {createVehicle} from './models.js?v=fld-world-002';
+import {VEHICLE_SKINS,skinsFor,resolveSkin,createAppearance} from './vehicle-skins.js?v=fld-world-002';
+import {studioEnvironment} from './vehicle-studio.js?v=fld-world-002';
 const $=id=>document.getElementById(id),canvas=$('garage');
 let renderer;
 try{renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});}catch{$('unavailable').hidden=false;}

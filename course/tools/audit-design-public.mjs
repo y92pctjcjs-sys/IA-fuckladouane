@@ -6,7 +6,12 @@ import {fileURLToPath} from 'node:url';
 const root=new URL('../../',import.meta.url),host='https://ia.fuckladouane.com/';
 const base=process.argv[2]||'e40304b73d5127b7d6be2b5daa5b701ed0b984ec';
 const localVersion=path=>execFileSync('git',['show',base+':'+path],{cwd:fileURLToPath(root),maxBuffer:8*1024*1024});
-const paths=new Set(['course.html','course/style.css','course/assets/fld-tribal.png']);
+const paths=new Set(['course.html','course/assets/fld-tribal.png']);
+const hasAtlas=(()=>{try{localVersion('course/map.html');return true;}catch{return false;}})();
+for(const htmlPath of ['course.html',...(hasAtlas?['course/map.html']:[])]){
+ paths.add(htmlPath);const html=localVersion(htmlPath).toString('utf8');
+ for(const match of html.matchAll(/<link[^>]+href="\.\/([^"?]+\.css)/g))paths.add(new URL(match[1],new URL(htmlPath,root)).pathname.slice(root.pathname.length));
+}
 async function graph(path){
  if(paths.has(path)&&path!=='course/boot.js')return;
  paths.add(path);const source=localVersion(path).toString('utf8');
@@ -15,7 +20,7 @@ async function graph(path){
   if(!paths.has(next))await graph(next);
  }
 }
-await graph('course/boot.js');
+await graph('course/boot.js');if(hasAtlas)await graph('course/map.js');
 const rows=[],queue=[...paths],sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 await Promise.all(Array.from({length:4},async()=>{
  while(queue.length){const path=queue.shift(),start=performance.now();try{

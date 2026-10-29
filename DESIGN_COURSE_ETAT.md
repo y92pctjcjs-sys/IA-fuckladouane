@@ -1,5 +1,20 @@
 # FLD / SWAGISTAN MOTOR CLUB — état design
 
+## État courant — forêt et atlas, 29 octobre 2026
+
+Branche : `feat/swagistan-world-20261029`, base `f118e32b56f46c2435e2d26bade3f2228cb29149`. L’utilisateur a explicitement demandé de publier puis de poursuivre les décors, la forêt, les virages et la cartographie. Les mentions de non-publication ci-dessous sont l’historique du premier jalon.
+
+- **Publié et contrôlé** : prototype B01 / C01, pause et quai, PR #6 fusionnée, commit main `f118e32b56f46c2435e2d26bade3f2228cb29149`, Pages `40816573727` réussi. 35 ressources servies identiques par SHA-256 : `course/validation/design-public-release-001.json`. Cache cohérent du prototype : `fld-design-001`.
+- **Conçu et implémenté, publication suivante en préparation** : forêt de chênes / bouleaux / pins à deux niveaux de détail, clairières et talus ; glissières continues suivant les courbes réelles et chevrons orientés ; neuf repères bâtis, chacun lié à un lieu de l’atlas, dans les cinq étapes. Aucun changement du tracé, de la simulation ou des collisions. Toit du tunnel limité exactement à 5,2–7,4 km, y compris le dernier tronçon de 80 m.
+- **Implémenté** : carte réelle des 13 km, cinq filtres d’étape, zoom, relief, dix contrôles et ouvertures tirées des données de jeu. Accès depuis l’accueil et la barre de course. Fenêtre native qui suspend simulation et audio ; fermer la carte exige ensuite la reprise explicite existante. Échap dans l’iframe ferme le parent par un message dont origine et source sont vérifiées.
+- **Fichiers principaux** : `world-landscape.js`, `world-landmarks.js`, `route-atlas.js`, `map.html/css/js`, `atlas-dialog.js`, `atlas-shell.css`, `renderer.js`, `main.js`, `course.html`, `tests/world.test.js`, outils de mesure / audit et atelier de contrôle. Cache prévu : `fld-world-002`.
+- **Testé** : 114/114 tests et 69 fichiers JavaScript contrôlés avant raccord à la nouvelle mise à jour OCULAIRE. Tests de positions / gabarits, continuité des glissières, orientation des chevrons, occultation exacte aux deux portails, données réelles de carte et contrat de fermeture. Chrome cloud : carte et panneau observés dans des cadres CSS 390×844, 320×568 et 844×390 ; cibles d’au moins 44 px, absence de débordement horizontal, zoom et filtres, fermeture par bouton et Échap, retour du focus. Cela ne constitue pas une partie 3D.
+- **Mesuré sans GPU** : `world-cpu.json`, Node v24.22.1 Linux, OCULAIRE prêt, DPR simulé 3, portraits / paysages, trois profils. Maximum 353 maillages adaptatif / détaillé, 329 économique ; au plus 220 948 triangles avant frustum, 264 géométries. Deux traversées identiques et huit retours réels au départ stables (234 géométries, 235 économique). Mesure à refaire après raccord OCULAIRE ; aucune cadence GPU déduite de ces nombres.
+- **Limite conservée** : contexte WebGL refusé dans le navigateur cloud (`GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `Error creating WebGL context.`). Pas d’observation de cette forêt depuis un rendu WebGL ni de FPS ou de validation iPhone. L’utilisateur a demandé la publication en connaissance du blocage décrit au jalon précédent ; cette version reste présentée avec cette limite.
+- **Raccord requis avant publication** : main a reçu `0d69230fc42385fe8d55aa890e528788e20de384` (chevelure, clignements et réactions aux poursuivants d’OCULAIRE). Lire son journal, conserver ses sources et intégrer les deux historiques. Aucun travail sur le visage n’est demandé ici.
+- **Prochaine action** : sauvegarder ce jalon, réunir main actuel, relancer tests et mesure, publier via Pages existant puis contrôler séparément commit, déploiement et octets servis.
+
+
 Date : 29 octobre 2026. Branche : `feat/swagistan-design-prototype-20261029`.
 Base initiale : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec`. Base actuelle intégrée : `764dcc90c33fcc5577fff29ea2499aaab6f064d9` (main a évolué pendant la mission). Aucun changement local préexistant, aucun AGENTS.md dans le dépôt.
 

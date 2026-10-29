@@ -1,0 +1,7 @@
+#routeAtlas{width:min(960px,calc(100vw - 20px));padding:0;max-height:calc(100dvh - 22px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow:hidden;border-color:#526274;background:#090b12}
+#routeAtlas .atlas-close{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 16px;margin:0;border-bottom:1px solid #414e5f;background:#151b26}
+#atlasTitle{font:700 10px/1.5 monospace;letter-spacing:1px;color:#62dfff}
+#routeAtlas .atlas-close button{min-width:94px;min-height:44px;background:#101722;border:1px solid #526274;font:700 10px monospace}
+#atlasFrame{display:block;width:100%;height:min(67dvh,720px);border:0;background:#090b12}
+.tools #map{font-size:10px;letter-spacing:0}
+@media(max-width:350px){.topbar{padding-inline:8px}.brand{font-size:28px}.tools{gap:3px}.tools button:first-child{min-width:52px}.tools button{min-width:44px}#atlasTitle{font-size:9px}.atlas-close{padding-inline:10px}}

@@ -1,12 +1,14 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-design-001';
-import {createRenderer} from './renderer.js?v=fld-design-001';
-import {createInput} from './input.js?v=fld-design-001';
-import {createAudio} from './audio.js?v=fld-design-001';
-import {createSave,createPreferences} from './storage.js?v=fld-design-001';
-import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-design-001';
-import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-design-001';
-import {createAppearance,resolveSkin} from './vehicle-skins.js?v=fld-design-001';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-world-002';
+import {createRenderer} from './renderer.js?v=fld-world-002';
+import {createInput} from './input.js?v=fld-world-002';
+import {createAudio} from './audio.js?v=fld-world-002';
+import {createSave,createPreferences} from './storage.js?v=fld-world-002';
+import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-world-002';
+import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-world-002';
+import {createAppearance,resolveSkin} from './vehicle-skins.js?v=fld-world-002';
+import {createAtlasDialog} from './atlas-dialog.js?v=fld-world-002';
 const $=id=>document.getElementById(id);
+const atlas=createAtlasDialog($('routeAtlas'),$('atlasFrame'));
 let storage;try{storage=localStorage;}catch{storage=null;}
 const save=createSave(storage),preferences=createPreferences(storage),systemMotion=matchMedia('(prefers-reduced-motion: reduce)');
 const appearance=createAppearance(storage),cosmeticQuery=new URLSearchParams(location.search);
@@ -32,7 +34,7 @@ $('engineSound').addEventListener('change',()=>{preferences.update({engineEnable
 for(const [id,key] of [['steeringMode','steering'],['quality','quality'],['motion','motion']])$(id).addEventListener('change',()=>{input.clear();preferences.update({[key]:$(id).value});settings();});
 systemMotion.addEventListener?.('change',settings);settings();
 function togglePause(){
- if(race.state==='PAUSE'){if(document.hidden||$('instructions').open||$('preferences').open)return;resume(race);audio.resume();}
+ if(race.state==='PAUSE'){if(document.hidden||$('instructions').open||$('preferences').open||$('routeAtlas').open)return;resume(race);audio.resume();}
  else{pause(race);input.clear();audio.suspend();}lastTime=performance.now();paintState();
 }
 function recordLabel(){return save.data.bestTime===null?'RECHERCHÉ V3 / AUCUNE ARRIVÉE ENREGISTRÉE':`RECHERCHÉ V3 / ${formatTime(save.data.bestTime)} · ${save.data.bestScore} PTS`;}
@@ -48,10 +50,11 @@ $('sound').addEventListener('click',async()=>{
  $('audioStatus').textContent=enabled?'HORIZON NON DÉCLARÉ / composition originale FLD · 108 BPM. Moteur réglable séparément.':'Son désactivé. Vos volumes restent mémorisés.';
  if(race.state==='PAUSE'||document.hidden)audio.suspend();
 });
-function openDialog(id){pause(race);input.clear();audio.suspend();paintState();$(id).showModal();}
+function openDialog(id){pause(race);input.clear();audio.suspend();paintState();if(id==='routeAtlas')atlas.open(race.s);else $(id).showModal();}
 for(const id of ['help','menuHelp','pauseHelp'])$(id).addEventListener('click',()=>openDialog('instructions'));
 for(const id of ['settings','pauseSettings'])$(id).addEventListener('click',()=>openDialog('preferences'));
-for(const id of ['instructions','preferences'])$(id).addEventListener('close',()=>{input.clear();if(race.state==='MENU')$('start').focus();else if(race.state==='PAUSE')$('resume').focus();if(race.state==='MENU'&&audio.enabled)audio.resume();});
+for(const id of ['map','menuMap'])$(id).addEventListener('click',()=>openDialog('routeAtlas'));
+for(const id of ['instructions','preferences','routeAtlas'])$(id).addEventListener('close',()=>{input.clear();if(race.state==='MENU')$('start').focus();else if(race.state==='PAUSE')$('resume').focus();if(race.state==='MENU'&&audio.enabled)audio.resume();});
 $('proof').addEventListener('click',()=>{if(proofURL)$('scoreProof').showModal();});
 $('scoreProof').addEventListener('close',()=>$('proof').focus());
 $('proofShare').addEventListener('click',async()=>{if(!proofFile)return;try{await navigator.share({files:[proofFile],title:'FLD — MADE IN SWAGISTAN'});}catch(error){if(error.name!=='AbortError')$('proofHint').textContent='Enregistrez l’image avec le lien ou maintenez votre doigt dessus.';}});
