@@ -11,7 +11,19 @@ Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
 - Sources du portrait et de la chevelure, simulation, collisions, véhicules, forêts, atlas, QR et portail préservés. Graphe de cache limité aux modules modifiés : `oculaire-impact-005` ; monde stable `fld-world-002`.
 - Atelier 3D enrichi d’un bouton dégât ; atelier audio indépendant de WebGL ajouté.
 - 121 tests existants réussis après raccordement. Sept contrôles audio réussis. Huit contrôles spécifiques ajoutés ; premier passage : sept réussis, un échec de test `AssertionError: actual -0, expected 0` sur le premier échantillon audio. Cause : égalité stricte distinguant le zéro signé produit par le fondu. Assertion corrigée pour comparer la magnitude, sans changer le son ; relance globale à effectuer.
-- Implémentation locale uniquement à ce jalon. Aucune nouvelle observation WebGL ou publication annoncée. Les preuves CPU et les vérifications publiques suivent.
+- Jalon 1 sauvegardé sur la branche distante : `d89e971d2e744c59368b86ad80b49d223f33535e`.
+
+## Jalon 2 — vérifications exécutées
+
+- `npm test` : **132/132 réussis** ; `npm run check` : **77 fichiers** vérifiés. Le contrôle du zéro signé corrigé passe ; aucun changement audio n’a été requis pour cet échec d’assertion.
+- Un tour par impact accepté ; contacts ignorés sous invulnérabilité sans effet ; calcul à 30/60/144 Hz identique ; pause stable ; nouvelle partie nettoyée ; dégât fatal animé en interception ; victoire prioritaire.
+- Vrai portrait vérifié pendant le tour : retour à l’orientation initiale, pupilles solidaires du visage pendant le tour puis cinq regards convergents vers la voiture ; inscription arrière de finale cachée. Cadre vérifié à 320×740, 390×844 et 844×390, trois voies et plusieurs virages.
+- Animation CPU de 22 poses du vrai maillage observée : `course/validation/oculaire-impact-cpu.html`. Elle montre le tour, son envers et le retour de face avec un éclairage de contrôle ; ce n’est pas un enregistrement du moteur WebGL.
+- Vrai `AudioContext` activé par clic dans le navigateur : trois variantes déclenchées avec `hit()`, chacune affichant son identifiant attendu. BRUITAGES à zéro : aucune moquerie planifiée. SON OFF : zéro source ponctuelle et ordonnanceur arrêté. 416 304 octets de buffers observés au taux du navigateur ; 453 120 octets à 48 kHz.
+- Données audio finies, déterministes, trois formes d’onde distinctes, crête 0,82 et fondu aux deux extrémités. Les tests vérifient aussi la réutilisation des buffers, le bus de volume, le nettoyage, les interruptions et l’absence de relecture des impacts silencieux.
+- WebGL toujours indisponible dans le navigateur cloud : `THREE.WebGLRenderer: Error creating WebGL context.` / `GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `BindToCurrentSequence failed`. Cause liée au contexte du navigateur ; aucun changement du moteur ou des protections pour la contourner. Pas de test iPhone/Safari ni de mesure de performance téléphone. L’observation WebAudio atteste son déclenchement et son état ; aucune écoute humaine ou capture du haut-parleur n’est revendiquée.
+- Aucun message d’erreur de l’application audio observé ; le journal contient des erreurs de métadonnées de l’extension Chrome, extérieures au jeu.
+- Rapport versionné : `course/validation/oculaire-impact-report.json`. Publication à suivre après dernier contrôle de main.
 
 ---
 
