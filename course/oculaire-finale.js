@@ -1,5 +1,6 @@
 import * as T from './vendor/three.module.min.js';
 import {LENGTH,sample} from './track.js?v=oculaire-003';
+import {softTexture} from './materials.js?v=oculaire-003';
 const smooth=x=>{x=T.MathUtils.clamp(x,0,1);return x*x*(3-2*x);};
 const rand=n=>{n=Math.imul(n^(n>>>16),0x45d9f3b);return ((n^(n>>>16))>>>0)/4294967296;};
 const IMPACT=4.7,PALETTE=['#31f6ec','#ff31b5','#dfff31','#fff6e3'];
@@ -29,10 +30,11 @@ function backMark(data){
  const geometry=new T.BufferGeometry();geometry.setAttribute('position',new T.Float32BufferAttribute(p,3));geometry.setAttribute('color',new T.Float32BufferAttribute(c,3));
  const mesh=new T.Mesh(geometry,new T.MeshBasicMaterial({vertexColors:true,side:T.DoubleSide,fog:false,toneMapped:false}));group.add(mesh);return group;
 }
-function shards(data){
+function shards(data,mark){
  const triangles=[];
- for(const s of data.SURFACES){
-  const p=from64(s.p,Int16Array),n=from64(s.n,Int8Array),c=from64(s.c,Uint8Array),idx=from64(s.i,Uint16Array);
+ const inputs=data.SURFACES.map(s=>({p:from64(s.p,Int16Array),n:from64(s.n,Int8Array),c:from64(s.c,Uint8Array),idx:from64(s.i,Uint16Array)}));
+ for(const mesh of mark.children){const a=mesh.geometry.attributes,p=Int16Array.from(a.position.array,x=>Math.round(x*8192)),n=new Int8Array(p.length),c=Uint8Array.from(a.color.array,x=>Math.round(x*255));for(let i=2;i<n.length;i+=3)n[i]=-127;inputs.push({p,n,c,idx:Uint16Array.from({length:a.position.count},(_,i)=>i)});}
+ for(const {p,n,c,idx} of inputs){
   for(let j=0;j<idx.length;j+=3){const ids=[idx[j],idx[j+1],idx[j+2]],center=[0,0,0];
    for(const id of ids)for(let a=0;a<3;a++)center[a]+=p[id*3+a]/8192/3;
    const q=center.map(x=>T.MathUtils.clamp(Math.floor((x+2)*32),0,127));let key=0;for(let b=0;b<7;b++)for(let a=0;a<3;a++)key|=((q[a]>>b)&1)<<(b*3+a);
@@ -55,7 +57,7 @@ function shards(data){
  attribute vec3 aCenter;attribute vec4 aMotion;uniform float uTime;uniform float uReduced;varying vec3 pigment;
  void main(){float t=uTime;vec3 axis=normalize(aCenter+vec3(.13,.07,.11));vec3 v=position-aCenter;float angle=aMotion.w*t*uReduced;
  vec3 spun=v*cos(angle)+cross(axis,v)*sin(angle)+axis*dot(axis,v)*(1.-cos(angle));
- vec3 p=aCenter+spun+aMotion.xyz*t*uReduced;p.y-=2.8*t*t;float floorY=-1.22;
+ vec3 p=aCenter+spun+aMotion.xyz*t*uReduced;p.y-=2.8*t*t;float floorY=${(-data.META.height/2+.012).toFixed(6)};
  p.y=max(floorY+abs(sin(t*5.+aMotion.w))*.025,p.y);pigment=color;
  gl_Position=projectionMatrix*modelViewMatrix*vec4(p,1.);}`,fragmentShader:`varying vec3 pigment;void main(){gl_FragColor=vec4(pigment,1.);#include <tonemapping_fragment>\n#include <colorspace_fragment>}`.replace(';#include',';\n#include')});
  const mesh=new T.Mesh(geo,mat);mesh.name='1000 fragments de surface';mesh.frustumCulled=false;mesh.visible=false;return mesh;
@@ -64,12 +66,12 @@ function fireworks(){
  const count=420,p=new Float32Array(count*3),color=new Float32Array(count*3),geometry=new T.BufferGeometry(),c=new T.Color();
  geometry.setAttribute('position',new T.BufferAttribute(p,3));geometry.setAttribute('color',new T.BufferAttribute(color,3));
  for(let i=0;i<count;i++){c.set(PALETTE[Math.floor(i/70)%4]);c.toArray(color,i*3);}
- const material=new T.PointsMaterial({size:.55,vertexColors:true,transparent:true,opacity:.9,depthWrite:false,blending:T.AdditiveBlending,fog:false,toneMapped:false});
+ const material=new T.PointsMaterial({size:.8,map:softTexture('spark'),vertexColors:true,transparent:true,opacity:.95,depthWrite:false,blending:T.AdditiveBlending,fog:false,toneMapped:false});
  const points=new T.Points(geometry,material);points.frustumCulled=false;points.visible=false;return points;
 }
 export function createOculaireFinale(scene,face,data){
  const effects=new T.Group();effects.name='OCULAIRE / arrivée';scene.add(effects);
- const mark=backMark(data),fracture=shards(data),sparks=fireworks();effects.add(fracture,sparks);
+ const mark=backMark(data),fracture=shards(data,mark),sparks=fireworks();effects.add(fracture,sparks);
  const ground=sample(LENGTH+148,-7),cameraSpot=sample(LENGTH+86,1),height=24,scale=height/data.META.height;
  const landingY=ground.y+height*.5,initialY=ground.y+60;
  let lastTime=-1;

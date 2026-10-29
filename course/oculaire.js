@@ -76,6 +76,9 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
    const g=geometry(surface);resources.add(g);const mesh=new T.Mesh(g,material(surface.finish));mesh.name=`${surface.group}_${surface.finish}`;
    if(surface.group.startsWith('eye_')){
     const eye=eyes[Number(surface.group.slice(4))];g.translate(-eye.assembly.position.x,-eye.assembly.position.y,-eye.assembly.position.z);
+    if(surface.finish==='iris'){
+     const normals=g.attributes.normal,mean=new T.Vector3();for(let i=0;i<normals.count;i++)mean.add(new T.Vector3().fromBufferAttribute(normals,i));eye.forward.copy(mean.normalize());
+    }
     (surface.finish==='iris'?eye.iris:surface.finish==='sclera'?eye.globe:eye.assembly).add(mesh);
    }else if(surface.group.startsWith('mouth_')){
     const mouth=mouths[Number(surface.group.slice(6))];g.translate(-mouth.position.x,-mouth.position.y,-mouth.position.z);mouth.add(mesh);

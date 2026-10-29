@@ -7,6 +7,8 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 from scipy.spatial.transform import Rotation
+from scipy.sparse import coo_matrix
+from scipy.sparse.csgraph import connected_components
 
 source, output = map(Path, sys.argv[1:3])
 raw=source.read_bytes(); length=struct.unpack_from('<I',raw,12)[0]
@@ -37,7 +39,7 @@ def matrix(i):
 records=[]; all_points=[]
 for ni,node in enumerate(g['nodes']):
  name=node.get('name','')
- if 'mesh' not in node or re.search('dents|cornee|Fibre_v4_',name):continue
+ if 'mesh' not in node or re.search('dents|cornee',name):continue
  # The eye assemblies move as five closed volumes, each about its sclera center.
  group='body'
  for pattern in [r'eye_\d',r'mouth_\d']:
@@ -45,11 +47,22 @@ for ni,node in enumerate(g['nodes']):
   if match:group=match.group()
  for p in g['meshes'][node['mesh']]['primitives']:
   attrs=p['attributes']; pos=array(attrs['POSITION']); normal=array(attrs['NORMAL']); faces=array(p['indices']).reshape(-1,3)
+  if name.startswith('Fibre_v4_'):
+   edges=np.r_[faces[:,[0,1]],faces[:,[1,2]]]
+   graph=coo_matrix((np.ones(len(edges)),(edges[:,0],edges[:,1])),shape=(len(pos),len(pos)))
+   _,components=connected_components(graph,directed=False)
+   stride=24 if name.endswith('_4') else 8
+   faces=faces[components[faces[:,0]]%stride==0]
   transform=matrix(ni);pos=pos@transform[:3,:3].T+transform[:3,3]; normal=normal@np.linalg.inv(transform[:3,:3]);normal/=np.maximum(np.linalg.norm(normal,axis=1)[:,None],1e-9)
   mat=g['materials'][p['material']];pbr=mat.get('pbrMetallicRoughness',{}); rgba=np.ones((len(pos),4))*pbr.get('baseColorFactor',[1,1,1,1])
   if 'baseColorTexture' in pbr:
    image=texture(pbr['baseColorTexture']['index']); uv=array(attrs['TEXCOORD_0']);h,w=image.shape[:2]
    rgba*=image[np.clip((uv[:,1]*h).astype(int),0,h-1),np.clip((uv[:,0]*w).astype(int),0,w-1)]
+  if 'Sclère' in mat['name']:
+   # The source crop contains a painted iris. Remove it from the sclera so
+   # the independently moving iris-pupil assembly is the only pupil.
+   uv=array(attrs['TEXCOORD_0']);vein=np.maximum(0,np.sin(uv[:,0]*69+np.sin(uv[:,1]*17)*2))**24
+   rgba[:,:3]=np.c_[np.ones(len(pos))*.94,.69-vein*.32,.81-vein*.13]
   if 'Cheveux_meche' in name:faces=faces[rgba[faces,3].mean(axis=1)>.25]
   # Sample textures before clustering, retaining asymmetric pigment distribution.
   cell=.028 if name=='Tete_seule_symetrique' else .018 if 'relief_anatomique' in name else .009 if 'eye_' in name else .017

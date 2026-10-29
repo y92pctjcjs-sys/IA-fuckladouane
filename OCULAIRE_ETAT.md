@@ -12,7 +12,7 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 
 - Brief artistique actuel lu intégralement avant modification. Sculpture validée v4 et référence visuelle retrouvées et examinées.
 - Source GLB : 41 870 456 octets, SHA-256 `08ac7e703ce322dadbd3c5a8be83955c17ca8289fa739c260575ffe248c5d10e`. Source inchangée et exclue du chargement du jeu.
-- Adaptation native : surfaces quantifiées avec pigments échantillonnés depuis les textures. 92 862 triangles, 58 534 sommets, 26 surfaces ; 1 681 519 octets de données JavaScript autonomes. Source : 545 576 triangles / 243 maillages.
+- Adaptation native : surfaces quantifiées avec pigments échantillonnés depuis les textures. 94 310 triangles, 60 055 sommets, 26 surfaces ; 1 717 474 octets de données JavaScript autonomes. Source : 545 576 triangles / 243 maillages.
 - Cinq yeux, trois reliefs de nez, trois bouches ; les surfaces de dents et les cornées transparentes superflues sont exclues. Les textures d'origine ne sont pas repeintes ; la géométrie de production est simplifiée.
 - Les fichiers du portail, QR, domaine, simulation, contrôles, difficulté, véhicules, sons, scores et tirage amoureux ne changent pas de comportement. Version de cache unifiée `oculaire-003`.
 
@@ -30,22 +30,33 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 - Calcul des regards et cadrage : trois formats, trois voies, tracé échantillonné tous les 300 m ; cinq regards à moins de 0,000001 radian de leur cible.
 - Rendu réel observé en Chromium headless / WebGL logiciel : course portrait, envers et fracture. Aucune erreur JavaScript ni shader observée dans ces captures.
 - Premier rendu gris : éclairage émissif uniforme identifié et supprimé. Premier contrôle de cadrage trop large à 11 400 m / 320 px : direction vers le tracé proche corrigée ; tests de cadrage réussis ensuite.
-- Ressources des fragments : 11 979 198 octets d'attributs GPU, 1000 groupes, un seul objet de rendu. Mesure de performance complète encore à exécuter.
+- Ressources des fragments : 12 541 122 octets d'attributs GPU, 1000 groupes, un seul objet de rendu. Mesure dans Chromium logiciel : scène ouverte 172 appels / 132 424 triangles ; même base sans OCULAIRE 146 appels / 38 114 triangles. 20 images chronométrées après préchauffage : médiane 1,9 ms / p95 3,1 ms pour les appels de rendu, contre 2,5 / 3,7 ms pour la base. Ces petits échantillons ne prouvent ni un gain de vitesse ni une cadence sur iPhone.
 
-## Reste à vérifier avant publication
+## Vérification finale exécutée
 
-- Occultation réelle en tunnel, autres formats, cinq pupilles de près, clignements, toute la finale et impact au sol.
-- Pause / reprise / nouvelle partie depuis les moments clés, réglages, perte de visibilité et deux issues victorieuses dans le navigateur réel.
-- Syntaxe complète, contrôles du portail, budget de rendu comparé à la base et mesure dans l'environnement disponible.
-- Aucun test sur iPhone physique. Aucun déploiement de cette branche à ce stade.
+- `npm test` : 100/100 ; `npm run check` : 56 fichiers. Rapport synthétique versionné : `course/validation/oculaire-report.json`.
+- 68 cas réels Chromium / WebGL logiciel : trois voies, portraits 390 × 844 et 320 × 740, paysage 844 × 390, tunnel occultant la tête, vue de contrôle et dernière frontière.
+- Finale normale et amoureuse inspectées de 0 à 7 s tous les quarts de seconde ; captures observées de la face en rotation, du mot dans les cheveux, de l'approche du sol et des fragments réels. L'inscription se fragmente avec les surfaces capillaires.
+- Pause stable à 2,6 et 5,05 s ; mouvements réduits ; défaite sans inscription ni fragments. Interface réelle parcourue jusqu'aux résultats des trois issues, y compris les 14 s de la rencontre ; bouton rejouer réinitialisant les effets.
+- Boutons pause / reprendre, interruption de fenêtre, préférences et coupure indépendante du moteur vérifiés. Volume général conservé à 75 %.
+- Test HTTP 404 volontaire du portrait : erreur identifiée et course toujours utilisable ; ce cas reste explicitement marqué `error`, jamais présenté comme une intégration réussie.
+- Cinq pupilles observées de près. La texture de sclère d'origine contenait un iris peint ; il est supprimé de la version adaptée pour éviter une seconde pupille immobile. Iris mobiles et pigments du visage conservés.
+- Aucune erreur JavaScript ni shader dans le parcours normal ; erreurs attendues du scénario HTTP 404 isolées dans le rapport.
+- Source d'origine intacte. Le rendu adapté est une simplification pour le jeu, pas un substitut haute définition au modèle d'atelier.
+- Aucun essai sur iPhone physique ou Safari. Les interactions de visibilité du jeu gardent leur logique existante ; interruption de fenêtre testée dans Chromium.
+- Sauvegarde distante du premier jalon vérifiée : `900b818bc1d7f4389cbc1d205aa718518ee58f10`, arbre `78ee91fc96a2de1106474c224c37564e8f536803`.
+- Publication finale en cours ; le code et le déploiement publics doivent encore être vérifiés séparément après mise à jour de main.
 
 ## Incidents d'accès et méthode
 
 - L'ancienne tentative d'import direct restait bloquée par le transfert Git du GLB. La correction utilisateur permet désormais une adaptation autonome, sans cette dépendance.
 - Lecture de configuration Pages via GitHub : `HTTPError: 400: GitHub Fetch URL is not an allowed public GitHub repository or search endpoint.` Pas de répétition ; mécanisme confirmé par l'historique Actions : `pages build and deployment`, branche `main`, dernier déploiement réussi sur la base ci-dessus.
-- URL publique indisponible dans l'outil de recherche (`is not accessible via this tool`). Le contrôle du site publié devra utiliser une requête HTTP ou un navigateur réel.
-- Browser local : Chromium déjà disponible. Fichiers servis pour les contrôles par interception HTTP Playwright ; ces contrôles ne prouvent pas encore la desserte publique.
+- URL publique indisponible dans l'outil de recherche (`is not accessible via this tool`). Vérification alternative réussie : HTTP 200 par curl, puis navigateur réel.
+- Browser local : Chromium déjà disponible. Contrôles locaux par interception HTTP Playwright ; contrôle réseau public effectué séparément.
+- Premier navigateur public sans configuration réseau : `page.goto: net::ERR_EMPTY_RESPONSE at https://ia.fuckladouane.com/course.html`. Cause : Chromium ignorait le proxy de l'environnement. Navigation via ce proxy réussie ensuite : HTTP 200, bon titre, aucune erreur JavaScript. Le navigateur de contrôle accepte le certificat de ce transport ; les requêtes curl utilisent leur vérification TLS habituelle.
+- Premier contrôle de préférence : `AssertionError: '75' !== '80'`. Cause : le test supposait 80 % alors que le réglage existant est 75 %. Test corrigé, réglage du jeu inchangé ; contrôle complet réussi ensuite.
+- Premier appel d'arbre GitHub : `tool call rejected because the catalog changed after codex_apps/github.create_tree was prepared`. Catalogue relu et écritures séparées entre code et données ; sauvegarde distante ensuite vérifiée.
 
 ## Prochaine action
 
-Finir la vérification visuelle et fonctionnelle détaillée, corriger les écarts, sauvegarder le jalon final ; publier via le mécanisme Pages existant uniquement après ces contrôles puis vérifier séparément le commit et l'URL publique.
+Publier l'arbre final vérifié avec le mécanisme Pages existant. Contrôler le SHA distant, le déploiement Actions, la réponse HTTP et les empreintes des ressources réellement servies, puis le démarrage / pause / reprise de la version publique. Consigner ce résultat ici avant de terminer.
