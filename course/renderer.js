@@ -326,13 +326,13 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       camera.lookAt(aim);
       const targetFov=carShot?62+(carShot.fov-62)*carShot.blend:62+(r.boosting&&!reduced?4:0),fov=carShot&&r.state!=='PAUSE'?targetFov:camera.fov+(targetFov-camera.fov)*(1-Math.exp(-renderDelta*4)); if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
       player.visible=!drive||player.position.distanceTo(camera.position)<1800;
-      victoryInspection=drive?{...drive,camera:camera.position.toArray(),target:aim.toArray(),fov:camera.fov,wheels:player.userData.wheels.map(w=>w.rolling.rotation.x),visible:player.visible}:null;
+      victoryInspection=drive?{...drive,logoFocus:carShot?.logoFocus||0,camera:camera.position.toArray(),target:aim.toArray(),fov:camera.fov,wheels:player.userData.wheels.map(w=>w.rolling.rotation.x),visible:player.visible}:null;
       const welcoming=r.result?.won||r.s>12000;
       scene.fog.color.lerp(new T.Color(welcoming?'#433443':stageAt(r.s).fog),.04);scene.background.copy(scene.fog.color).multiplyScalar(.43);
       scene.fog.density=stageAt(r.s).kind==='tunnel'?.005:.0033;
       sky.update(r,camera,quality.level);
       const front=driveSample(s+7*routeScale,lateral,r.branch);headPool.position.set(front.x,front.y+.018,front.z);headPool.rotation.y=front.angle;
-      glow.position.copy(player.position);glow.position.y+=1.5;glow.color.set(drive?.departing?'#c0b0ff':love&&r.cinematic>5?'#e8b992':'#956bf1');
+      const logoLight=carShot?.logoFocus||0;glow.position.copy(player.position);glow.position.y+=1.5;glow.position.x-=Math.cos(player.rotation.y)*3*logoLight;glow.position.z+=Math.sin(player.rotation.y)*3*logoLight;glow.intensity=10+12*logoLight;glow.color.set(logoLight?'#e2dcff':drive?.departing?'#c0b0ff':love&&r.cinematic>5?'#e8b992':'#956bf1');
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
       const headRace=r.branch?{...r,cops:r.cops.filter(c=>{const p=sample(c.s,c.x);return Math.hypot(p.x-player.position.x,p.z-player.position.z)<90;})}:r;

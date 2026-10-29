@@ -1,0 +1,148 @@
+{
+  "kind": "OCULAIRE_VICTORY_DRIVE_AND_FLD_BRANDING",
+  "base": "75b97144c71b5e268f2379677f8135a18872b940",
+  "branch": "feat/oculaire-victory-drive-20261029",
+  "tests": {
+    "passed": 152,
+    "failed": 0,
+    "syntaxFiles": 85
+  },
+  "timeline": {
+    "normalDeparture": 7,
+    "normalResults": 14.8,
+    "loveDeparture": 14,
+    "loveResults": 21.8,
+    "defeatResults": 4.5,
+    "slowSpeed": 6.5,
+    "escapeSpeed": 58,
+    "logoInsertAfterDeparture": [
+      1.25,
+      2.25
+    ],
+    "cameraFixedAfterDeparture": 3.5,
+    "resultsBackgroundMaxSeconds": 60
+  },
+  "verification": {
+    "realVehicleVerticesFramed": [
+      [
+        320,
+        740
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "originalDoorUvsVisibleOnAllLiveries": [
+      "nightrunner",
+      "seraph",
+      "cursed"
+    ],
+    "realHeadFractureBeforeLogo": true,
+    "scoreFrozen": true,
+    "pauseAndReplay": true,
+    "wheelMotion": true,
+    "cameraContinuity": true,
+    "audioEngineMuteAndFade": true,
+    "cpuProof": "oculaire-victory-cpu.html",
+    "cpuImages": 10,
+    "cpuContainsOriginalTribalBitmap": true,
+    "webglGameplayObserved": false,
+    "physicalIphoneOrSafari": false
+  },
+  "preserved": [
+    {
+      "path": "index.html",
+      "sha256": "231ab72d77805afbe82170809f09ae6395b97ae88929f02889d5c66f9b232ea7"
+    },
+    {
+      "path": "CNAME",
+      "sha256": "3d707f4f3aa6ac76eb3511c24d4cf95e269fa391cf1c2b125dca12645199c47b"
+    },
+    {
+      "path": "core.js",
+      "sha256": "115f47b2a0892b668e1470ba859d3b31bce3bca22210523804632f972bd60da9"
+    },
+    {
+      "path": "app.js",
+      "sha256": "19a4e03cbc52aa43fdd88d5e68cd62a02d0cf0ecd0d0e0dc222c76d13943e7f2"
+    },
+    {
+      "path": "course/oculaire.js",
+      "sha256": "004f13bbb0e9208e125106db71940b1cef56063b14877c7b123e1c86c7e23104"
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "sha256": "49124eb69964a0cee5c6fce57c0b5c5ffd0a60be1a3da63b8dd6c2c18feee809"
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b"
+    },
+    {
+      "path": "course/oculaire-reactions.js",
+      "sha256": "384ec1300a207afdf7223c51d3e24c35a47fae8aaa9c0b9bc7c6420c5a672a8c"
+    },
+    {
+      "path": "course/oculaire-taunts.js",
+      "sha256": "2644b6613db7cebb5d3dc513dd8dc095b0e2de8392d0d1ab7bdf0b1df8acd16b"
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a"
+    },
+    {
+      "path": "course/assets/fld-tribal.png",
+      "sha256": "d391b8832aef4a0b15d94a9da614598e6bea0592709fde3ba496caebccee020c"
+    },
+    {
+      "path": "course/vehicle-designs.js",
+      "sha256": "5f6c41d235bca4e4f91a04f69cff7973cdb0c3f9d93055f21de9d675a47f12ac"
+    },
+    {
+      "path": "course/vehicle-livery.js",
+      "sha256": "4e5fe9c666815ba6ab44963c352944f1cb314779ad86feb0e058423f26c2b968"
+    },
+    {
+      "path": "course/vehicle-skins.js",
+      "sha256": "739c936982e8612d223389ca1c163eedfde1d0a19f3a6915ae023089c6332d94"
+    },
+    {
+      "path": "course/track.js",
+      "sha256": "6044efa158b946ddbfb19ae85c3ab0b5a78444e16baa81324fd66cb5aeebb707"
+    },
+    {
+      "path": "course/route-options.js",
+      "sha256": "a7613a2c061b081aa90b4f1c4e98fbfe04787ea83e9f98c7251a441e1449ee91"
+    },
+    {
+      "path": "course/route-atlas.js",
+      "sha256": "ce5e574ec3a52d9eec09df380aeef75a29443a9d103ff195981c27a012c995c7"
+    },
+    {
+      "path": "course/world-landscape.js",
+      "sha256": "cf447df5f96a3c68db025602bdd2df6696f12a849a8fca6229f56d24514a314f"
+    },
+    {
+      "path": "course/world-landmarks.js",
+      "sha256": "628b3e5b457d5735a34904c1769047e8508a7f8c81313cee14ee672095e8354b"
+    },
+    {
+      "path": "course/input.js",
+      "sha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb"
+    },
+    {
+      "path": "course/storage.js",
+      "sha256": "bd0fd16ad158c96f3503478fffd1237a47c9424129ee92a65cd72bba62573f88"
+    },
+    {
+      "path": "course/ending.js",
+      "sha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706"
+    }
+  ],
+  "publication": "Prepared, not yet published"
+}

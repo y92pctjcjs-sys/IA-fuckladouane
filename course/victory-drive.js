@@ -48,10 +48,16 @@ export function victoryShot(r,aspect=1,reduced=false,tail=0){
  // Stay in the road corridor: orbiting behind roadside lamp posts masks the
  // hero car. A bounded three-quarter arc gives a clear body view on phones.
  const side=-Math.sin(orbit)*(reduced?4:6.8),back=-Math.sqrt(radius*radius-side*side);
- const position=[p.x+Math.cos(angle)*side+Math.sin(angle)*back,p.y+height,p.z-Math.sin(angle)*side+Math.cos(angle)*back];
+ let position=[p.x+Math.cos(angle)*side+Math.sin(angle)*back,p.y+height,p.z-Math.sin(angle)*side+Math.cos(angle)*back];
  const settle=smooth((t-capture)/1.2),horizon=victorySample(LENGTH+initial+motion.distance+180,0);
- const target=[pose.position.x*(1-settle)+horizon.x*settle,(pose.position.y+.85)*(1-settle)+(horizon.y+2.2)*settle,pose.position.z*(1-settle)+horizon.z*settle];
- return {position,target,blend:smooth(t/.7),fov:62-(reduced?3:10)*Math.sin(Math.PI*u),phase:pose.phase};
+ let target=[pose.position.x*(1-settle)+horizon.x*settle,(pose.position.y+.85)*(1-settle)+(horizon.y+2.2)*settle,pose.position.z*(1-settle)+horizon.z*settle];
+ const logoFocus=reduced?0:smooth((t-.75)/.5)*(1-smooth((t-2.25)/.65));
+ if(logoFocus>0){
+  const a=pose.position.angle+pose.yaw,c=Math.cos(a),sn=Math.sin(a),car=pose.position;
+  const close=[car.x-4.6*c-.2*sn,car.y+1.12,car.z+4.6*sn-.2*c],door=[car.x-.94*c,car.y+.66,car.z+.94*sn];
+  position=position.map((v,i)=>v+(close[i]-v)*logoFocus);target=target.map((v,i)=>v+(door[i]-v)*logoFocus);
+ }
+ return {position,target,blend:smooth(t/.7),fov:62-(reduced?3:10)*Math.sin(Math.PI*u),phase:logoFocus>.9?'brand-detail':pose.phase,logoFocus};
 }
 
 export function createVictoryTail(){

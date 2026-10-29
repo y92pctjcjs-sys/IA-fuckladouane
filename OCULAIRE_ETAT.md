@@ -3,7 +3,7 @@
 Date : 29 octobre 2026. Branche : `feat/oculaire-victory-drive-20261029`.
 Base distante relue : `75b9714` ; les virages V4, le raccourci forestier et les débris sont conservés.
 Brief complet : `course/OCULAIRE_VICTOIRE_ROUTE_INFINIE.md`.
-Statut : implémenté et contrôlé en calcul ; préparation de la preuve visuelle et de la livraison.
+Statut : implémenté, contrôlé en calcul et observé en rastérisation CPU ; prêt pour sauvegarde finale et publication.
 
 ## Jalon 1 — mise en scène raccordée
 
@@ -20,6 +20,17 @@ Statut : implémenté et contrôlé en calcul ; préparation de la preuve visuel
 - Première trajectoire de caméra observée en raster CPU : passage derrière un lampadaire. Arc ramené dans le corridor de la route, en trois-quarts arrière, sans grande traversée des accessoires de bord de route.
 - Contrôle de cadrage initial par boîte alignée au monde : `vehicle frame escape/320/0: -1.017304…` puis `love/320/0: -1.110326…`. Distance affinée pour les formats étroits et test remplacé par la projection des vrais sommets visibles, instances comprises, afin de ne pas confondre une boîte fictive avec le maillage rendu. Contrôles ciblés réussis ensuite.
 - Aucune observation WebGL ou validation iPhone/Safari nouvelle à ce jalon. Le raster CPU contrôle la géométrie et la caméra, avec un éclairage de contrôle.
+
+## Jalon 2 — logos, preuves et vérifications finales
+
+- Correction demandée appliquée : le logo FLD existant sur la portière reçoit un insert d’une seconde pendant le ralenti, après la fin complète de l’explosion de la tête. Éclairage doux latéral par le point lumineux existant, sans modification des pigments ni de la géométrie des carrosseries. Plan large conservé en mouvements réduits.
+- `npm test` : **152/152 réussis**. Syntaxe : **85 fichiers**. Script inline de l’atelier vérifié syntaxiquement après ajout des liens directs de prévisualisation.
+- Contrôle de la vraie géométrie : cadrage de trois formats ; rayons depuis la vraie caméra vers le centre du logo atteignant les UV d’origine sur les trois livrées. Insert supérieur à 100 pixels dans les formats contrôlés. Fracture du vrai modèle OCULAIRE contrôlée à 4,7 s avant tout insert de logo.
+- Dix plans CPU observés sur les vrais maillages et caméras, avec le bitmap tribal original : `course/validation/oculaire-victory-cpu.html`. Éclairage de contrôle, sans reproduction des reflets physiques WebGL ni test de fluidité.
+- Une anomalie du raster CPU masquait les textures de carrosserie : la propriété `Canvas.data` est une fonction dans le moteur de dessin natif, et non un tableau de pixels. Lecture réservée aux tableaux typés puis recours à `getImageData()` pour les canvas ; les logos apparaissent ensuite correctement. Aucun changement aux textures du jeu pour corriger cet outil.
+- Première préparation de sauvegarde distante interrompue par `SyntaxError: Unexpected token W, Warning: t... is not valid JSON` : résultat du terminal tronqué par le budget de sortie. Lecture du contenu Git commité avec un budget adapté, puis sauvegarde vérifiée du jalon initial : `a3a9e516dfbb7618fed77fe4a9ea0e2cf6c9556a`.
+- Vingt-deux sources protégées comparées à la base, identiques octet pour octet : visage, cheveux, finale, 360°, moqueries, logo, livrées, V4, raccourci, atlas, contrôles, scores et portail. Rapport complet `course/validation/oculaire-victory-report.json`.
+- Aucun nouveau test de course WebGL ni d’iPhone/Safari n’est revendiqué. Sauvegarde de la version finale et contrôle du dernier état de main à effectuer avant toute publication.
 
 ---
 

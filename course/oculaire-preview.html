@@ -31,6 +31,7 @@ $('sound').onclick=async()=>{const enabled=await audio.toggle();$('sound').textC
 $('blink').onclick=()=>{let found=0;for(let t=0;t<6;t+=.001)if(blinkAt(t,race.seed,2,false)>.999){found=t;break;}race.time=found;pause(race);$('pausePreview').textContent='Reprendre';};
 $('reset').onclick=()=>{race.time=0;race.s=0;race.x=0;race.cinematic=0;race.hitSerial=0;race.invulnerable=0;race.health=100;race.result=null;race.state='RACE';$('scene').value='race';$('cinematic').value=0;$('patrol').value='none';$('pausePreview').textContent='Pause';view.reset();audio.reset();audio.resume();};
 $('reduced').onchange=()=>view.configure({reduced:$('reduced').checked,quality:'auto'});
+const previewQuery=new URLSearchParams(location.search);if(['escape','love','caught'].includes(previewQuery.get('scene'))){$('scene').value=previewQuery.get('scene');$('cinematic').value=Math.max(0,Math.min(24,Number(previewQuery.get('cinematic'))||0));$('motion').checked=previewQuery.get('play')==='1';scene();}
 function patrol(){const mode=$('patrol').value;race.cops.forEach(c=>c.active=false);if(mode==='none')return;const c=race.cops[0];c.active=mode!=='hidden';c.undercover=mode==='hidden';c.s=race.s-Number($('gap').value);c.x=race.x+(mode==='left'?5:mode==='right'?-5:Math.sin(race.time*.65)*5);c.phase='flank';}
 function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;
  if(race.state==='RACE'){

@@ -1,16 +1,19 @@
 // Geometry inspection through the real chase camera. This is NOT a WebGL screenshot,
 // shader/reflection validation or performance benchmark. No game code is replaced.
 import * as T from '../vendor/three.module.min.js';
-import {createRenderer} from '../renderer.js';
 import {createRace} from '../simulation.js';
 import * as model from '../assets/oculaire/portrait-data.js';
 import {createRequire} from 'node:module';
 import {mkdirSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
-const require=createRequire(import.meta.url),{createCanvas,ImageData}=require('@napi-rs/canvas');
+import {fileURLToPath} from 'node:url';
+const require=createRequire(import.meta.url),{createCanvas,ImageData,Image:NativeImage}=require('@napi-rs/canvas');
 const output=resolve(process.argv[2]||'course/validation/world-raster');mkdirSync(output,{recursive:true});
 globalThis.document={createElement:()=>createCanvas(1,1)};
 globalThis.devicePixelRatio=1;globalThis.addEventListener=globalThis.removeEventListener=()=>{};
+globalThis.Image=class extends NativeImage{set src(value){super.src=typeof value==='string'&&value.startsWith('file:')?fileURLToPath(value):value;}get src(){return super.src;}};
+const {createRenderer}=await import('../renderer.js');
+const {brandReady}=await import('../vehicle-livery.js?v=fld-route-003');if(!await brandReady)throw new Error('Original FLD tribal logo could not be loaded for CPU inspection.');
 let scene,camera;
 const sink={setPixelRatio(){},setSize(){},dispose(){},info:{},render(s,c){scene=s;camera=c;}};
 const textures=new WeakMap(),light=new T.Vector3(-.4,.7,-.2).normalize();
@@ -19,7 +22,7 @@ const srgb=x=>{x=T.MathUtils.clamp(x,0,1);return x<=.0031308?x*12.92:1.055*x**(1
 function textureData(texture){
  if(!texture)return null;if(textures.has(texture))return textures.get(texture);
  const image=texture.image;let value=null;
- if(image?.data)value={data:image.data,width:image.width,height:image.height};
+ if(image?.data&&ArrayBuffer.isView(image.data))value={data:image.data,width:image.width,height:image.height};
  else if(image?.getContext)value=image.getContext('2d').getImageData(0,0,image.width,image.height);
  textures.set(texture,value);return value;
 }

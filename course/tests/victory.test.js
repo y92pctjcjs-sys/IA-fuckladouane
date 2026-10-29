@@ -6,6 +6,7 @@ import {LENGTH,sample} from '../track.js';
 import {cinematicDuration,departureStart,departureMotion,victoryPose,victoryShot,victorySample,createVictoryTail} from '../victory-drive.js';
 import {createRenderer} from '../renderer.js';
 import {canvasSink} from '../tools/canvas-sink.mjs';
+import {META,SURFACES} from '../assets/oculaire/portrait-data.js';
 function winner(ending='escape'){const r=createRace(()=>ending);Object.assign(r,{state:'RACE',s:LENGTH,time:280,speed:48,x:0});finish(r,true);return r;}
 
 test('the entire head finale and rare encounter precede the driving outro; defeat has none',()=>{
@@ -59,7 +60,7 @@ test('the actual car, wheels and camera remain framed, deterministic and frozen 
    for(let i=0;i<=65;i++){
     r.cinematic=departureStart(r.result)+.8+i*.1;view.render(r,1/60);const inspect=view.inspectVictory(),vehicle=scene.children.find(o=>o.userData.kind==='fld');
     assert.equal(JSON.stringify(r.result),result);assert.equal(r.s,LENGTH);
-    if(i<28){
+    if(i<28&&inspect.logoFocus<.1){
      vehicle.traverseVisible(mesh=>{if(!mesh.isMesh)return;const a=mesh.geometry.attributes.position,instance=new T.Matrix4();for(let k=0;k<(mesh.isInstancedMesh?mesh.count:1);k++){
       if(mesh.isInstancedMesh)mesh.getMatrixAt(k,instance);else instance.identity();const matrix=mesh.matrixWorld.clone().multiply(instance);
       for(let n=0;n<a.count;n++){const p=new T.Vector3().fromBufferAttribute(a,n).applyMatrix4(matrix).project(camera);assert.ok(Math.abs(p.x)<1&&Math.abs(p.y)<1,`vehicle frame ${ending}/${width}/${i}: ${p.toArray()}`);}
@@ -73,4 +74,29 @@ test('the actual car, wheels and camera remain framed, deterministic and frozen 
   view.reset();view.render(createRace(),1/60);assert.equal(view.inspectVictory(),null);assert.equal(scene.getObjectByName('VICTOIRE / ROUTE VERS L’HORIZON').visible,false);
   }finally{view.dispose();}
  }}finally{for(const k of names)if(old[k]===undefined)delete globalThis[k];else globalThis[k]=old[k];}
+});
+
+test('the existing door logo receives a legible close-up only after the complete OCULAIRE explosion',()=>{
+ for(const ending of['escape','love'])for(const aspect of[320/740,390/844,844/390]){
+  const r=winner(ending);r.cinematic=departureStart(r.result)+1.6;const shot=victoryShot(r,aspect),pose=victoryPose(r);assert.equal(shot.logoFocus,1);assert.equal(shot.phase,'brand-detail');assert.ok(r.cinematic>7);
+  const camera=new T.PerspectiveCamera(shot.fov,aspect,.3,4200);camera.position.fromArray(shot.position);camera.lookAt(new T.Vector3().fromArray(shot.target));camera.updateMatrixWorld(true);
+  const angle=pose.position.angle+pose.yaw,points=[-.70,.70].map(z=>new T.Vector3(pose.position.x-Math.cos(angle)*.94+Math.sin(angle)*z,pose.position.y+.66,pose.position.z+Math.sin(angle)*.94+Math.cos(angle)*z).project(camera));
+  assert.ok(points.every(p=>Math.abs(p.x)<1&&Math.abs(p.y)<1));const pixels=Math.abs(points[1].x-points[0].x)/2*(aspect<1?320:844);assert.ok(pixels>100,`logo should be readable, ${pixels}px`);
+  assert.equal(victoryShot(r,aspect,true).logoFocus,0);
+ }
+});
+
+test('the real camera sees the original door UVs on all three liveries and leaves the complete head fracture first',async()=>{
+ const names=['document','innerWidth','innerHeight','devicePixelRatio','addEventListener','removeEventListener'],old=Object.fromEntries(names.map(k=>[k,globalThis[k]]));
+ Object.assign(globalThis,{document:{createElement:canvasSink},innerWidth:390,innerHeight:844,devicePixelRatio:1,addEventListener(){},removeEventListener(){}});let scene,camera,view;
+ const sink={setPixelRatio(){},setSize(){},dispose(){},info:{},render(s,c){scene=s;camera=c;scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);}};
+ try{
+  view=createRenderer({},false,()=>sink,'auto',undefined,{oculaire:{loadModel:()=>({META,SURFACES})}});await new Promise(setImmediate);assert.equal(view.oculaireStatus.state,'ready');
+  const r=winner();r.cinematic=4.7;view.render(r,1/60);assert.equal(view.oculaireStatus.fragments,1000);assert.equal(view.inspectVictory().logoFocus,0);
+  for(const fld of['nightrunner','seraph','cursed']){
+   view.setAppearance({fld,cop:'mixed'},0);r.cinematic=8.8;view.render(r,1/60);assert.equal(view.inspectVictory().logoFocus,1);
+   const car=scene.children.find(o=>o.userData.kind==='fld'),ray=new T.Raycaster();ray.setFromCamera(new T.Vector2(0,0),camera);const hit=ray.intersectObject(car,true)[0];
+   assert.ok(hit&&hit.object.material.name==='Chassis',`the ${fld} door must not be hidden by another car part`);assert.ok(hit.uv.x>.3&&hit.uv.x<.7&&hit.uv.y>.75&&hit.uv.y<1);assert.equal(view.inspectOculaire().markVisible,false);
+  }
+ }finally{view?.dispose();for(const k of names)if(old[k]===undefined)delete globalThis[k];else globalThis[k]=old[k];}
 });
