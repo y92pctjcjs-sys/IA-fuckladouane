@@ -1,0 +1,286 @@
+{
+  "kind": "CPU_GEOMETRY_RASTER_REAL_CHASE_CAMERA_NOT_WEBGL",
+  "report": [
+    {
+      "file": "forest-390x844.png",
+      "s": 2800,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 135330,
+      "instances": 681,
+      "camera": [
+        1251.011567849644,
+        8.233650018237812,
+        1352.4256338533148
+      ]
+    },
+    {
+      "file": "forest-turn-390x844.png",
+      "s": 3520,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 130595,
+      "instances": 691,
+      "camera": [
+        547.0039180578227,
+        16.73570158814214,
+        1283.0014491555607
+      ]
+    },
+    {
+      "file": "secret-entry-390x844.png",
+      "s": 3170,
+      "branch": "forest-cut",
+      "width": 390,
+      "height": 844,
+      "faces": 119548,
+      "instances": 664,
+      "camera": [
+        906.5177840356673,
+        13.578738954802848,
+        1357.7777450363599
+      ]
+    },
+    {
+      "file": "secret-mid-390x844.png",
+      "s": 3700,
+      "branch": "forest-cut",
+      "width": 390,
+      "height": 844,
+      "faces": 115409,
+      "instances": 681,
+      "camera": [
+        685.1440158384876,
+        12.171340986618798,
+        1510.09728259547
+      ]
+    },
+    {
+      "file": "secret-exit-390x844.png",
+      "s": 4370,
+      "branch": "forest-cut",
+      "width": 390,
+      "height": 844,
+      "faces": 131561,
+      "instances": 636,
+      "camera": [
+        755.6748715670237,
+        4.300098581808721,
+        1804.2871205364315
+      ]
+    },
+    {
+      "file": "debris-390x844.png",
+      "s": 1020,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 130438,
+      "instances": 1016,
+      "camera": [
+        436.57031920796885,
+        9.475249258989091,
+        789.0016520749136
+      ]
+    },
+    {
+      "file": "tunnel-entry-390x844.png",
+      "s": 5180,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 129250,
+      "instances": 626,
+      "camera": [
+        1372.5858507884818,
+        -0.3114910075053663,
+        2172.906690447703
+      ]
+    },
+    {
+      "file": "tunnel-exit-390x844.png",
+      "s": 7380,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 129523,
+      "instances": 679,
+      "camera": [
+        1617.848093968184,
+        3.3151733484757555,
+        3808.6744519808876
+      ]
+    },
+    {
+      "file": "control-390x844.png",
+      "s": 7800,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 130948,
+      "instances": 823,
+      "camera": [
+        2011.307080882051,
+        3.0668668484923822,
+        3711.5690601938322
+      ]
+    },
+    {
+      "file": "swagistan-390x844.png",
+      "s": 11610,
+      "branch": null,
+      "width": 390,
+      "height": 844,
+      "faces": 131241,
+      "instances": 653,
+      "camera": [
+        3031.659510658098,
+        6.8996999159755426,
+        5277.298760291717
+      ]
+    },
+    {
+      "file": "forest-844x390.png",
+      "s": 2800,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 148432,
+      "instances": 681,
+      "camera": [
+        1251.011567849644,
+        8.233650018237812,
+        1352.4256338533148
+      ]
+    },
+    {
+      "file": "forest-turn-844x390.png",
+      "s": 3520,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 142305,
+      "instances": 691,
+      "camera": [
+        547.0039180578227,
+        16.73570158814214,
+        1283.0014491555607
+      ]
+    },
+    {
+      "file": "secret-entry-844x390.png",
+      "s": 3170,
+      "branch": "forest-cut",
+      "width": 844,
+      "height": 390,
+      "faces": 145557,
+      "instances": 664,
+      "camera": [
+        906.5177840356673,
+        13.578738954802848,
+        1357.7777450363599
+      ]
+    },
+    {
+      "file": "secret-mid-844x390.png",
+      "s": 3700,
+      "branch": "forest-cut",
+      "width": 844,
+      "height": 390,
+      "faces": 128372,
+      "instances": 681,
+      "camera": [
+        685.1440158384876,
+        12.171340986618798,
+        1510.09728259547
+      ]
+    },
+    {
+      "file": "secret-exit-844x390.png",
+      "s": 4370,
+      "branch": "forest-cut",
+      "width": 844,
+      "height": 390,
+      "faces": 138416,
+      "instances": 636,
+      "camera": [
+        755.6748715670237,
+        4.300098581808721,
+        1804.2871205364315
+      ]
+    },
+    {
+      "file": "debris-844x390.png",
+      "s": 1020,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 131265,
+      "instances": 1016,
+      "camera": [
+        436.57031920796885,
+        9.475249258989091,
+        789.0016520749136
+      ]
+    },
+    {
+      "file": "tunnel-entry-844x390.png",
+      "s": 5180,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 130153,
+      "instances": 626,
+      "camera": [
+        1372.5858507884818,
+        -0.3114910075053663,
+        2172.906690447703
+      ]
+    },
+    {
+      "file": "tunnel-exit-844x390.png",
+      "s": 7380,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 131402,
+      "instances": 679,
+      "camera": [
+        1617.848093968184,
+        3.3151733484757555,
+        3808.6744519808876
+      ]
+    },
+    {
+      "file": "control-844x390.png",
+      "s": 7800,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 133999,
+      "instances": 823,
+      "camera": [
+        2011.307080882051,
+        3.0668668484923822,
+        3711.5690601938322
+      ]
+    },
+    {
+      "file": "swagistan-844x390.png",
+      "s": 11610,
+      "branch": null,
+      "width": 844,
+      "height": 390,
+      "faces": 136933,
+      "instances": 653,
+      "camera": [
+        3031.659510658098,
+        6.8996999159755426,
+        5277.298760291717
+      ]
+    }
+  ],
+  "images": "CPU images produced and inspected in scratch. Regenerate using tools/render-world-cpu.mjs. They are not WebGL screenshots."
+}

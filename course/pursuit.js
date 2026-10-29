@@ -1,4 +1,6 @@
-import {LENGTH, BLOCKADES, pressureAt} from './track.js?v=fld-world-002';
+import {LENGTH, BLOCKADES, pressureAt} from './track.js?v=fld-route-003';
+
+import {SHORTCUT,DEBRIS,merging} from './route-options.js?v=fld-route-003';
 
 export const PURSUIT = Object.freeze({maxSpeed:61, acceleration:9.2, braking:18, grace:2.4, recycleDistance:180});
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));
@@ -30,6 +32,9 @@ export function moveCivilian(r,car,dt){
       if(row.s-car.s<42&&Math.abs(car.x-row.gap)>.35)desiredSpeed=0;
     }
   }
+  const debris=DEBRIS.find(d=>d.s>car.s-5&&d.s-car.s<100&&Math.abs(d.x-car.x)<2.4);
+  if(debris)wantedX=debris.x>=0?-5:5;
+  if(merging(r)&&Math.abs(car.s-SHORTCUT.exit)<160)wantedX=-5;
   car.x+=clamp(wantedX-car.x,-3*dt,3*dt);
   car.speed+=clamp(desiredSpeed-car.speed,-12*dt,5*dt);
   car.s+=car.speed*dt;car.steer=clamp((wantedX-car.x)*.12,-.4,.4);
@@ -74,6 +79,7 @@ export function updatePursuit(r,dt,warning,hit,overlaps) {
     let wantedX=c.aimX;
     // Cops and civilians clear the announced escape lane before the player reaches it.
     if(row)wantedX=row.gap;
+    if(merging(r)&&Math.abs(c.s-SHORTCUT.exit)<160)wantedX=-5;
     const dx=clamp(wantedX-c.x,-3.25*dt,3.25*dt);c.x+=dx;c.steer=dx/Math.max(dt,1e-6)/8;
     if(Math.abs(gap)<22)close++;
     if(Math.abs(gap)<65)c.engaged=true;

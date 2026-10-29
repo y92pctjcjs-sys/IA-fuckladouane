@@ -2,3 +2,5 @@
 
 /* The blocking in-game atlas prioritizes the map over the standalone introduction. */
 .embedded header,.embedded .eyebrow,.embedded h1,.embedded .intro{display:none}.embedded main{padding:12px}.embedded .facts{padding:8px 0;font-size:9px}.embedded .facts b{font-size:18px}.embedded nav{padding:12px 0}.embedded .map-scroll{max-height:65dvh}@media(max-height:400px){.embedded .facts{display:none}.embedded nav{padding-top:0}}
+
+.legend [hidden]{display:none}.secret{background:#ff3bc8}.map-panel #routeMap{min-width:100%}

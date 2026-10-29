@@ -1,0 +1,15 @@
+# PROMPT MAÎTRE — FLD / ROUTE 89, COURBES ET LISIÈRE
+
+Transformer les 13 km actuels en véritable parcours arcade : grandes courbes, contre-courbes, retours et respirations. Garder les cinq étapes et le monde FLD, le ciel Matrix, OCULAIRE et la finale existante. Asphalt sert de référence de rythme, d’anticipation et de choix de trajectoire, sans reprise de ses assets.
+
+Références officielles examinées : https://asphaltlegends.com/fr/news/touge-masters et le centre d’aide Asphalt Legends, « What is Quick Race mode and what benefits do I get from it? ». Retenir les contrastes entre longues lignes de vitesse, grandes boucles et passages à apprendre. La nouvelle route doit réellement changer de direction dans le monde, pas seulement incliner la caméra.
+
+Définir un tracé continu mesuré par sa longueur. Borner la courbure pour conserver frein, drift et nitro utilisables avec les commandes actuelles ; éviter les intersections accidentelles et les sauts de tangente. Route, garde-corps, panneaux, tunnel, décor, caméra et carte suivent la même définition.
+
+Identifier les objets qui empiètent accidentellement sur la route, notamment les éléments droits du tunnel posés dans des courbes. Replacer ces éléments le long du tracé. Distinguer les vrais dangers de jeu des accessoires décoratifs. Ajouter seulement quelques amas de pneus et colis tombés, assez grands et contrastés pour être lus, avec un gabarit de collision correspondant, une annonce anticipée et deux voies toujours ouvertes. Ne pas combiner un amas et un barrage au même endroit.
+
+Construire un passage secret forestier original, LISIÈRE 89, à l’intérieur d’un grand détour. Il doit être une vraie chaussée plus courte reliant deux points éloignés du parcours : entrée progressive au braquage, raccord de position / direction / pente, limites et caméra cohérentes, aucune téléportation. Une discrète marque FLD révèle l’entrée. Les poursuivants restent sur la route principale ; ils ne frappent pas le joueur à travers les arbres. La réinsertion réserve une voie sans faire apparaître ou disparaître les voitures à proximité. Le passage se révèle dans la carte une fois découvert, et cette découverte reste mémorisée avec les données V4.
+
+Le tracé et le raccourci modifient les temps possibles : créer un classement de route V4 séparé, conserver les anciennes clés de records sans les écraser, faire suivre le déblocage amoureux. Garder skins, préférences, audio séparé, tirage exact 1/30, QR, portail, domaine et sculpture OCULAIRE.
+
+Procéder par jalons sauvegardés : audit public / dépôt ; prototype de tracé et raccord ; simulation complète avec et sans passage ; contrôle géométrique du couloir ; projections de la vraie caméra ; carte tactile ; budgets et stabilité de ressources ; fusion conservant main actuel ; Pages et comparaison des fichiers servis. Nommer explicitement les tests CPU et les observations navigateur. Ne pas transformer une projection CPU en validation WebGL ou iPhone. Publier la version vérifiée selon l’autorisation utilisateur et consigner précisément les limites dans DESIGN_COURSE_ETAT.md.

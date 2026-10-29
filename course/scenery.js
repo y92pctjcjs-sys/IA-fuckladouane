@@ -1,5 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,industrialMaterial,facadeMaterial,softTexture} from './materials.js?v=fld-world-002';
+import {sample} from './track.js?v=fld-route-003';
+import {distanceToShortcut} from './route-options.js?v=fld-route-003';
+import {surface,industrialMaterial,facadeMaterial,softTexture} from './materials.js?v=fld-route-003';
 const metal=surface('#52596d',.44,.7),concrete=surface('#61636c',.92),dark=surface('#191b27',.83);
 const tube=new T.CylinderGeometry(1,1,1,10);
 function pipe(parent,x,y,z,r,h,mat=metal){const mesh=new T.Mesh(tube,mat);mesh.position.set(x,y,z);mesh.scale.set(r,h,r);parent.add(mesh);return mesh;}
@@ -29,17 +31,21 @@ export function industrialDetail(parent,s,side,cube){
     cube(parent,side*44,11,-2,.55,22,.55,'#57546a');cube(parent,side*41,21,-2,24,.4,.5,'#6b627c');cube(parent,side*30,18,-2,.1,6,.1,'#898196');
   }
 }
-export function tunnelDetail(parent,cube){
-  for(const side of[-1,1]){
-    cube(parent,side*9.65,1.05,0,.18,.13,78,'#d0a5ff',true);
-    cube(parent,side*9.65,.4,0,.18,.16,78,'#6b6677');
-    for(const z of[-24,24]){
-      const frame=cube(parent,side*9.55,3,z,.12,2.2,1.2,'#43394f');frame.material=industrialMaterial('concrete');
-      cube(parent,side*9.45,3,z,.08,1.7,.9,'#51ba9d',true);
-      pipe(parent,side*8.8,7.15,z,.42,1.7,dark).rotation.z=Math.PI/2;
+export function tunnelDetail(parent,start,cube,positionOn){
+  for(const offset of[8,28,48,68]){
+    const group=new T.Group();parent.add(group);positionOn(group,start+offset);
+    for(const side of[-1,1]){
+      cube(group,side*9.65,1.05,0,.18,.13,18,'#d0a5ff',true);
+      cube(group,side*9.65,.4,0,.18,.16,18,'#6b6677');
+      if(offset===8||offset===48){
+        cube(group,side*9.55,3,0,.12,2.2,1.2,'#43394f').material=industrialMaterial('concrete');
+        cube(group,side*9.45,3,0,.08,1.7,.9,'#51ba9d',true);
+        pipe(group,side*8.8,7.15,0,.42,1.7,dark).rotation.z=Math.PI/2;
+      }
     }
   }
 }
+
 const poolResources=new Map();
 export function lightPool(parent,color,width,length){
  const key=[color,width,length].join(':');
@@ -60,7 +66,9 @@ export function openDetail(group,s,kind,cube,positionOn){
   const terrain=new T.Group();group.add(terrain);positionOn(terrain,s+40);
   for(const side of[-1,1]){
     const hill=new T.Mesh(hillGeometry,surface(kind==='frontier'?'#353449':'#252a40',1));
-    hill.position.set(side*(100+s/80%3*24),14,25);hill.scale.set(65,22+s/80%4*9,65);terrain.add(hill);
+    hill.position.set(side*(100+s/80%3*24),14,25);hill.scale.set(65,22+s/80%4*9,65);
+    const base=sample(s+40),hx=base.x+Math.cos(base.angle)*hill.position.x+Math.sin(base.angle)*25,hz=base.z-Math.sin(base.angle)*hill.position.x+Math.cos(base.angle)*25;
+    if(s<2880||s>4640||distanceToShortcut(hx,hz)>90)terrain.add(hill);
   }
   if(kind==='open'&&s%320===0){
     for(const side of[-1,1]){
@@ -76,7 +84,7 @@ export function openDetail(group,s,kind,cube,positionOn){
 export function controlDetail(group,s,cube,positionOn){
   const yard=new T.Group();group.add(yard);positionOn(yard,s+40);
   for(const side of[-1,1]){
-    cube(yard,side*22,.1,0,22,.15,75,'#222735');
+    cube(yard,side*28,-.08,0,20,.15,75,'#222735');
     for(const z of[-24,0,24]){
       cube(yard,side*34,2,z,.13,4,.13,'#637187');cube(yard,side*34,2,z,.08,.08,24,'#8792a1');
       cube(yard,side*19,.15,z,10,.025,.18,'#8c8992');

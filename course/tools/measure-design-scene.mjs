@@ -3,7 +3,7 @@
 import {performance} from 'node:perf_hooks';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
-import {writeFileSync} from 'node:fs';
+import {writeFileSync,existsSync} from 'node:fs';
 import {canvasSink} from './canvas-sink.mjs';
 const root=process.argv[2]?pathToFileURL(resolve(process.argv[2])+'/'):new URL('../../',import.meta.url);
 const [{createRenderer},{createRace},{LENGTH},model]=await Promise.all([
@@ -11,6 +11,7 @@ const [{createRenderer},{createRace},{LENGTH},model]=await Promise.all([
 ]);
 globalThis.document={createElement:canvasSink};globalThis.devicePixelRatio=3;
 globalThis.addEventListener=globalThis.removeEventListener=()=>{};
+const branch=existsSync(new URL('course/route-options.js',root))?(await import(new URL('course/route-options.js',root))).SHORTCUT:null;
 const rows=[];
 for(const profile of ['auto','eco','high'])for(const [width,height]of [[390,844],[844,390]]){
  globalThis.innerWidth=width;globalThis.innerHeight=height;
@@ -30,12 +31,13 @@ for(const profile of ['auto','eco','high'])for(const [width,height]of [[390,844]
   for(let s=0;s<=LENGTH;s+=80){r.s=s;r.time=s/48;r.cops.forEach((c,i)=>Object.assign(c,{s:s-16-i*8,speed:48,active:s>450+i*3000}));r.traffic.forEach((t,i)=>{t.s=s+50+i*100;});view.render(r,1/60);}
   afterLaps.push(live.size);
  }
+ if(branch){r.branch=branch.id;for(let s=branch.entry;s<branch.exit;s+=16){r.s=s;r.time=s/48;view.render(r,1/60);}r.branch=null;}
  const beforeReplays=live.size,replayStartGeometryCounts=[];
  for(let i=0;i<8;i++){
   r.s=0;r.time=0;r.cops.forEach((c,j)=>Object.assign(c,{s:40+j*40,active:false}));r.traffic.forEach((t,j)=>{t.s=300+j*430;});
   view.reset();view.render(r,1/60);replayStartGeometryCounts.push(live.size);
  }
- const row={profile,width,height,devicePixelRatio:3,targetRatio:view.metrics.ratio,oculaire:view.oculaireStatus.state,loadedCpuMs,totalCpuMs:Math.round(performance.now()-started),maxVisibleMeshes,maxTrianglesBeforeFrustumCulling:maxTriangles,maxGeometries,afterLaps,beforeReplays,afterReplays:live.size,replayStartGeometryCounts};
+ const row={profile,width,height,devicePixelRatio:3,targetRatio:view.metrics.ratio,oculaire:view.oculaireStatus.state,loadedCpuMs,totalCpuMs:Math.round(performance.now()-started),maxVisibleMeshes,maxTrianglesBeforeFrustumCulling:maxTriangles,maxGeometries,afterLaps,beforeReplays,branchPassMeasured:Boolean(branch),afterReplays:live.size,replayStartGeometryCounts};
  if(afterLaps[0]!==afterLaps[1]||new Set(replayStartGeometryCounts).size!==1)throw Error('Geometry growth: '+JSON.stringify(row));
  view.dispose();row.sharedGeometryAfterDispose=live.size;rows.push(row);
 }

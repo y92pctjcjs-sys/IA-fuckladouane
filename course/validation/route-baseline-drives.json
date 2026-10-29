@@ -1,0 +1,127 @@
+{
+  "kind": "FIXED_STEP_CONTROLLER_NOT_HUMAN_OR_IPHONE",
+  "rows": [
+    {
+      "secretRequested": false,
+      "seed": 1,
+      "won": false,
+      "time": 243.43333333327627,
+      "health": 0,
+      "sectors": 5,
+      "escapes": 3,
+      "reason": "VÉHICULE HORS SERVICE"
+    },
+    {
+      "secretRequested": false,
+      "seed": 2,
+      "won": true,
+      "time": 260.18333333326103,
+      "health": 35,
+      "sectors": 5,
+      "escapes": 4,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 3,
+      "won": true,
+      "time": 260.12499999992775,
+      "health": 27,
+      "sectors": 5,
+      "escapes": 7,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 4,
+      "won": false,
+      "time": 248.14166666660532,
+      "health": 0,
+      "sectors": 5,
+      "escapes": 6,
+      "reason": "VÉHICULE HORS SERVICE"
+    },
+    {
+      "secretRequested": false,
+      "seed": 5,
+      "won": false,
+      "time": 248.32499999993848,
+      "health": 0,
+      "sectors": 5,
+      "escapes": 11,
+      "reason": "VÉHICULE HORS SERVICE"
+    },
+    {
+      "secretRequested": false,
+      "seed": 6,
+      "won": true,
+      "time": 259.0666666665954,
+      "health": 54,
+      "sectors": 5,
+      "escapes": 4,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 7,
+      "won": true,
+      "time": 259.96666666659456,
+      "health": 21,
+      "sectors": 5,
+      "escapes": 5,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 8,
+      "won": true,
+      "time": 258.53333333326253,
+      "health": 21,
+      "sectors": 5,
+      "escapes": 4,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 9,
+      "won": true,
+      "time": 263.22499999992493,
+      "health": 13,
+      "sectors": 5,
+      "escapes": 11,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 10,
+      "won": true,
+      "time": 259.47499999992834,
+      "health": 27,
+      "sectors": 5,
+      "escapes": 6,
+      "reason": ""
+    },
+    {
+      "secretRequested": false,
+      "seed": 11,
+      "won": false,
+      "time": 248.5249999999383,
+      "health": 0,
+      "sectors": 5,
+      "escapes": 10,
+      "reason": "VÉHICULE HORS SERVICE"
+    },
+    {
+      "secretRequested": false,
+      "seed": 12,
+      "won": false,
+      "time": 260.566666666594,
+      "health": 0,
+      "sectors": 5,
+      "escapes": 3,
+      "reason": "VÉHICULE HORS SERVICE"
+    }
+  ],
+  "allWon": false,
+  "allSecretsTaken": true
+}

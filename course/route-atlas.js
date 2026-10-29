@@ -1,4 +1,5 @@
-import {sample,stageAt,STAGES,LENGTH,BLOCKADES,curvature,screenSide} from './track.js?v=fld-world-002';
+import {sample,stageAt,STAGES,LENGTH,BLOCKADES,curvature,screenSide} from './track.js?v=fld-route-003';
+import {SHORTCUT,shortcutSamples,driveSample} from './route-options.js?v=fld-route-003';
 export const STAGE_COLORS=Object.freeze(['#62dfff','#d0ff50','#ce9aff','#ffb54c','#f2f1ea']);
 export const LANDMARKS=Object.freeze([
  {s:640,id:'quai89',name:'Quai 89',kind:'industrial',side:1,offset:31},
@@ -19,24 +20,27 @@ export function routeData(stage=-1){
  const selected=Number.isInteger(stage)&&stage>=0&&stage<STAGES.length?STAGES[stage]:null,from=selected?.start??0,to=selected?.end??LENGTH;
  return {from,to,points:routeSamples(from,to),stages:STAGES.map((x,i)=>({...x,index:i,color:STAGE_COLORS[i]})).filter(s=>s.end>from&&s.start<to),landmarks:LANDMARKS.filter(x=>x.s>=from&&x.s<=to),blockades:BLOCKADES.filter(x=>x.s>=from&&x.s<=to).map(x=>({...x,opening:screenSide(x.gap)}))};
 }
-export function routeSvg(stage=-1,position=0){
- const data=routeData(stage),height=stage<0?1100:760,p=data.points,minX=Math.min(...p.map(v=>v.x)),maxX=Math.max(...p.map(v=>v.x)),minZ=Math.min(...p.map(v=>v.z)),maxZ=Math.max(...p.map(v=>v.z));
- const scale=Math.min(205/Math.max(1,maxX-minX), (height-130)/Math.max(1,maxZ-minZ)),left=76+(205-(maxX-minX)*scale)/2;
- const project=v=>({x:left+(v.x-minX)*scale,y:65+(maxZ-v.z)*scale}),path=points=>points.map((v,i)=>{const q=project(v);return `${i?'L':'M'}${q.x.toFixed(2)},${q.y.toFixed(2)}`;}).join('');
- const parts=[`<svg viewBox="0 0 640 ${height}" role="img" aria-label="Tracé exact du parcours, étapes et barrages"><defs><pattern id="atlas-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#263240" stroke-width=".5"/></pattern></defs><rect width="640" height="${height}" fill="#111923"/><rect width="640" height="${height}" fill="url(#atlas-grid)"/><path d="${path(p)}" fill="none" stroke="#3b4856" stroke-width="18" stroke-linecap="round"/>`];
+export function routeSvg(stage=-1,position=0,options={}){
+ const data=routeData(stage),height=stage<0?920:700,p=data.points,minX=Math.min(...p.map(v=>v.x)),maxX=Math.max(...p.map(v=>v.x)),minZ=Math.min(...p.map(v=>v.z)),maxZ=Math.max(...p.map(v=>v.z));
+ const scale=Math.min(600/Math.max(1,maxX-minX),(height-150)/Math.max(1,maxZ-minZ)),left=100+(600-(maxX-minX)*scale)/2,top=75+(height-150-(maxZ-minZ)*scale)/2;
+ const project=v=>({x:left+(v.x-minX)*scale,y:top+(maxZ-v.z)*scale}),path=points=>points.map((v,i)=>{const q=project(v);return `${i?'L':'M'}${q.x.toFixed(2)},${q.y.toFixed(2)}`;}).join('');
+ const parts=[`<svg viewBox="0 0 800 ${height}" role="img" aria-label="Tracé exact du parcours, étapes et barrages"><defs><pattern id="atlas-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#263240" stroke-width=".5"/></pattern></defs><rect width="800" height="${height}" fill="#111923"/><rect width="800" height="${height}" fill="url(#atlas-grid)"/><path d="${path(p)}" fill="none" stroke="#3b4856" stroke-width="17" stroke-linecap="round"/>`];
  for(const s of data.stages){
   const from=Math.max(data.from,s.start),to=Math.min(data.to,s.end),points=routeSamples(from,to),q=project(sample((from+to)/2));
-  parts.push(`<path d="${path(points)}" fill="none" stroke="${s.color}" stroke-width="6" stroke-linecap="round"/><path d="M${q.x+18} ${q.y}H322" stroke="${s.color}" stroke-width="1" opacity=".55"/><text x="338" y="${q.y-7}" fill="${s.color}" font-family="monospace" font-size="19" font-weight="700">0${s.index+1}</text><text x="338" y="${q.y+17}" fill="#f2f1ea" font-family="Arial,sans-serif" font-size="16">${['ORIGINES','FROM ELSEWHERE','OMERTA','CONTRÔLE','SWAGISTAN'][s.index]}</text>`);
+  parts.push(`<path d="${path(points)}" fill="none" stroke="${s.color}" stroke-width="6" stroke-linecap="round"/><circle cx="${q.x+30}" cy="${q.y}" r="18" fill="#111923" stroke="${s.color}"/><text x="${q.x+30}" y="${q.y+6}" text-anchor="middle" fill="${s.color}" font-family="monospace" font-size="17" font-weight="700">0${s.index+1}</text>`);
  }
  for(let km=Math.ceil(data.from/1000);km<=Math.floor(data.to/1000);km++){
-  const q=project(sample(km*1000));parts.push(`<path d="M${q.x-14} ${q.y}h-11" stroke="#9ba7b4"/><text x="25" y="${q.y+4}" fill="#b6c0cf" font-size="12" font-family="monospace">${km} KM</text>`);
+  const q=project(sample(km*1000)),side=km%2?-1:1;parts.push(`<path d="M${q.x+side*12} ${q.y}h${side*14}" stroke="#9ba7b4"/><text x="${q.x+side*33}" y="${q.y+5}" text-anchor="${side<0?'end':'start'}" fill="#b6c0cf" font-size="16" font-family="monospace">${km}</text>`);
+ }
+ if(options.discovered&&data.from<SHORTCUT.exit&&data.to>SHORTCUT.entry){
+  parts.push(`<path data-shortcut="forest-cut" d="${path(shortcutSamples())}" fill="none" stroke="#ff3bc8" stroke-width="4" stroke-dasharray="9 7"><title>LISIÈRE 89 / passage découvert</title></path>`);
  }
  for(const b of data.blockades){const q=project(sample(b.s));parts.push(`<path d="M${q.x} ${q.y-6}l6 6-6 6-6-6Z" fill="#ffb54c" stroke="#111923" stroke-width="2"><title>Contrôle ${(b.s/1000).toFixed(2)} km / ouverture ${b.opening}</title></path>`);}
- for(const l of data.landmarks){const q=project(sample(l.s));parts.push(`<circle cx="${q.x+20}" cy="${q.y}" r="3" fill="#62dfff"><title>${l.name}</title></circle>`);}
+ for(const l of data.landmarks){const q=project(sample(l.s));parts.push(`<circle cx="${q.x-15}" cy="${q.y}" r="4" fill="#62dfff"><title>${l.name}</title></circle>`);}
  for(const [s,label]of [[data.from,'DÉPART'],[data.to,stage<0?'SWAGISTAN':'ÉTAPE SUIVANTE']]){
-  const q=project(sample(s));parts.push(`<circle cx="${q.x}" cy="${q.y}" r="8" fill="#111923" stroke="#f2f1ea" stroke-width="2"/><text x="338" y="${q.y+5}" fill="#b6c0cf" font-size="12" font-family="monospace">${label}</text>`);
+  const q=project(sample(s));parts.push(`<circle cx="${q.x}" cy="${q.y}" r="8" fill="#111923" stroke="#f2f1ea" stroke-width="2"/><text x="${q.x}" y="${q.y+(s===data.from?35:-23)}" text-anchor="middle" fill="#f2f1ea" font-size="17" font-family="monospace">${label}</text>`);
  }
- const at=Math.max(0,Math.min(LENGTH,Number(position)||0));if(at>=data.from&&at<=data.to){const q=project(sample(at));parts.push(`<circle cx="${q.x}" cy="${q.y}" r="13" fill="#d0ff50" stroke="#111923" stroke-width="4"/><text x="338" y="${q.y+43}" fill="#d0ff50" font-size="12" font-family="monospace">VOUS / ${(at/1000).toFixed(1).replace('.',',')} KM</text>`);}
+ const at=Math.max(0,Math.min(LENGTH,Number(position)||0));if(at>=data.from&&at<=data.to){const q=project(driveSample(at,0,options.branch));parts.push(`<circle cx="${q.x}" cy="${q.y}" r="12" fill="#d0ff50" stroke="#111923" stroke-width="4"><title>VOUS / ${(at/1000).toFixed(1).replace('.',',')} KM</title></circle>`);}
  parts.push('</svg>');return parts.join('');
 }
 export function elevationSvg(){

@@ -1,0 +1,133 @@
+{
+  "base": "bb38fe39d1bb449704509cd6e64762cfdd89efe2",
+  "kind": "SOURCE_PROTECTION_NOT_GAMEPLAY",
+  "resources": [
+    {
+      "path": "index.html",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "231ab72d77805afbe82170809f09ae6395b97ae88929f02889d5c66f9b232ea7"
+    },
+    {
+      "path": "CNAME",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "3d707f4f3aa6ac76eb3511c24d4cf95e269fa391cf1c2b125dca12645199c47b"
+    },
+    {
+      "path": "app.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "19a4e03cbc52aa43fdd88d5e68cd62a02d0cf0ecd0d0e0dc222c76d13943e7f2"
+    },
+    {
+      "path": "styles.css",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "a5c47d663be450177f6ccc3106a1e43600e4288a89a57424740fffceda180895"
+    },
+    {
+      "path": "core.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "115f47b2a0892b668e1470ba859d3b31bce3bca22210523804632f972bd60da9"
+    },
+    {
+      "path": "arcade.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "7bb9f99e5f446feabdf9df903208535909a5d5dc0cf77a2e9a02283000b93f15"
+    },
+    {
+      "path": "drop.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "17b77d33631fa13e1ce67b07b1cd6a250d3b583d9b7b810a2b9534f3c302f9f9"
+    },
+    {
+      "path": "matrix.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "d3a31afb168005069e2d69e8937a91142c7b8cf6964e9534ef1deb33dfc076af"
+    },
+    {
+      "path": "course/input.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb"
+    },
+    {
+      "path": "course/audio.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "c9a56f990ec8bb76bea2469fed1d0de844a788fa5505aec3363dd88d8fcf5904"
+    },
+    {
+      "path": "course/ending.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706"
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "49124eb69964a0cee5c6fce57c0b5c5ffd0a60be1a3da63b8dd6c2c18feee809"
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b"
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a"
+    },
+    {
+      "path": "OCULAIRE_ETAT.md",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "749f0076dc47ccfe34c57bbbda76190d9edbd9755871a9a1b8f1d74f03a9dd20"
+    },
+    {
+      "path": "course/vehicle-skins.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "739c936982e8612d223389ca1c163eedfde1d0a19f3a6915ae023089c6332d94"
+    },
+    {
+      "path": "course/vehicle-mesh.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "e0b32285e6b58c9c48af85beee28f32c625a386b7a34c9769e381db5992461c1"
+    },
+    {
+      "path": "course/road-vehicles.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "9bb78131eb92b35d23090e5192ff3231d7b41f51a2dd9d4df41215ac8183e215"
+    },
+    {
+      "path": "course/quality.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "2f5b27222d4213a59099249bdfda7514339409079a554ffb1f9f6b9e3af87e00"
+    },
+    {
+      "path": "course/oculaire-reactions.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "384ec1300a207afdf7223c51d3e24c35a47fae8aaa9c0b9bc7c6420c5a672a8c"
+    },
+    {
+      "path": "course/oculaire-taunts.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "2644b6613db7cebb5d3dc513dd8dc095b0e2de8392d0d1ab7bdf0b1df8acd16b"
+    }
+  ],
+  "oculaireRoutePatch": "Only driving-threat gate and sky anchor adapt to branch; incoming spin, gaze policy, audio, hair and finale kept"
+}

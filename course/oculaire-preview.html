@@ -14,10 +14,10 @@
 <button id="pausePreview">Pause</button> <button id="damage">Dégât réel + 360°</button> <button id="sound">SON OFF</button> <button id="blink">Figer un clignement</button> <button id="reset">Repartir</button> <a href="../course.html">Jeu</a> · <a href="oculaire-lab.html">Formats téléphone</a> · <a href="oculaire-impact-audio.html">Trois moqueries</a>
 <details><summary>Contrôles du rendu</summary><pre id="diagnostics">Chargement…</pre></details></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=oculaire-impact-005';
-import {createRace,pause,resume,hit} from './simulation.js?v=fld-world-002';
-import {blinkAt} from './oculaire.js?v=oculaire-impact-005';
-import {createAudio} from './audio.js?v=oculaire-impact-005';
+import {createRenderer} from './renderer.js?v=fld-route-003';
+import {createRace,pause,resume,hit} from './simulation.js?v=fld-route-003';
+import {blinkAt} from './oculaire.js?v=fld-route-003';
+import {createAudio} from './audio.js?v=fld-route-003';
 const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace(),audio=createAudio(()=>pause(race));race.state='RACE';race.s=2400;race.speed=48;race.time=50;
 audio.configure({music:0,engineEnabled:false});
 let last=0,lastReport=0;

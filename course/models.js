@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js';
 import {vehicleData} from './assets/vehicle-data.js';
-import {surface,palette,softTexture} from './materials.js?v=fld-world-002';
-import {createDesignedVehicle} from './vehicle-designs.js?v=fld-world-002';
-import {createRoadPrototype,animateRoadBrakes} from './road-vehicles.js?v=fld-world-002';
+import {surface,palette,softTexture} from './materials.js?v=fld-route-003';
+import {createDesignedVehicle} from './vehicle-designs.js?v=fld-route-003';
+import {createRoadPrototype,animateRoadBrakes} from './road-vehicles.js?v=fld-route-003';
 // Civilian traffic retains Classic Muscle car, Alexus16, CC BY 4.0 (CREDITS.md).
 // Player and marked patrol/interceptor are original meshes in vehicle-designs.js.
 const geometryCache=new Map();

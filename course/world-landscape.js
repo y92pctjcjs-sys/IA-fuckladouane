@@ -1,13 +1,16 @@
 import * as T from './vendor/three.module.min.js';
-import {sample,stageAt,LENGTH,curvature} from './track.js?v=fld-world-002';
-import {surface} from './materials.js?v=fld-world-002';
-import {LANDMARKS} from './route-atlas.js?v=fld-world-002';
+import {sample,stageAt,LENGTH,curvature} from './track.js?v=fld-route-003';
+import {surface} from './materials.js?v=fld-route-003';
+import {distanceToShortcut,railOpening} from './route-options.js?v=fld-route-003';
+import {LANDMARKS} from './route-atlas.js?v=fld-route-003';
 
 // Static, deterministic scenery. No tree, rock or sign participates in the simulation.
 const forestMaterial=new T.MeshStandardMaterial({vertexColors:true,roughness:.96});
 const terrainMaterial=new T.MeshStandardMaterial({vertexColors:true,roughness:1});
 const railMaterial=surface('#717b86',.39,.65),postMaterial=surface('#4a535d',.67,.45);
 const treeCache=new Map(),signCache=new Map(),unitBox=new T.BoxGeometry(1,1,1);
+const SHORTCUT_START=2900,SHORTCUT_END=4640;
+export const forestTemplate=(species='oak',low=false)=>({geometry:treeGeometry(species,low),material:forestMaterial});
 const hash=n=>{const x=Math.sin(n*127.1+39.7)*43758.5453123;return x-Math.floor(x);};
 export function shoulderHeight(s,lateral){const d=Math.abs(lateral);return Math.min(3.4,Math.max(0,d-10.3)*.055)+Math.sin(s/137)*Math.min(.28,Math.max(0,d-13)*.009);}
 function colouredGeometry(parts){
@@ -46,6 +49,7 @@ export function forestPlacements(start){
   const lateral=side*(kind==='control'?45+hash(seed+8)*25:17.2+hash(seed+8)*40),scale=.82+hash(seed+13)*.46;
   if(s>11560&&s<11840&&Math.abs(lateral)<31)continue;
   if(LANDMARKS.some(l=>Math.abs(l.s-s)<35&&Math.abs(l.side*l.offset-lateral)<11))continue;
+  const point=sample(s,lateral);if(s>SHORTCUT_START&&s<SHORTCUT_END&&distanceToShortcut(point.x,point.z)<12.5)continue;
   result.push({s,lateral,scale,yaw:hash(seed+5)*Math.PI*2,species:i%3===0?'pine':Math.floor(start/160)%3===0?'birch':'oak'});
  }
  return result;
@@ -71,7 +75,7 @@ function terrain(root,start){
    const s=start+i*4,lateral=side*(10.2+j*12),p=sample(s,lateral),t=hash(Math.floor(s/20)+j*77);
    positions.push(p.x,p.y+shoulderHeight(s,lateral)-.18,p.z);
    const c=new T.Color(j===0?'#31372f':stageAt(s).kind==='frontier'?'#303e37':'#29372e');c.multiplyScalar(.88+t*.24);colors.push(c.r,c.g,c.b);
-   if(i&&j){const a=offset+(i-1)*stride+j-1,b=a+1,c=a+stride,d=c+1;indices.push(...(side>0?[a,c,b,b,c,d]:[a,b,c,b,d,c]));}
+   if(i&&j){const centre=sample(s-2,side*(10.2+(j-.5)*12));if(s>SHORTCUT_START&&s<SHORTCUT_END&&distanceToShortcut(centre.x,centre.z)<14)continue;const a=offset+(i-1)*stride+j-1,b=a+1,c=a+stride,d=c+1;indices.push(...(side>0?[a,c,b,b,c,d]:[a,b,c,b,d,c]));}
   }
  }
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setAttribute('color',new T.Float32BufferAttribute(colors,3));g.setIndex(indices);g.computeVertexNormals();g.userData.chunkOwned=true;
@@ -112,7 +116,7 @@ export function curvedRails(root,start){
   for(let i=0;i<=20;i++){
    const s=start+i*4;
    for(const [dx,y]of profile){const p=sample(s,side*(9.6+dx));positions.push(p.x,p.y+y,p.z);}
-   if(i)for(let j=0;j<n;j++){const a=base+(i-1)*n+j,b=base+(i-1)*n+(j+1)%n,c=base+i*n+j,d=base+i*n+(j+1)%n;indices.push(...(side>0?[a,c,b,b,c,d]:[a,b,c,b,d,c]));}
+   if(i&&!railOpening(start+i*4-2,side))for(let j=0;j<n;j++){const a=base+(i-1)*n+j,b=base+(i-1)*n+(j+1)%n,c=base+i*n+j,d=base+i*n+(j+1)%n;indices.push(...(side>0?[a,c,b,b,c,d]:[a,b,c,b,d,c]));}
   }
  }
  const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(positions,3));g.setIndex(indices);g.computeVertexNormals();g.userData.chunkOwned=true;

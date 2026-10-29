@@ -1,4 +1,4 @@
-import {LENGTH, RULESET} from './track.js?v=fld-world-002';
+import {LENGTH, RULESET} from './track.js?v=fld-route-003';
 
 export function formatTime(t){const cs=Math.max(0,Math.round((Number.isFinite(t)?t:0)*100));return `${Math.floor(cs/6000)}:${String(Math.floor(cs/100)%60).padStart(2,'0')}.${String(cs%100).padStart(2,'0')}`;}
 export function resultBadge(result){
@@ -30,7 +30,7 @@ export function createScoreCard(result,makeCanvas=()=>document.createElement('ca
     text(label,x,y,18,purple);text(value,x,y+56,43,'#eee7f8');
   });
   c.save();c.translate(700,1212);c.rotate(-.09);c.strokeStyle=green;c.lineWidth=3;c.strokeRect(-207,-40,414,70);text(result.won?'RIEN À DÉCLARER':'REPRENDRE LA FUITE',-188,5,27,green);c.restore();
-  text('ORIGINE NON DÉCLARÉE / SESSION LOCALE',78,1310,18,purple);
+  text(result.shortcut?'LISIÈRE 89 / PASSAGE DÉCOUVERT':'ORIGINE NON DÉCLARÉE / SESSION LOCALE',78,1310,18,purple);
   text('ia.fuckladouane.com',78,1360,25,'#eee7f8');
   return canvas;
 }

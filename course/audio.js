@@ -1,6 +1,6 @@
-import {sectorAt,stageAt} from './track.js?v=fld-world-002';
-import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-world-002';
-import {TAUNTS,synthesizeTaunt,tauntIndex} from './oculaire-taunts.js?v=oculaire-impact-005';
+import {sectorAt,stageAt} from './track.js?v=fld-route-003';
+import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-route-003';
+import {TAUNTS,synthesizeTaunt,tauntIndex} from './oculaire-taunts.js?v=fld-route-003';
 export {BPM};
 export function engineTone(speed,previousGear=1){
  const limits=[0,10,21,33,46,61,76];let gear=Math.max(1,Math.min(6,previousGear));

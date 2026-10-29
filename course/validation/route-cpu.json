@@ -1,0 +1,193 @@
+{
+  "kind": "CPU_ONLY_OCULAIRE_READY_NOT_GPU_OR_IPHONE",
+  "date": "2026-10-29T05:35:17.238Z",
+  "node": "v24.22.1",
+  "rows": [
+    {
+      "profile": "auto",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 1085,
+      "totalCpuMs": 2213,
+      "maxVisibleMeshes": 353,
+      "maxTrianglesBeforeFrustumCulling": 236221,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 251,
+      "replayStartGeometryCounts": [
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251
+      ],
+      "sharedGeometryAfterDispose": 160
+    },
+    {
+      "profile": "auto",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 614,
+      "totalCpuMs": 1588,
+      "maxVisibleMeshes": 353,
+      "maxTrianglesBeforeFrustumCulling": 236221,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 251,
+      "replayStartGeometryCounts": [
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251
+      ],
+      "sharedGeometryAfterDispose": 160
+    },
+    {
+      "profile": "eco",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 0.72,
+      "oculaire": "ready",
+      "loadedCpuMs": 594,
+      "totalCpuMs": 1504,
+      "maxVisibleMeshes": 324,
+      "maxTrianglesBeforeFrustumCulling": 213877,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 252,
+      "replayStartGeometryCounts": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "sharedGeometryAfterDispose": 161
+    },
+    {
+      "profile": "eco",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 0.72,
+      "oculaire": "ready",
+      "loadedCpuMs": 558,
+      "totalCpuMs": 1529,
+      "maxVisibleMeshes": 324,
+      "maxTrianglesBeforeFrustumCulling": 213877,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 252,
+      "replayStartGeometryCounts": [
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252,
+        252
+      ],
+      "sharedGeometryAfterDispose": 161
+    },
+    {
+      "profile": "high",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 519,
+      "totalCpuMs": 1452,
+      "maxVisibleMeshes": 353,
+      "maxTrianglesBeforeFrustumCulling": 236221,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 251,
+      "replayStartGeometryCounts": [
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251
+      ],
+      "sharedGeometryAfterDispose": 160
+    },
+    {
+      "profile": "high",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 557,
+      "totalCpuMs": 1471,
+      "maxVisibleMeshes": 353,
+      "maxTrianglesBeforeFrustumCulling": 236221,
+      "maxGeometries": 282,
+      "afterLaps": [
+        261,
+        261
+      ],
+      "beforeReplays": 261,
+      "branchPassMeasured": true,
+      "afterReplays": 251,
+      "replayStartGeometryCounts": [
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251,
+        251
+      ],
+      "sharedGeometryAfterDispose": 160
+    }
+  ]
+}

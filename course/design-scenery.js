@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,industrialMaterial} from './materials.js?v=fld-world-002';
+import {surface,industrialMaterial} from './materials.js?v=fld-route-003';
 const box=new T.BoxGeometry(1,1,1),warm=new T.MeshBasicMaterial({color:'#d7c397',toneMapped:false});
 const dark=surface('#19212a',.88),steel=industrialMaterial('steel'),concrete=industrialMaterial('concrete'),metal=surface('#69717a',.57,.46),rubber=surface('#191c21',.94),paint=surface('#4c5c5c',.6,.3);
 function block(root,x,y,z,w,h,d,material){const mesh=new T.Mesh(box,material);mesh.position.set(x,y,z);mesh.scale.set(w,h,d);root.add(mesh);return mesh;}

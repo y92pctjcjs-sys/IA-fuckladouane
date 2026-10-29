@@ -1,4 +1,4 @@
-export {tauntIndex} from './oculaire-reactions.js?v=oculaire-impact-005';
+export {tauntIndex} from './oculaire-reactions.js?v=fld-route-003';
 export const TAUNTS=Object.freeze([
  Object.freeze({id:'rire-cascade',label:'Ha-ha-ha / rire en cascade',duration:.78}),
  Object.freeze({id:'gnagnagna',label:'Gna-gna-gnère / moquerie nasale',duration:.82}),

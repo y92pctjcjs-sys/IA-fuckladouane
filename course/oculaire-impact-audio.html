@@ -6,9 +6,9 @@
 <div class="sounds" id="sounds"></div><p id="status" role="status">Son désactivé. Activez-le pour écouter.</p><canvas id="wave" width="840" height="140" aria-label="Forme d’onde du dernier bruitage"></canvas>
 <details open><summary>Diagnostic audio réel</summary><pre id="diagnostics">Aucun AudioContext créé.</pre></details><p><a href="oculaire-preview.html">Atelier 3D et vrais dégâts</a> · <a href="../course.html">Jouer</a> · <a href="OCULAIRE_IMPACTS_MOQUERIES.md">Prompt maître</a></p></main>
 <script type="module">
-import {createAudio} from './audio.js?v=oculaire-impact-005';
-import {TAUNTS,synthesizeTaunt} from './oculaire-taunts.js?v=oculaire-impact-005';
-import {createRace,hit} from './simulation.js?v=fld-world-002';
+import {createAudio} from './audio.js?v=fld-route-003';
+import {TAUNTS,synthesizeTaunt} from './oculaire-taunts.js?v=fld-route-003';
+import {createRace,hit} from './simulation.js?v=fld-route-003';
 const $=id=>document.getElementById(id),audio=createAudio(()=>{$('status').textContent='Audio interrompu par l’appareil. Réactivez le son.';}),buttons=[];
 audio.configure({music:0,engineEnabled:false,effects:.7});
 function diagnostics(){ $('diagnostics').textContent=JSON.stringify(audio.diagnostics,null,2); }
