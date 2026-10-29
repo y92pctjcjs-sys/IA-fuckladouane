@@ -1,5 +1,53 @@
 # FLD / SWAGISTAN MOTOR CLUB — état design
 
+## État courant — route V4 et passage secret, 29 octobre 2026
+
+Branche : `feat/swagistan-route-secret-20261029`. Base distante et publique vérifiée avant modification : `c0acf1e0e5e0eb7232a8d721d2debf08a495feda`. Aucun changement local préexistant, aucun AGENTS.md. Publication explicitement demandée par l’utilisateur. Brief écrit puis appliqué : `course/ROUTE_V4_PROMPT_MAITRE.md`. Cette demande autorise à changer le tracé, contrairement à la limite du brief initial ; les 13 km principaux, les cinq étapes et les dix barrages restent en place dans la progression.
+
+### Audit et direction
+
+- Base : 121/121 tests ; 44 fichiers publics HTTP 200 et identiques au commit avant travail (`route-public-base.json`). GitHub Pages main / racine, domaine et QR conservés.
+- Références officielles : notes Touge Masters Asphalt et aide Quick Race / chemins secrets (liens dans le brief). Principes retenus : changements de direction réels, courbes longues entre les lignes de vitesse, choix de route à apprendre. Créations FLD uniquement, aucune ressource Asphalt importée.
+- **Conçu et implémenté** : angles de route composés à la main, raccords quintiques continus, intégration par longueur. Amplitude des caps supérieure à 4,3 radians ; rayon minimal de la route principale d’environ 133 m. Étendue latérale de plus de 3 km, retours et contre-courbes. Distance entre parties non voisines supérieure à 400 m aux échantillons contrôlés ; aucun croisement accidentel.
+
+### Passage LISIÈRE 89 et dangers
+
+- **Implémenté** : vraie chaussée forestière de 686,94 m entre les progressions 3 120 et 4 400 m, évitant 593,06 m de détour. Entrée par le côté gauche, marque FLD discrète, sol et lisière construits ; aucun saut de position. L’avancement canonique s’adapte à la longueur physique, les roues / effets utilisent la vraie vitesse. Raccords de position, direction et pente ; sol découpé et hauteurs accordées aux jonctions. Garde-corps principal ouvert uniquement aux deux raccords.
+- La caméra, l’éclairage du joueur, les traces de drift, la nitro, la carte et le point de visée céleste suivent cette route. Le visage, les pigments, la chevelure, les clignements, la finale et les cinq regards d’OCULAIRE restent ceux de main. Seul son ancrage de parcours s’adapte à la branche et les patrouilles éloignées physiquement sont écartées de son attention.
+- Les poursuivants restent sur la route principale. Collisions vérifiées dans le monde pendant le passage : aucun contact ou passage au ras gagné à travers la forêt. Les civils / poursuivants s’écartent progressivement de la voie de réinsertion ; aucun déplacement instantané d’une voiture proche. Le passage ne peut être pris en pause et ne termine pas la partie.
+- Cinq amas fixes de pneus / colis : 1,06 ; 2,72 ; 4,90 ; 8,48 ; 11,14 km. Deux voies libres à chaque amas, plus de 392 m de séparation avec un barrage ; signal selon la même anticipation de plus de trois secondes. Gabarit réel ±1,05 m / ±1,15 m, peinture et petites languettes réfléchissantes ; impact de 6 points de résistance avec délai de contact existant. Les débris décoratifs ne deviennent pas des collisions cachées.
+- Les accessoires longs du tunnel sont répartis dans des repères locaux suivant le tracé, au lieu de traverser les virages en ligne droite. Aires techniques reculées / abaissées, forêt écartée du passage. La toiture conserve exactement 5,2–7,4 km.
+
+### Carte, records et invariants
+
+- Atlas redessiné autour de la nouvelle géométrie, plan à proportions exactes, tracé entier visible en portrait, cinq filtres, zoom et défilement. Le passage ne se dessine qu’après découverte ; celle-ci est mémorisée avec les données V4 et suivie sur les nouvelles parties. Le marqueur suit le joueur sur la branche.
+- Classement séparé `swagistan-13k-v4-forest-cut`, clé `fld.course.v4`, schéma 4 ; clés V1 / V2 / V3 jamais écrasées. Le souvenir amoureux suit la migration, sans reprendre les anciens temps / scores. Résultat et preuve indiquent la découverte. Commandes, préférences, skins et audio séparé conservés.
+- Cache de tout le graphe : `fld-route-003`. Comparaison de 19 sources protégées à la base : identiques hors paramètres de cache (`route-preserved.json`), dont portail, domaine, commandes, audio, tirage 1/30, données du portrait, cheveux, finale et journal OCULAIRE.
+
+### Vérifications exécutées
+
+- **Testé** : 132/132 tests, syntaxe de 79 fichiers JavaScript vérifiée. Les onze nouveaux tests couvrent continuité et séparation des courbes, gain physique du passage, entrée et raccord sans téléportation, déterminisme à 30 / 60 / 144 Hz, pause, collision indépendante des deux routes, débris et gabarits, réinsertion, migration V3 / V4, révélation de carte, caméra réelle et cinq regards.
+- Contrôle géométrique de la vraie scène : **15 729 sondes**, tous les 8 m, route principale entre −8 et +8 m et passage entre −3,7 et +3,7 m ; intervalle vertical 0,12–2,87 m au-dessus de la route. Aucun décor solide rencontré. Les halos transparents de sol sont exclus car ce ne sont pas des obstacles. Ce relevé échantillonné ne garantit pas tous les points continus ni le cadrage WebGL (`route-clearance.json`).
+- **Simulé** : 24 parcours complets avec vrais civils et poursuivants, douze graines, avec / sans passage. Route principale : 10 arrivées et deux défaites (`VÉHICULE HORS SERVICE`, graines 7 et 9). Passage : 12 découvertes et 12 arrivées, temps d’environ 246–249 s contre 258–260 s pour les arrivées principales. Aucun choc de débris pour ce contrôleur. Base antérieure : 7 arrivées sur 12 pour la même famille de contrôleur. Les ajustements du contrôleur aux nouveaux dangers empêchent d’en déduire un taux de victoire humain ou un équilibrage parfait. Rapports `route-drives.json`, `route-baseline-drives.json` ; les défaites sont conservées et ne sont pas masquées en succès.
+- **Observé en CPU uniquement** : vingt projections des maillages via la vraie caméra de poursuite en 390×844 et 844×390 : courbe forestière, trois moments du passage, débris, portails, contrôle et finale de route. Route et joueur visibles, ciel occulté dans OMERTA ; ombrage simplifié et échantillonnage de textures, sans les shaders / reflets WebGL. Reproduction : `tools/render-world-cpu.mjs`, relevé `route-camera-cpu.json`.
+- **Observé dans Chrome cloud** : atlas en cadres CSS 390×844, 320×568 et 844×390. Aucune largeur de page excédentaire (373/373, 303/303, 827/827), boutons au moins 44 px, filtre forêt et parcours entier, zoom 150 %, dévoilement en mode découvert. Dialogue du vrai composant ouvert, Échap depuis son iframe puis retour du focus au bouton carte. La simulation de pause et l’audio sont couverts séparément par les tests ; cette fixture ne constitue pas une partie jouée.
+
+### Budget mesuré et limites
+
+Node v24.22.1 Linux, CPU seulement, OCULAIRE `ready`, DPR simulé 3, six combinaisons de profil / cadre. Adaptatif et détaillé : ratio cible 1,25, maillages visibles maximum 353 (base 353), triangles avant frustum maximum 236 221 (base 226 291). Économie : ratio 0,72, maillages maximum 324 (base 329), triangles maximum 213 877 (base 213 961). Géométries maximum 282 contre 265 ; deux traversées à 261 / 261 et huit retours au départ stables à 251, ou 252 en économie. Géométries partagées après retrait : 160 / 161. Passage mesuré, arbres instanciés et LOD économique ; aucune lumière dynamique ajoutée. Rapports `route-cpu.json` et `route-baseline-cpu.json`. Les temps CPU varient avec la charge de l’hôte et ne démontrent pas un gain de fluidité.
+
+Le contexte WebGL du navigateur cloud est désactivé, comme au jalon précédent (`GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `Error creating WebGL context.`). Aucune observation WebGL de la V4, mesure de FPS / régularité GPU ou partie sur iPhone physique n’est revendiquée. 60 / 30 images par seconde restent des objectifs. L’autorisation utilisateur de publier est explicite ; ces limites sont maintenues dans la livraison.
+
+### Incidents corrigés et état de publication
+
+- Premier audit de couloir : les plans transparents des halos au sol étaient comptés comme solides ; classés explicitement hors obstacles, puis contrôle des solides exécuté.
+- Audit ensuite réellement bloquant : le grand ruban de terrain principal recouvrait le passage. Maillage subdivisé et découpé ; un point sur le bord de la jonction avait encore un dénivelé avec l’asphalte principal. Hauteurs accordées au sol voisin et contrôle élargi jusqu’aux bords, terminé sans rencontre.
+- Premier test de scène du passage : `TypeError: Cannot read properties of undefined (reading 'active')`, dû à une fixture qui supprimait les trois emplacements de poursuivants requis par le moteur. Fixture corrigée avec les emplacements réels.
+- Test de caméra ensuite trop excentré à l’entrée (x projeté −0,641 en portrait) : repère de branche corrigé pour les points de caméra avant / après la jonction. Le contrôle vérifie le cadrage dans les virages avec une tolérance adaptée au déport de regard, et les cinq pupilles convergent.
+- Sélecteur de revue `getByLabel('FORMAT', exact:true)` sans correspondance, lié au libellé avec espace ; sélection de l’élément `#format` réellement présent, puis contrôles mobiles terminés. Aucun changement du moteur pour contourner WebGL.
+- **Publication V4 : en préparation**. Prochaine action : sauvegarder le jalon, contrôler main distant, fusionner via le mécanisme GitHub existant, attendre Pages, comparer les octets publics et observer l’atlas publié. Les entrées ci-dessous sont l’historique des versions antérieures.
+
+
 ## État courant — forêt et atlas, 29 octobre 2026
 
 Branche : `feat/swagistan-world-20261029`. Premier jalon sauvegardé : `2cf0297b2bdf9f8368782ef62c034b68e8b3d494`. Base OCULAIRE intégrée : `0d69230fc42385fe8d55aa890e528788e20de384`. L’utilisateur a explicitement demandé de publier puis de poursuivre les décors, la forêt, les virages et la cartographie. Les mentions de non-publication ci-dessous sont l’historique du premier jalon.

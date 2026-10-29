@@ -45,7 +45,7 @@ test('v1 and easier v2 records are retained byte-for-byte; only love carries int
  const old=JSON.stringify({version:1,love:false,bestTime:99}),v2=JSON.stringify({version:2,route:'swagistan-13k-v2',wins:30,bestTime:240,bestScore:50000,love:true});
  const map=new Map([[LEGACY_KEY,old],[PREVIOUS_KEY,v2]]),store={getItem:k=>map.get(k),setItem:(k,v)=>map.set(k,v)},save=createSave(store);
  assert.equal(save.data.bestTime,null);assert.equal(save.data.bestScore,0);assert.equal(save.data.love,true);
- save.record({won:true,time:280,score:31000,ending:'escape'});assert.equal(map.get(LEGACY_KEY),old);assert.equal(map.get(PREVIOUS_KEY),v2);assert.equal(JSON.parse(map.get(SAVE_KEY)).version,3);
+ save.record({won:true,time:280,score:31000,ending:'escape'});assert.equal(map.get(LEGACY_KEY),old);assert.equal(map.get(PREVIOUS_KEY),v2);assert.equal(JSON.parse(map.get(SAVE_KEY)).version,4);
  const prefs=createPreferences(store);prefs.update({engine:.13,engineEnabled:false,effects:.8,music:.6});const loaded=createPreferences(store).data;
  assert.equal(loaded.engineEnabled,false);assert.equal(loaded.engine,.13);assert.equal(loaded.effects,.8);assert.equal(loaded.music,.6);assert.ok(map.has(PREFS_KEY));
  const blocked=createPreferences({getItem(){throw Error();},setItem(){throw Error();}});blocked.update({engineEnabled:false});assert.equal(blocked.data.engineEnabled,false);

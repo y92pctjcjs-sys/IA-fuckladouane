@@ -1,19 +1,21 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-world-002';
-import {createVehicle,animateVehicle} from './models.js?v=fld-world-002';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-world-002';
-import {createDrivingEffects} from './effects.js?v=fld-world-002';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=fld-world-002';
-import {createDigitalSky} from './sky.js?v=fld-world-002';
-import {createQuality} from './quality.js?v=fld-world-002';
-import {addRoadPosters} from './posters.js?v=fld-world-002';
-import {patrolSkin} from './vehicle-skins.js?v=fld-world-002';
-import {setVehicleDetail} from './vehicle-detail.js?v=fld-world-002';
-import {resetRoadPrototype} from './road-vehicles.js?v=fld-world-002';
-import {industrialPrototype} from './design-scenery.js?v=fld-world-002';
-import {createOculaire} from './oculaire.js?v=fld-world-002';
-import {landscapeChunk,setLandscapeDetail,curvedRails} from './world-landscape.js?v=fld-world-002';
-import {addWorldLandmarks} from './world-landmarks.js?v=fld-world-002';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-route-003';
+import {createVehicle,animateVehicle} from './models.js?v=fld-route-003';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-route-003';
+import {createDrivingEffects} from './effects.js?v=fld-route-003';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=fld-route-003';
+import {createDigitalSky} from './sky.js?v=fld-route-003';
+import {createQuality} from './quality.js?v=fld-route-003';
+import {addRoadPosters} from './posters.js?v=fld-route-003';
+import {patrolSkin} from './vehicle-skins.js?v=fld-route-003';
+import {setVehicleDetail} from './vehicle-detail.js?v=fld-route-003';
+import {resetRoadPrototype} from './road-vehicles.js?v=fld-route-003';
+import {industrialPrototype} from './design-scenery.js?v=fld-route-003';
+import {createOculaire} from './oculaire.js?v=fld-route-003';
+import {landscapeChunk,setLandscapeDetail,curvedRails} from './world-landscape.js?v=fld-route-003';
+import {addWorldLandmarks} from './world-landmarks.js?v=fld-route-003';
+import {SHORTCUT,driveSample,distanceToShortcut} from './route-options.js?v=fld-route-003';
+import {createShortcutScenery,createDebrisScenery} from './route-assets.js?v=fld-route-003';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1);
 const mats = new Map();
@@ -70,22 +72,21 @@ function car(kind='fld',variant=0,skin='') {
   for(const wheel of vehicle.userData.wheels)wheel.steering.traverse(n=>exclude.add(n));
   batch(vehicle,exclude);return vehicle;
 }
-function positionOn(object, s, lateral = 0, height = 0, yaw = 0) {
-  const p = sample(s, lateral); object.position.set(p.x, p.y + height, p.z); object.rotation.y = p.angle + yaw; object.rotation.x=-Math.atan((sample(s+2).y-sample(Math.max(0,s-2)).y)/4);
+function positionOn(object, s, lateral = 0, height = 0, yaw = 0, branch = null) {
+  const p = driveSample(s, lateral,branch); object.position.set(p.x, p.y + height, p.z); object.rotation.y = p.angle + yaw; object.rotation.x=-Math.atan((driveSample(s+2,0,branch).y-driveSample(Math.max(0,s-2),0,branch).y)/(4*(branch?SHORTCUT.length/(SHORTCUT.exit-SHORTCUT.entry):1)));
 }
-function ribbon(start, end, l, r, height, color) {
-  const vertices = [], indices = [], uvs = [];
-  let i = 0;
-  for (let s = start; s <= end + .01; s += 4) {
-    const a = sample(s, l), b = sample(s, r);
-    vertices.push(a.x, a.y + height, a.z, b.x, b.y + height, b.z);
-    uvs.push(0,s/3,(r-l)/3,s/3);
-    if (i) indices.push(i - 2, i, i - 1, i - 1, i, i + 1);
-    i += 2;
+function ribbon(start,end,l,r,height,color){
+  const vertices=[],indices=[],uvs=[],columns=r-l>100&&start>2800&&start<4720?12:1;
+  let row=0;
+  for(let s=start;s<=end+.01;s+=4,row++)for(let col=0;col<=columns;col++){
+    const lateral=l+(r-l)*col/columns,p=sample(s,lateral);vertices.push(p.x,p.y+height,p.z);uvs.push((lateral-l)/3,s/3);
+    if(row&&col){
+      if(columns>1){const centre=sample(s-2,l+(r-l)*(col-.5)/columns);if(distanceToShortcut(centre.x,centre.z)<16)continue;}
+      const a=(row-1)*(columns+1)+col-1,b=a+1,c=a+columns+1,d=c+1;indices.push(a,c,b,b,c,d);
+    }
   }
-  const geo = new T.BufferGeometry(); geo.setAttribute('position', new T.Float32BufferAttribute(vertices, 3)); geo.setIndex(indices); geo.setAttribute('uv',new T.Float32BufferAttribute(uvs,2)); geo.computeVertexNormals();
-  geo.userData.chunkOwned=true;
-  const m = new T.Mesh(geo, typeof color==='string'?material(color):color); m.material.side = T.DoubleSide; return m;
+  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geo.setIndex(indices);geo.setAttribute('uv',new T.Float32BufferAttribute(uvs,2));geo.computeVertexNormals();geo.userData.chunkOwned=true;
+  const mesh=new T.Mesh(geo,typeof color==='string'?material(color):color);mesh.material.side=T.DoubleSide;return mesh;
 }
 function wallRibbon(start,end,lateral,bottom,top,mat){
  const vertices=[],indices=[],uvs=[];let i=0;
@@ -126,7 +127,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     for(const geometry of geometries)geometry.dispose();g.clear();
   }
   function fillChunk(chunk,s){
-    releaseChunk(chunk.g);chunk.s=s;const g=chunk.g;
+    releaseChunk(chunk.g);chunk.s=s;const g=chunk.g;g.userData.chunkStart=s;g.name='TRONÇON / '+s;
     g.add(ribbon(s, s + 80, -120, 120, -.22, '#171624'));
     g.add(ribbon(s, s + 80, -8.1, 8.1, 0, asphaltMaterial()));
     g.add(ribbon(s, s + 80, -7.9, -7.65, .035, '#c7b5d1'));
@@ -153,10 +154,12 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     }
     if (tunnel) {
       const arch = new T.Group(); g.add(arch); positionOn(arch, s + 40);
-      tunnelDetail(arch,cube);
-      for (const dz of [-30, -10, 10, 30]) {
-        cube(arch, 0, 7.7, dz, 19.7, .08, .16, '#b97cff', true);
-        cube(arch, -9.6, 2.2, dz, .08, .16, 11, '#b97cff', true); cube(arch, 9.6, 2.2, dz, .08, .16, 11, '#b97cff', true);
+      tunnelDetail(g,s,cube,positionOn);
+      for(const offset of[10,30,50,70]){
+        const local=new T.Group();g.add(local);positionOn(local,s+offset);
+        cube(local,0,7.7,0,19.7,.08,.16,'#b97cff',true);
+        cube(local,-9.6,2.2,0,.08,.16,11,'#b97cff',true);cube(local,9.6,2.2,0,.08,.16,11,'#b97cff',true);
+        lightPool(local,'#a86cff',19,18);
       }
     } else {
       openDetail(g,s,stage.kind,cube,positionOn);
@@ -260,6 +263,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   let trafficVariant=0;
   const traffic = Array.from({length: 7}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
   const effects=createDrivingEffects(scene,reduced);
+  const shortcutScenery=createShortcutScenery(scene),debrisScenery=createDebrisScenery(scene);
   let initialized=false;
   const glow=new T.PointLight('#956bf1',10,12,2);scene.add(glow);
   const headPool=new T.Group();scene.add(headPool);const headWash=lightPool(headPool,'#dce7ff',5,13);headWash.material.opacity=.2;
@@ -279,7 +283,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(quality.update(elapsed,r.state==='RACE')){renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();}
       stream(s);destination.visible=s>STAGES[4].start-300;
       overpass.visible=Math.abs(s-8200)<430;station.visible=s>LENGTH-300;finishGate.visible=s>LENGTH-380;
-      positionOn(player, s, lateral, .015, yaw);
+      positionOn(player, s, lateral, .015, yaw,r.branch);
       animateVehicle(player,r,r.state==='RACE'?Math.min(elapsed,.05):0);
       player.userData.flame.visible = r.boosting && r.state === 'RACE';
       player.userData.flame.scale.z=reduced?1:.8+Math.sin(r.time*40)*.25;
@@ -293,10 +297,12 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0);if(traffic[i].visible&&traffic[i].userData.prototype)setVehicleDetail(traffic[i],Math.abs(t.s-r.s)>(quality.level===0?55:85)); }
       for (const {s:start,g} of chunks){g.visible=start>s-160&&start<s+(quality.level===0?300:380);if(g.visible)setLandscapeDetail(g,start,s,quality.level===0);}
       barriers.forEach(g => { g.visible = Math.abs(g.userData.s-s)<(quality.level===0?300:450) && !ending; });
+      shortcutScenery.update(r,quality.level===0);debrisScenery.update(r);
+      const routeScale=r.branch?(SHORTCUT.exit-SHORTCUT.entry)/SHORTCUT.length:1;
       const chaseDistance=10.5+Math.min(2,r.speed/34)+(r.boosting?1:0);
-      const behind = sample(Math.max(0, s-chaseDistance), lateral*.62);
+      const behind = driveSample(Math.max(0, s-chaseDistance*routeScale), lateral*.62,r.branch);
       desired.set(behind.x, behind.y + 4.3, behind.z);
-      const ahead = sample(s + 24, lateral * .7); aim.set(ahead.x, ahead.y + 1.1, ahead.z);
+      const ahead = driveSample(s + 24*routeScale, lateral * .7,r.branch); aim.set(ahead.x, ahead.y + 1.1, ahead.z);
       // At the starting line the mathematical road starts at zero: extend behind it.
       if (s < 15) { const start = sample(0); desired.set(player.position.x - Math.sin(start.angle) * 10.5, player.position.y + 4.3, player.position.z - Math.cos(start.angle) * 10.5); }
       if (love && r.cinematic > 5) {
@@ -316,11 +322,12 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       scene.fog.color.lerp(new T.Color(welcoming?'#433443':stageAt(r.s).fog),.04);scene.background.copy(scene.fog.color).multiplyScalar(.43);
       scene.fog.density=stageAt(r.s).kind==='tunnel'?.005:.0033;
       sky.update(r,camera,quality.level);
-      const front=sample(s+7,lateral);headPool.position.set(front.x,front.y+.018,front.z);headPool.rotation.y=front.angle;
+      const front=driveSample(s+7*routeScale,lateral,r.branch);headPool.position.set(front.x,front.y+.018,front.z);headPool.rotation.y=front.angle;
       glow.position.copy(player.position);glow.position.y+=1.5;glow.color.set(love&&r.cinematic>5?'#e8b992':'#956bf1');
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
-      oculaire.update(r,player,camera);
+      const headRace=r.branch?{...r,cops:r.cops.filter(c=>{const p=sample(c.s,c.x);return Math.hypot(p.x-player.position.x,p.z-player.position.z)<90;})}:r;
+      oculaire.update(headRace,player,camera);
       if(inspectionAngle!==null){
         const offset=new T.Vector3(Math.sin(inspectionAngle)*64,2,Math.cos(inspectionAngle)*64).multiplyScalar(oculaire.status.growth).applyQuaternion(oculaire.root.quaternion);
         inspectionCamera.position.copy(oculaire.root.position).add(offset);inspectionCamera.aspect=camera.aspect;inspectionCamera.updateProjectionMatrix();inspectionCamera.lookAt(oculaire.root.position);
@@ -341,7 +348,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     get oculaireStatus() {return oculaire.status;},
     inspectHead(angle=null){inspectionAngle=Number.isFinite(angle)?angle:null;},
     inspectOculaire() {return oculaire.inspect(inspectionAngle===null?camera:inspectionCamera);},
-    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();oculaire.dispose();renderer.dispose(); },
+    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();shortcutScenery.dispose();debrisScenery.dispose();oculaire.dispose();renderer.dispose(); },
     info: renderer.info
   };
 }

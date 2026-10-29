@@ -7,10 +7,10 @@
 <meta name="description" content="Treize kilomètres jusqu’au Swagistan. Une voiture FLD. Rien à déclarer aux poursuivants. Course arcade 3D indépendante.">
 <title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="./course/style.css?v=fld-world-002">
-<link rel="stylesheet" href="./course/design-system.css?v=fld-world-002">
-<link rel="stylesheet" href="./course/atlas-shell.css?v=fld-world-002">
-<script type="module" src="./course/boot.js?v=fld-world-002"></script>
+<link rel="stylesheet" href="./course/style.css?v=fld-route-003">
+<link rel="stylesheet" href="./course/design-system.css?v=fld-route-003">
+<link rel="stylesheet" href="./course/atlas-shell.css?v=fld-route-003">
+<script type="module" src="./course/boot.js?v=fld-route-003"></script>
 </head>
 <body>
 <canvas id="world" aria-label="Circuit 3D nocturne vers le Swagistan"></canvas>
@@ -25,15 +25,15 @@
 </section>
 <main id="overlay" class="overlay">
 <section id="menu" class="panel menu" aria-busy="true">
-<div class="eyebrow">FLD® / RECHERCHÉ / PARCOURS 03</div>
+<div class="eyebrow">FLD® / RECHERCHÉ / PARCOURS 04</div>
 <h1>FUITE<br>DOUANIÈRE<span>SWAGISTAN MOTOR CLUB</span></h1>
 <p class="intro">Le protocole dit : MADE IN SWAGISTAN.<br>Il reste à retrouver l’origine de la veste.</p>
 <div class="race-meta"><span>13 KM<br><b>ROUTE DE NUIT</b></span><span>4–6 MIN<br><b>AUCUNE FORMALITÉ</b></span><span>01 AUTO<br><b id="vehicleName">fld® / NIGHTRUNNER</b></span></div>
-<p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Patrouilles et douanes banalisées. Gardez de la nitro.</p>
+<p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Virages, débris et patrouilles. Gardez de la nitro.</p>
 <button id="start" class="primary" disabled>PRENDRE LA ROUTE <span>↗</span></button>
 <button id="menuHelp" class="text-button">VOIR LES COMMANDES</button>
 <button id="menuMap" class="text-button">EXPLORER LE PARCOURS / 13 KM ↗</button>
-<a class="credits-link" href="./course/garage.html?v=fld-world-002">PERSONNALISER / 6 LIVRÉES 3D ↗</a>
+<a class="credits-link" href="./course/garage.html?v=fld-route-003">PERSONNALISER / 6 LIVRÉES 3D ↗</a>
 <div id="recordMenu" class="record"></div>
 <a class="credits-link" href="./course/credits.html" target="_blank" rel="noopener">SOURCES & MUSIQUE ↗</a>
 </section>
@@ -44,7 +44,7 @@
  <div class="result-badge"><b id="resultRank"></b><span id="resultBadge"></span></div>
  <div class="result-score"><span>SCORE DE FUITE</span><strong id="resultScore"></strong></div>
  <dl class="result-grid"><div><dt>CHRONO</dt><dd id="resultTime"></dd></div><div><dt>RÉSISTANCE</dt><dd id="resultHealth"></dd></div><div><dt>PASSAGES AU RAS</dt><dd id="resultNearMisses"></dd></div><div><dt>ÉCHAPPÉES</dt><dd id="resultEscapes"></dd></div></dl><p class="result-drifts">DRIFTS VALIDÉS / <b id="resultDrifts"></b></p>
- <p id="resultCopy"></p><p id="bestResult" class="record"></p><p id="souvenir" class="souvenir" hidden>✦ AMOUR NON DÉCLARÉ / SOUVENIR DÉBLOQUÉ</p>
+ <p id="resultShortcut" class="record" hidden></p><p id="resultCopy"></p><p id="bestResult" class="record"></p><p id="souvenir" class="souvenir" hidden>✦ AMOUR NON DÉCLARÉ / SOUVENIR DÉBLOQUÉ</p>
  <button id="proof" class="primary proof-button" hidden>GARDER LA PREUVE ↗</button><p id="proofStatus" class="record" aria-live="polite" hidden></p>
  <button id="replay" class="primary">REPRENDRE LA FUITE ↗</button><a class="return" href="./index.html">RETOUR AU PROTOCOLE</a>
 </section>
@@ -57,7 +57,7 @@
  <div class="actions"><button data-control="brake" class="brake">FREIN</button><button data-control="drift" class="drift">DRIFT</button><button data-control="nitro" class="nitro">NITRO ↗</button></div>
 </div>
 <dialog id="routeAtlas" aria-labelledby="atlasTitle"><form method="dialog" class="atlas-close"><span id="atlasTitle">ATLAS 89 / LE PARCOURS</span><button aria-label="Fermer la carte">FERMER ×</button></form><iframe id="atlasFrame" title="Carte complète du parcours vers le Swagistan"></iframe></dialog>
-<dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Le signal annonce au moins trois secondes de trajectoire et indique le côté ouvert à l’écran.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>Pouce gauche / boutons</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + pouce gauche</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse et recharge la nitro. Relâchez-le pour reprendre l’adhérence. Gardez une réserve pour décrocher les poursuivants. Les véhicules banalisés roulent parmi les civils : leurs feux bleus révèlent la douane et font monter la pression. Leurs attaques commencent après une phase d’approche.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir. Une collision seule ne vous arrête pas. Une victoire donne un rang C à S selon le score et la résistance ; les passages au ras, échappées et drifts propres rapportent des points, avec des bonus plafonnés.</p><p>Deux contacts suffisent : direction à gauche, une action à droite. RÉGLAGES permet les boutons et la sensibilité, ainsi que la coupure du moteur sans retirer musique, sirènes et autres bruitages. Le portrait reste jouable. Activez le son explicitement ; quitter l’onglet met en pause et exige une reprise.</p><button class="primary">COMPRIS ↗</button></form></dialog>
+<dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Le signal annonce au moins trois secondes de trajectoire et indique le côté ouvert à l’écran.</p><p>Les courbes demandent d’anticiper : freinez avant le virage, relâchez le drift en sortie. Les débris signalés laissent deux voies libres. Certaines marques FLD indiquent une route que la carte ne connaît pas encore.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>Pouce gauche / boutons</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + pouce gauche</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse et recharge la nitro. Relâchez-le pour reprendre l’adhérence. Gardez une réserve pour décrocher les poursuivants. Les véhicules banalisés roulent parmi les civils : leurs feux bleus révèlent la douane et font monter la pression. Leurs attaques commencent après une phase d’approche.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir. Une collision seule ne vous arrête pas. Une victoire donne un rang C à S selon le score et la résistance ; les passages au ras, échappées et drifts propres rapportent des points, avec des bonus plafonnés.</p><p>Deux contacts suffisent : direction à gauche, une action à droite. RÉGLAGES permet les boutons et la sensibilité, ainsi que la coupure du moteur sans retirer musique, sirènes et autres bruitages. Le portrait reste jouable. Activez le son explicitement ; quitter l’onglet met en pause et exige une reprise.</p><button class="primary">COMPRIS ↗</button></form></dialog>
 <dialog id="preferences" aria-labelledby="preferencesTitle"><form method="dialog"><button class="close" aria-label="Fermer les réglages">FERMER ×</button><div class="eyebrow">SWAGISTAN NETWORK / RÉCEPTEUR</div><h2 id="preferencesTitle">À VOTRE<br>MESURE.</h2>
  <p id="audioStatus">Le son reste silencieux jusqu’à votre activation avec SON.</p>
  <label class="setting" for="masterVolume">VOLUME GÉNÉRAL <input id="masterVolume" type="range" min="0" max="100" step="1"></label>
@@ -69,7 +69,7 @@
  <label class="setting" for="sensitivity">SENSIBILITÉ DU POUCE <input id="sensitivity" type="range" min="60" max="150" step="5"></label>
  <label class="setting" for="quality">GRAPHISMES <select id="quality"><option value="auto">Adaptatifs</option><option value="eco">Économiques</option><option value="high">Détaillés</option></select></label>
  <label class="setting" for="motion">MOUVEMENT DÉCORATIF <select id="motion"><option value="auto">Selon l’appareil</option><option value="reduced">Réduit</option></select></label>
- <p id="renderStats" class="record"></p><p class="record">Les records précédents sont conservés. Le classement local RECHERCHÉ V3 est séparé ; votre souvenir amoureux reste acquis.</p><button class="primary">ENREGISTRÉ / FERMER ↗</button>
+ <p id="renderStats" class="record"></p><p class="record">Les records précédents sont conservés. Le classement local RECHERCHÉ V4 est séparé ; votre souvenir amoureux reste acquis.</p><button class="primary">ENREGISTRÉ / FERMER ↗</button>
 </form></dialog>
 <dialog id="scoreProof" aria-labelledby="proofTitle"><form method="dialog"><button class="close" aria-label="Fermer la preuve">FERMER ×</button><h2 id="proofTitle">ORIGINE<br>RETROUVÉE.</h2><img id="proofImage" alt="Carte du score FLD avec rang, chronomètre, résistance et échappées" width="1080" height="1440"><a id="proofDownload" class="primary" download>ENREGISTRER L’IMAGE ↗</a><button type="button" id="proofShare" class="primary" hidden>PARTAGER LA PREUVE ↗</button><p id="proofHint">Sur iPhone, vous pouvez aussi maintenir le doigt sur l’image pour l’enregistrer.</p><button class="text-button">RETOUR AU SCORE</button></form></dialog>
 <noscript><div class="noscript">Activez JavaScript pour prendre la route. <a href="./index.html">Retour au protocole</a></div></noscript>

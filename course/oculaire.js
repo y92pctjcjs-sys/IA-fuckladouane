@@ -1,7 +1,9 @@
 import * as T from './vendor/three.module.min.js';
-import {sample,LENGTH,STAGES,sectorAt,blockadeAhead,beatAt} from './track.js?v=fld-world-002';
-import {createOculaireFinale} from './oculaire-finale.js?v=fld-world-002';
-import {adaptOculaireHair} from './oculaire-hair.js?v=fld-world-002';
+import {sample,LENGTH,STAGES,sectorAt,blockadeAhead,beatAt} from './track.js?v=fld-route-003';
+import {createOculaireFinale} from './oculaire-finale.js?v=fld-route-003';
+import {adaptOculaireHair} from './oculaire-hair.js?v=fld-route-003';
+
+import {driveSample,SHORTCUT} from './route-options.js?v=fld-route-003';
 
 export const WORDS=Object.freeze([
  'Tu conduis depuis l’intérieur de mes paupières.',
@@ -15,7 +17,7 @@ export const GROWTH=Object.freeze([1,1.06,1.12,1.18,1.25]);
 const smooth=x=>{x=T.MathUtils.clamp(x,0,1);return x*x*(3-2*x);};
 const hash=n=>{n=Math.imul(n^(n>>>16),0x45d9f3b);n=Math.imul(n^(n>>>16),0x45d9f3b);return ((n^(n>>>16))>>>0)/4294967296;};
 export function growthAt(s){const i=sectorAt(s),stage=STAGES[i];return i===0?1:T.MathUtils.lerp(GROWTH[i-1],GROWTH[i],smooth((s-stage.start)/300));}
-export function dangerous(r){return Boolean(blockadeAhead(r.s,r.speed)||r.capture>.15||r.time-r.lastRevealTime<4||r.impact>.1||r.drifting||r.s-beatAt(r.s).s<130);}
+export function dangerous(r){return Boolean((!r.branch&&blockadeAhead(r.s,r.speed))||r.capture>.15||r.time-r.lastRevealTime<4||r.impact>.1||r.drifting||r.s-beatAt(r.s).s<130);}
 export function createWhispers(){
  let index=0,until=-1,text='',mouth=-1,seed=0,order=[],lastTime=0,nextAllowed=0;
  const gates=[650,2700,4700,6100,9500,11300];
@@ -66,7 +68,7 @@ export function createPursuitMotion(){
 }
 
 // Reuses the approved surfaces as a bounded game asset. The source file stays intact.
-export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-world-002'),report=()=>{}}={}){
+export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-route-003'),report=()=>{}}={}){
  const root=new T.Group();root.name='OCULAIRE';root.visible=false;scene.add(root);
  const face=new T.Group();root.add(face);
  const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers(),pursuitMotion=createPursuitMotion();
@@ -111,7 +113,7 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
   status.meshes=data.SURFACES.length;status.triangles=meta.triangles;status.state='ready';root.visible=true;report({...status});
  }).catch(error=>{status.state='error';status.error=`${error.name}: ${error.message}`;root.visible=false;report({...status});console.error('OCULAIRE adaptation:',error);});
  function sky(r,player,camera){
-  const p=sample(Math.min(LENGTH+200,r.s+40));const dx=p.x-camera.position.x,dz=p.z-camera.position.z,d=Math.hypot(dx,dz)||1;
+  const p=driveSample(Math.min(LENGTH+200,r.s+40*(r.branch?(SHORTCUT.exit-SHORTCUT.entry)/SHORTCUT.length:1)),0,r.branch);const dx=p.x-camera.position.x,dz=p.z-camera.position.z,d=Math.hypot(dx,dz)||1;
   const motion=pursuitMotion.update(r),strength=reduced?.32:1;status.pursuit=motion;
   const scale=34/meta.height*growthAt(r.s);root.scale.setScalar(scale);
   const slide=motion.side*3.4*strength;

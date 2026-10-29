@@ -64,15 +64,15 @@ function raster(width,height){
  scene.traverseVisible(mesh=>{if(!mesh.isMesh)return;if(mesh.isInstancedMesh){for(let i=0;i<mesh.count;i++){mesh.getMatrixAt(i,im);meshRaster(mesh,mesh.matrixWorld.clone().multiply(im));instances++;}}else meshRaster(mesh,mesh.matrixWorld);});
  const canvas=createCanvas(width,height);canvas.getContext('2d').putImageData(new ImageData(rgb,width,height),0,0);return {png:canvas.toBuffer('image/png'),faces,instances};
 }
-const views=[['forest',2800],['relay-curve',3700],['tunnel-entry',5180],['tunnel-exit',7380],['control',7800],['swagistan',11610]],report=[];
+const views=[['forest',2800],['forest-turn',3520],['secret-entry',3170,'forest-cut'],['secret-mid',3700,'forest-cut'],['secret-exit',4370,'forest-cut'],['debris',1020],['tunnel-entry',5180],['tunnel-exit',7380],['control',7800],['swagistan',11610]],report=[];
 for(const [width,height]of [[390,844],[844,390]]){
  globalThis.innerWidth=width;globalThis.innerHeight=height;
  const view=createRenderer({},true,()=>sink,'auto',undefined,{oculaire:{loadModel:()=>model}});await new Promise(setImmediate);
  if(view.oculaireStatus.state!=='ready')throw Error('OCULAIRE unavailable');
  const race=createRace();race.state='RACE';race.speed=48;race.cops.forEach(c=>c.active=false);
- for(const [name,s]of views){
-  Object.assign(race,{s,time:s/48});race.traffic.forEach((t,i)=>{t.s=s+45+i*54;});view.reset();for(let i=0;i<12;i++)view.render(race,1/60);
-  const result=raster(width,height),file=`${name}-${width}x${height}.png`;writeFileSync(resolve(output,file),result.png);report.push({file,s,width,height,faces:result.faces,instances:result.instances,camera:camera.position.toArray()});console.log(file,result.faces);
+ for(const [name,s,branch]of views){
+  Object.assign(race,{s,time:s/48,branch:branch||null});race.traffic.forEach((t,i)=>{t.s=s+45+i*54;});view.reset();for(let i=0;i<12;i++)view.render(race,1/60);
+  const result=raster(width,height),file=`${name}-${width}x${height}.png`;writeFileSync(resolve(output,file),result.png);report.push({file,s,branch:branch||null,width,height,faces:result.faces,instances:result.instances,camera:camera.position.toArray()});console.log(file,result.faces);
  }view.dispose();
 }
 writeFileSync(resolve(output,'report.json'),JSON.stringify({kind:'CPU_GEOMETRY_RASTER_REAL_CHASE_CAMERA_NOT_WEBGL',report},null,2)+'\n');

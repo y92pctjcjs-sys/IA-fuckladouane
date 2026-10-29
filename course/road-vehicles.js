@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {softTexture} from './materials.js?v=fld-world-002';
+import {softTexture} from './materials.js?v=fld-route-003';
 
 // Milestone 2 only. Production collision boxes, simulation and spawn rules are untouched.
 // Coordinates: +Z front, -Z rear, +Y up. All dimensions include mirrors and lamps.

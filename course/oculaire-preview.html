@@ -14,9 +14,9 @@
 <button id="pausePreview">Pause</button> <button id="blink">Figer un clignement</button> <button id="reset">Repartir</button> <a href="../course.html">Jeu</a> · <a href="oculaire-lab.html">Formats téléphone</a>
 <details><summary>Contrôles du rendu</summary><pre id="diagnostics">Chargement…</pre></details></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=fld-world-002';
-import {createRace,pause,resume} from './simulation.js?v=fld-world-002';
-import {blinkAt} from './oculaire.js?v=fld-world-002';
+import {createRenderer} from './renderer.js?v=fld-route-003';
+import {createRace,pause,resume} from './simulation.js?v=fld-route-003';
+import {blinkAt} from './oculaire.js?v=fld-route-003';
 const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace();race.state='RACE';race.s=2400;race.speed=48;race.time=50;
 let last=0,lastReport=0;
 $('distance').oninput=()=>{race.s=+$('distance').value;view.reset();};$('lane').oninput=()=>{race.x=+$('lane').value;};

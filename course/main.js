@@ -1,12 +1,13 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-world-002';
-import {createRenderer} from './renderer.js?v=fld-world-002';
-import {createInput} from './input.js?v=fld-world-002';
-import {createAudio} from './audio.js?v=fld-world-002';
-import {createSave,createPreferences} from './storage.js?v=fld-world-002';
-import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-world-002';
-import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-world-002';
-import {createAppearance,resolveSkin} from './vehicle-skins.js?v=fld-world-002';
-import {createAtlasDialog} from './atlas-dialog.js?v=fld-world-002';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-route-003';
+import {createRenderer} from './renderer.js?v=fld-route-003';
+import {createInput} from './input.js?v=fld-route-003';
+import {createAudio} from './audio.js?v=fld-route-003';
+import {createSave,createPreferences} from './storage.js?v=fld-route-003';
+import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-route-003';
+import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-route-003';
+import {createAppearance,resolveSkin} from './vehicle-skins.js?v=fld-route-003';
+import {createAtlasDialog} from './atlas-dialog.js?v=fld-route-003';
+import {SHORTCUT,debrisAhead} from './route-options.js?v=fld-route-003';
 const $=id=>document.getElementById(id);
 const atlas=createAtlasDialog($('routeAtlas'),$('atlasFrame'));
 let storage;try{storage=localStorage;}catch{storage=null;}
@@ -37,7 +38,7 @@ function togglePause(){
  if(race.state==='PAUSE'){if(document.hidden||$('instructions').open||$('preferences').open||$('routeAtlas').open)return;resume(race);audio.resume();}
  else{pause(race);input.clear();audio.suspend();}lastTime=performance.now();paintState();
 }
-function recordLabel(){return save.data.bestTime===null?'RECHERCHÉ V3 / AUCUNE ARRIVÉE ENREGISTRÉE':`RECHERCHÉ V3 / ${formatTime(save.data.bestTime)} · ${save.data.bestScore} PTS`;}
+function recordLabel(){return save.data.bestTime===null?'RECHERCHÉ V4 / AUCUNE ARRIVÉE ENREGISTRÉE':`RECHERCHÉ V4 / ${formatTime(save.data.bestTime)} · ${save.data.bestScore} PTS`;}
 function freshSeed(){try{const values=new Uint32Array(1);crypto.getRandomValues(values);return values[0];}catch{return (Date.now()^Math.floor(performance.now()*1000))>>>0;}}
 function launch(){
  input.clear();if(proofURL)URL.revokeObjectURL(proofURL);proofURL=null;proofFile=null;proofResult=null;
@@ -50,7 +51,7 @@ $('sound').addEventListener('click',async()=>{
  $('audioStatus').textContent=enabled?'HORIZON NON DÉCLARÉ / composition originale FLD · 108 BPM. Moteur réglable séparément.':'Son désactivé. Vos volumes restent mémorisés.';
  if(race.state==='PAUSE'||document.hidden)audio.suspend();
 });
-function openDialog(id){pause(race);input.clear();audio.suspend();paintState();if(id==='routeAtlas')atlas.open(race.s);else $(id).showModal();}
+function openDialog(id){pause(race);input.clear();audio.suspend();paintState();if(id==='routeAtlas')atlas.open(race.s,race.branch,race.shortcutUsed||save.data.shortcutKnown);else $(id).showModal();}
 for(const id of ['help','menuHelp','pauseHelp'])$(id).addEventListener('click',()=>openDialog('instructions'));
 for(const id of ['settings','pauseSettings'])$(id).addEventListener('click',()=>openDialog('preferences'));
 for(const id of ['map','menuMap'])$(id).addEventListener('click',()=>openDialog('routeAtlas'));
@@ -76,6 +77,7 @@ function prepareProof(r){
 function showResult(){
  const r=race.result;$('resultKicker').textContent=r.won?'SWAGISTAN / ORIGINE RETROUVÉE':'DOSSIER DE SAISIE / FIN DE TRAJET';
  $('resultTitle').innerHTML=r.ending==='love'?'QUELQU’UN.<br>POUR UNE FOIS.':r.won?'MADE IN<br>SWAGISTAN.':'INTERCEPTÉ.';
+ $('resultShortcut').hidden=!r.shortcut;$('resultShortcut').textContent=r.shortcut?(r.shortcutMetres?`LISIÈRE 89 / ${Math.round(r.shortcutMetres)} M DE DÉTOUR ÉVITÉS`:'LISIÈRE 89 / PASSAGE DÉCOUVERT'):'';
  $('resultCopy').textContent=r.ending==='love'?'Après le contrôle, quelqu’un. Aucun frais de douane sur ça.':r.won?'Origine retrouvée. La douane reste de l’autre côté.':`${r.reason}. La douane a votre voiture. Pas votre prochain essai.`;
  $('resultTime').textContent=formatTime(r.time);$('resultScore').textContent=r.score.toLocaleString('fr-FR');$('resultHealth').textContent=`${Math.round(r.health)}%`;$('resultDrifts').textContent=r.drifts;
  const badge=resultBadge(r);$('resultRank').textContent=badge.rank;$('resultBadge').textContent=badge.title;$('resultRules').textContent=`${RULESET} / 13 KM`;
@@ -99,21 +101,21 @@ function paintState(){
 function hud(){
  $('speed').textContent=Math.round(race.speed*3.6).toString().padStart(3,'0');$('nitro').value=race.nitro;$('health').value=race.health;$('pressure').value=race.pressure;
  $('nitroValue').textContent=Math.round(race.nitro);$('healthValue').textContent=Math.round(race.health);$('pressureValue').textContent=`${Math.round(race.pressure)}%`;
- const rear=race.cops.filter(c=>c.active&&race.s-c.s>-6&&race.s-c.s<75);
+ const rear=race.cops.filter(c=>!race.branch&&c.active&&race.s-c.s>-6&&race.s-c.s<75);
  for(const [i,c] of race.cops.entries()){
   const dot=$(`copDot${i}`);dot.hidden=!rear.includes(c);
   dot.style.left=`${Math.max(5,Math.min(95,50-(c.x-race.x)*6))}%`;dot.style.top=`${Math.max(5,Math.min(31,8+(race.s-c.s)*.3))}px`;
   dot.classList.toggle('radar-attack',['follow','flank','encircle'].includes(c.phase));
  }
  const nearest=rear.reduce((a,c)=>!a||Math.abs(race.s-c.s)<Math.abs(race.s-a.s)?c:a,null);
- $('rearThreat').textContent=nearest?`RÉTRO / ${Math.abs(nearest.x-race.x)<1.1?'DANS L’AXE':screenSide(nearest.x-race.x)}`:'RÉTRO / LIBRE';
+ $('rearThreat').textContent=nearest?`RÉTRO / ${Math.abs(nearest.x-race.x)<1.1?'DANS L’AXE':screenSide(nearest.x-race.x)}`:race.branch?'RÉTRO / ROUTE PRINCIPALE':'RÉTRO / LIBRE';
  $('time').textContent=formatTime(race.time);$('progress').style.width=`${Math.min(100,race.s/LENGTH*100)}%`;$('sector').textContent=SECTORS[sectorAt(race.s)];
  $('remaining').textContent=`SWAGISTAN / ${Math.max(0,(LENGTH-race.s)/1000).toFixed(1).replace('.',',')} KM`;
- const row=blockadeAhead(race.s,race.speed),direction=row?screenSide(row.gap):'';
+ const row=race.branch?null:blockadeAhead(race.s,race.speed),debris=debrisAhead(race),direction=row?screenSide(row.gap):'';
  const beat=beatAt(race.s),showBeat=race.s-beat.s<130&&race.s>100;
  const revealed=race.time-race.lastRevealTime<4;
  $('alert').classList.toggle('undercover-alert',revealed&&!row);
- $('alert').textContent=race.capture>.15?`ENCERCLÉ / REPARTEZ AVANT ${Math.ceil(4-race.capture)} S`:row?`BARRAGE ${Math.ceil((row.s-race.s)/10)*10} M / OUVERTURE ${direction}`:revealed?'VÉHICULE BANALISÉ / DOUANE À BORD':race.drifting?'DRIFT / NITRO EN RECHARGE':showBeat?beat.label:'';
+ $('alert').textContent=race.capture>.15?`ENCERCLÉ / REPARTEZ AVANT ${Math.ceil(4-race.capture)} S`:row?`BARRAGE ${Math.ceil((row.s-race.s)/10)*10} M / OUVERTURE ${direction}`:debris?`DÉBRIS ${Math.ceil((debris.s-race.s)/10)*10} M / ${debris.x>0?'PASSER À DROITE':debris.x<0?'PASSER À GAUCHE':'GAUCHE OU DROITE'}`:revealed?'VÉHICULE BANALISÉ / DOUANE À BORD':race.branch&&race.s-SHORTCUT.entry<220?'LISIÈRE 89 / PASSAGE TROUVÉ':race.branch&&SHORTCUT.exit-race.s<210?'RACCORDEMENT / ROUTE PRINCIPALE':race.drifting?'DRIFT / NITRO EN RECHARGE':showBeat?beat.label:'';
  if(race.state==='COUNTDOWN')$('countdown').textContent=Math.max(1,Math.ceil(race.countdown));
  if(['ARRIVAL','INTERCEPTION'].includes(race.state)){
   const t=race.cinematic,love=race.result.ending==='love';

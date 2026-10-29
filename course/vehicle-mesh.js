@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {atlasUV} from './vehicle-livery.js?v=fld-world-002';
+import {atlasUV} from './vehicle-livery.js?v=fld-route-003';
 const primitives=new Map();
 export function primitive(key,make){if(!primitives.has(key))primitives.set(key,make());return primitives.get(key);}
 export function patch(points,indices,uv=null){const g=new T.BufferGeometry();g.setAttribute('position',new T.Float32BufferAttribute(points.flat(),3));g.setAttribute('uv',new T.Float32BufferAttribute(uv?uv.flat():points.flatMap(()=>atlasUV('blank',.5,.5)),2));g.setIndex(indices.flat());g.computeVertexNormals();if(uv)g.userData.atlas=true;return g;}

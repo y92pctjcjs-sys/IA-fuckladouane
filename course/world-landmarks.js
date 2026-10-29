@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {sample} from './track.js?v=fld-world-002';
-import {LANDMARKS} from './route-atlas.js?v=fld-world-002';
-import {shoulderHeight} from './world-landscape.js?v=fld-world-002';
+import {sample} from './track.js?v=fld-route-003';
+import {LANDMARKS} from './route-atlas.js?v=fld-route-003';
+import {shoulderHeight} from './world-landscape.js?v=fld-route-003';
 const cache=new Map(),solidMaterial=new T.MeshStandardMaterial({vertexColors:true,roughness:.73,metalness:.12}),litMaterial=new T.MeshBasicMaterial({vertexColors:true,toneMapped:false});
 function model(id){
  if(cache.has(id))return cache.get(id);

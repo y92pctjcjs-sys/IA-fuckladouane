@@ -46,12 +46,12 @@ test('score image uses the exact result and grades never turn a defeat into a vi
  assert.equal(formatTime(59.999),'1:00.00');assert.equal(formatTime(0),'0:00.00');assert.equal(formatTime(240),'4:00.00');
 });
 test('the published entry and local module graph share one cache version',()=>{
- const html=readFileSync(new URL('../../course.html',import.meta.url),'utf8');assert.match(html,/course\/boot\.js\?v=fld-world-002/);assert.match(html,/course\/style\.css\?v=fld-world-002/);
+ const html=readFileSync(new URL('../../course.html',import.meta.url),'utf8');assert.match(html,/course\/boot\.js\?v=fld-route-003/);assert.match(html,/course\/style\.css\?v=fld-route-003/);
  const seen=new Set(),visit=path=>{
   if(seen.has(path))return;seen.add(path);const source=readFileSync(new URL('../'+path,import.meta.url),'utf8');
   for(const match of source.matchAll(/'\.\/([^']+\.js(?:\?[^']+)?)'/g)){
    if(match[1].startsWith('vendor/')||match[1].startsWith('assets/'))continue;
-   assert.ok(match[1].endsWith('?v=fld-world-002'),`${path} must not request a stale ${match[1]}`);visit(match[1].split('?')[0]);
+   assert.ok(match[1].endsWith('?v=fld-route-003'),`${path} must not request a stale ${match[1]}`);visit(match[1].split('?')[0]);
   }
  };
  visit('boot.js');assert.ok(seen.has('pursuit.js')&&seen.has('posters.js')&&seen.has('results.js'));

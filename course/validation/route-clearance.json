@@ -1,0 +1,16 @@
+{
+  "kind": "CPU_STATIC_GEOMETRY_CLEARANCE_NOT_WEBGL",
+  "probes": 15729,
+  "excluded": "Transparent ground light pools and soft textures are not solid obstacles",
+  "verticalFromRoad": 0.12,
+  "verticalToRoad": 2.87,
+  "mainLateralRange": [
+    -8,
+    8
+  ],
+  "branchLateralRange": [
+    -3.7,
+    3.7
+  ],
+  "issues": []
+}

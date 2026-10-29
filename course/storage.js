@@ -1,22 +1,23 @@
-import {ROUTE_ID} from './track.js?v=fld-world-002';
+import {ROUTE_ID} from './track.js?v=fld-route-003';
 export const LEGACY_KEY='fld.course.v1';
 export const PREVIOUS_KEY='fld.course.v2';
-export const SAVE_KEY='fld.course.v3';
+export const V3_KEY='fld.course.v3';
+export const SAVE_KEY='fld.course.v4';
 export const PREFS_KEY='fld.course.preferences.v2';
 const load=(storage,key)=>{try{return JSON.parse(storage?.getItem(key)||'null');}catch{return null;}};
 const persist=(storage,key,data)=>{try{storage?.setItem(key,JSON.stringify(data));}catch{/* Session memory remains usable. */}};
 export function createSave(storage){
-  const legacy=load(storage,LEGACY_KEY),previous=load(storage,PREVIOUS_KEY),saved=load(storage,SAVE_KEY);
-  const data={version:3,route:ROUTE_ID,wins:0,runs:0,bestTime:null,bestScore:0,love:legacy?.love===true||previous?.love===true};
-  if(saved?.version===3&&saved.route===ROUTE_ID){
+  const legacy=load(storage,LEGACY_KEY),previous=load(storage,PREVIOUS_KEY),v3=load(storage,V3_KEY),saved=load(storage,SAVE_KEY);
+  const data={version:4,route:ROUTE_ID,wins:0,runs:0,bestTime:null,bestScore:0,shortcutKnown:false,love:legacy?.love===true||previous?.love===true||v3?.love===true};
+  if(saved?.version===4&&saved.route===ROUTE_ID){
     for(const key of ['wins','runs','bestScore'])if(Number.isFinite(saved[key])&&saved[key]>=0)data[key]=Math.floor(saved[key]);
     if(Number.isFinite(saved.bestTime)&&saved.bestTime>0)data.bestTime=saved.bestTime;
-    data.love ||= saved.love===true;
+    data.love ||= saved.love===true;data.shortcutKnown=saved.shortcutKnown===true;
   }
   const recorded=new WeakSet();
   return {get data(){return {...data};},get legacy(){return legacy?.version===1?{...legacy}:null;},record(result){
     if(!result||typeof result!=='object'||recorded.has(result))return {...data};
-    recorded.add(result);data.runs++;
+    recorded.add(result);data.runs++;data.shortcutKnown ||= result.shortcut===true;
     if(result.won){data.wins++;if(Number.isFinite(result.time)&&result.time>0)data.bestTime=data.bestTime===null?result.time:Math.min(data.bestTime,result.time);if(Number.isFinite(result.score))data.bestScore=Math.max(data.bestScore,result.score);data.love ||= result.ending==='love';}
     persist(storage,SAVE_KEY,data);return {...data};
   }};

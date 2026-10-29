@@ -61,7 +61,7 @@ test('all mapped landmarks exist as bounded 3D assets away from the driveable ro
  assert.equal(ids.size,9);assert.ok(triangles<10000);
 });
 test('turn descriptors agree with the existing screen-side convention',()=>{
- const directions=new Set();for(let s=0;s<LENGTH;s+=20){const turn=curveAt(s);if(turn.direction!=='OUVERT'){assert.equal(turn.direction,screenSide(turn.curvature));assert.ok(turn.radius>340);directions.add(turn.direction);}}
+ const directions=new Set();for(let s=0;s<LENGTH;s+=20){const turn=curveAt(s);if(turn.direction!=='OUVERT'){assert.equal(turn.direction,screenSide(turn.curvature));assert.ok(turn.radius>130);directions.add(turn.direction);}}
  assert.deepEqual([...directions].sort(),['DROITE','GAUCHE']);
 });
 test('atlas close messages are accepted only from its own frame and same origin',()=>{
