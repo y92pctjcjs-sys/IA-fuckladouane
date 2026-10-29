@@ -1,22 +1,41 @@
 <!doctype html>
 <html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="data:,"><title>OCULAIRE — atelier de présence</title>
-<style>html,body{margin:0;background:#080710;color:#ede8f3;font:12px monospace}canvas{display:block;width:100vw;height:100dvh}aside{position:fixed;bottom:10px;left:10px;right:10px;padding:10px;background:#090711eb;border:1px solid #6c617d}label{display:inline-block;margin:5px 10px 0 0}input{vertical-align:middle;width:115px}output{color:#d4ff4f}select,button{padding:5px;background:#1c142c;border:1px solid #756285;color:white}a{color:#c5bef0}#voice{position:fixed;top:43%;left:12%;right:12%;text-align:center;font:15px/1.5 Georgia;pointer-events:none;text-shadow:0 1px 8px black}#status{font-size:10px}aside p{margin:5px 0}@media(max-height:500px){aside{left:auto;max-width:480px;font-size:10px}aside p{margin:2px 0}}</style>
+<style>html,body{margin:0;background:#080710;color:#ede8f3;font:12px monospace}canvas{display:block;width:100vw;height:100dvh}aside{position:fixed;bottom:10px;left:10px;right:10px;padding:10px;background:#090711eb;border:1px solid #6c617d;max-height:36vh;overflow:auto}label{display:inline-block;margin:5px 10px 0 0}input{vertical-align:middle;width:115px}output{color:#d4ff4f}select,button{padding:5px;background:#1c142c;border:1px solid #756285;color:white}a{color:#c5bef0}#voice{position:fixed;top:43%;left:12%;right:12%;text-align:center;font:15px/1.5 Georgia;pointer-events:none;text-shadow:0 1px 8px black}#status{font-size:10px}aside p{margin:5px 0}#diagnostics{white-space:pre-wrap;font-size:10px}details{margin-top:5px}button{margin-top:5px}@media(max-height:500px){aside{left:auto;max-width:480px;font-size:10px;max-height:40vh}aside p{margin:2px 0}}</style>
 <canvas id="world" aria-label="OCULAIRE dans le vrai moteur du jeu"></canvas><p id="voice"></p>
-<aside><strong>OCULAIRE / LE CIEL AVAIT UN DOS</strong> <output id="status">Chargement…</output><p>Version adaptée au jeu · regards, silences, envers et fracture.</p>
+<aside><strong>OCULAIRE / CHEVELURE ET PRÉSENCE</strong> <output id="status">Chargement…</output>
+<label>Vue <select id="angle"><option value="race">Course</option><option value="0">Visage de face</option><option value="-0.65">Trois quarts gauche</option><option value="0.65">Trois quarts droit</option><option value="1.57">Profil</option><option value="3.14">Arrière</option></select></label>
 <label>Distance <input id="distance" type="range" min="0" max="13000" step="10" value="2400"><span id="metres">2400</span> m</label>
 <label>Voie <input id="lane" type="range" min="-5" max="5" step="1" value="0"></label>
+<label>Douane arrière <select id="patrol"><option value="none">Aucune</option><option value="left">À gauche</option><option value="right">À droite</option><option value="moving">Gauche / droite</option><option value="hidden">Banalisée non révélée</option></select></label>
+<label>Écart douane <input id="gap" type="range" min="3" max="150" step="1" value="18"> m</label>
 <label>Scène <select id="scene"><option value="race">Course</option><option value="escape">Victoire</option><option value="love">Rencontre 1/30</option><option value="caught">Défaite</option></select></label>
 <label>Finale <input id="cinematic" type="range" min="0" max="14" step="0.02" value="0"></label>
-<label><input id="motion" type="checkbox" style="width:auto">Avancer</label><label><input id="reduced" type="checkbox" style="width:auto">Mouvements réduits</label><button id="reset">Repartir</button> <a href="../course.html">Jeu</a></aside>
+<label><input id="motion" type="checkbox" style="width:auto">Avancer</label><label><input id="living" type="checkbox" checked style="width:auto">Animer les yeux</label><label><input id="reduced" type="checkbox" style="width:auto">Mouvements réduits</label>
+<button id="pausePreview">Pause</button> <button id="blink">Figer un clignement</button> <button id="reset">Repartir</button> <a href="../course.html">Jeu</a> · <a href="oculaire-lab.html">Formats téléphone</a>
+<details><summary>Contrôles du rendu</summary><pre id="diagnostics">Chargement…</pre></details></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=fld-design-001';
-import {createRace} from './simulation.js?v=fld-design-001';
+import {createRenderer} from './renderer.js?v=oculaire-004';
+import {createRace,pause,resume} from './simulation.js?v=fld-design-001';
+import {blinkAt} from './oculaire.js?v=oculaire-004';
 const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace();race.state='RACE';race.s=2400;race.speed=48;race.time=50;
-let last=0,playing=false;
+let last=0,lastReport=0;
 $('distance').oninput=()=>{race.s=+$('distance').value;view.reset();};$('lane').oninput=()=>{race.x=+$('lane').value;};
-function scene(){const mode=$('scene').value;race.result=mode==='race'?null:{won:mode!=='caught',ending:mode};race.state=mode==='race'?'RACE':mode==='caught'?'INTERCEPTION':'ARRIVAL';race.cinematic=+$('cinematic').value;if(mode!=='race')race.s=13000;view.reset();}
-$('scene').onchange=scene;$('cinematic').oninput=()=>{race.cinematic=+$('cinematic').value;};$('reset').onclick=()=>{race.time=0;race.s=0;race.x=0;race.cinematic=0;race.result=null;race.state='RACE';$('scene').value='race';$('cinematic').value=0;view.reset();};
+$('angle').onchange=()=>view.inspectHead($('angle').value==='race'?null:Number($('angle').value));
+function scene(){const mode=$('scene').value;race.result=mode==='race'?null:{won:mode!=='caught',ending:mode};race.state=mode==='race'?'RACE':mode==='caught'?'INTERCEPTION':'ARRIVAL';race.cinematic=+$('cinematic').value;if(mode!=='race')race.s=13000;view.reset();$('pausePreview').textContent='Pause';}
+$('scene').onchange=scene;$('cinematic').oninput=()=>{race.cinematic=+$('cinematic').value;};
+$('pausePreview').onclick=()=>{if(race.state==='PAUSE')resume(race);else pause(race);$('pausePreview').textContent=race.state==='PAUSE'?'Reprendre':'Pause';};
+$('blink').onclick=()=>{let found=0;for(let t=0;t<6;t+=.001)if(blinkAt(t,race.seed,2,false)>.999){found=t;break;}race.time=found;pause(race);$('pausePreview').textContent='Reprendre';};
+$('reset').onclick=()=>{race.time=0;race.s=0;race.x=0;race.cinematic=0;race.result=null;race.state='RACE';$('scene').value='race';$('cinematic').value=0;$('patrol').value='none';$('pausePreview').textContent='Pause';view.reset();};
 $('reduced').onchange=()=>view.configure({reduced:$('reduced').checked,quality:'auto'});
-function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;if($('motion').checked){if(race.state==='RACE'){race.s=Math.min(12999,race.s+race.speed*dt);race.time+=dt;}else if(race.state==='ARRIVAL'){race.cinematic=Math.min(14,race.cinematic+dt);$('cinematic').value=race.cinematic;}}view.render(race,dt);$('metres').textContent=Math.round(race.s);const status=view.oculaireStatus;$('status').textContent=status.state+' / '+status.phase+' / '+Math.round(status.growth*100)+' %';$('voice').textContent=status.caption;requestAnimationFrame(frame);}
+function patrol(){const mode=$('patrol').value;race.cops.forEach(c=>c.active=false);if(mode==='none')return;const c=race.cops[0];c.active=mode!=='hidden';c.undercover=mode==='hidden';c.s=race.s-Number($('gap').value);c.x=race.x+(mode==='left'?5:mode==='right'?-5:Math.sin(race.time*.65)*5);c.phase='flank';}
+function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;
+ if(race.state==='RACE'){
+  if($('living').checked||$('motion').checked)race.time+=dt;
+  if($('motion').checked)race.s=Math.min(12999,race.s+race.speed*dt);
+ }else if(race.state==='ARRIVAL'&&$('motion').checked){race.cinematic=Math.min(14,race.cinematic+dt);$('cinematic').value=race.cinematic;}
+ patrol();view.render(race,dt);$('metres').textContent=Math.round(race.s);const status=view.oculaireStatus;$('status').textContent=status.state+' / '+status.phase+' / '+Math.round(status.growth*100)+' %';$('voice').textContent=status.caption;
+ if(now-lastReport>300&&status.state==='ready'){const a=view.inspectOculaire();$('diagnostics').textContent=JSON.stringify({state:race.state,time:race.time,phase:a.phase,pursuit:a.pursuit,position:a.position,blink:a.gazes.map(e=>Number(e.blink.toFixed(3))),maxGazeError:Math.max(...a.gazes.map(e=>e.errorRadians)),markVisible:a.markVisible,fragments:a.fragments,headTriangles:a.triangles,gpuBytes:a.gpuBytes,draws:view.metrics.calls,format:[innerWidth,innerHeight]},null,2);lastReport=now;}
+ requestAnimationFrame(frame);
+}
 window.oculairePreview={view,race};requestAnimationFrame(frame);
 </script></html>

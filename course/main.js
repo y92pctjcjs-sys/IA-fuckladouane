@@ -1,5 +1,5 @@
 import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-design-001';
-import {createRenderer} from './renderer.js?v=fld-design-001';
+import {createRenderer} from './renderer.js?v=oculaire-004';
 import {createInput} from './input.js?v=fld-design-001';
 import {createAudio} from './audio.js?v=fld-design-001';
 import {createSave,createPreferences} from './storage.js?v=fld-design-001';

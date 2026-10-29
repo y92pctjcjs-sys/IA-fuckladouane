@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-29",
+  "kind": "CPU_GEOMETRY_RENDER_AND_LOGIC_TESTS",
+  "baseCommit": "f118e32b56f46c2435e2d26bade3f2228cb29149",
+  "tests": {
+    "passed": 113,
+    "failed": 0
+  },
+  "syntaxFiles": 67,
+  "head": {
+    "triangles": 99653,
+    "surfaces": 26,
+    "fragmentAttributeBytes": 13243785
+  },
+  "checks": [
+    "upper-skull coverage: 120 ray samples",
+    "all five eye apertures clear",
+    "approximately 10 irregular blinks/minute",
+    "active rear-patrol side and proximity response",
+    "motion smoothing at 30/60/144 Hz",
+    "pause freezes and restart resets",
+    "five gaze axes converge while head reacts",
+    "portrait bounds through bends",
+    "new FLD vehicle and industrial-scene tests preserved"
+  ],
+  "visualProof": "oculaire-cheveux-cpu.html",
+  "visualViews": [
+    "face",
+    "three-quarter",
+    "profile",
+    "crown",
+    "reverse with douaniere"
+  ],
+  "browser": {
+    "verified": false,
+    "error": "THREE.WebGLRenderer: Error creating WebGL context.",
+    "diagnostic": "Cloud renderer reports GL_VENDOR = Disabled, GL_RENDERER = Disabled. No browser infrastructure replaced. Native CPU raster used for geometry inspection only."
+  },
+  "physicalIPhone": false,
+  "safari": false,
+  "sourcePortraitSHA256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a"
+}

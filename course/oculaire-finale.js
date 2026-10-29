@@ -4,7 +4,7 @@ import {softTexture} from './materials.js?v=fld-design-001';
 const smooth=x=>{x=T.MathUtils.clamp(x,0,1);return x*x*(3-2*x);};
 const rand=n=>{n=Math.imul(n^(n>>>16),0x45d9f3b);return ((n^(n>>>16))>>>0)/4294967296;};
 const IMPACT=4.7,PALETTE=['#31f6ec','#ff31b5','#dfff31','#fff6e3'];
-function from64(value,Type){return new Type(Uint8Array.from(atob(value),c=>c.charCodeAt(0)).buffer);}
+function from64(value,Type){return value instanceof Type?value:new Type(Uint8Array.from(atob(value),c=>c.charCodeAt(0)).buffer);}
 function backMark(data){
  const group=new T.Group();group.name='douaniere — mèches décolorées';group.visible=false;
  const canvas=globalThis.document?.createElement('canvas'),ctx=canvas?.getContext('2d');if(!ctx?.getImageData)return group;

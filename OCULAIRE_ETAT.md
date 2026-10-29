@@ -1,3 +1,46 @@
+# OCULAIRE — chevelure et présence, mise à jour du 29 octobre 2026
+
+Branche : `feat/oculaire-chevelure-presence-20261029`.
+Base intégrée et vérifiée : `f118e32b56f46c2435e2d26bade3f2228cb29149` (nouveaux véhicules, panneau de pause et quai industriel conservés).
+Brief exécuté : `course/OCULAIRE_CHEVEUX_PRESENCE.md`.
+Statut : implémenté et contrôlé en calcul / rastérisation CPU ; publication en cours.
+
+## Modifications de cette mise à jour
+
+- Chevelure 3D dense : couverture opaque ajustée au vrai relief du crâne, mèches ondulées, frange et longues mèches latérales ; silhouette plus féminine. Le visage, les cinq yeux, trois nez et trois bouches restent ceux de la référence.
+- Géométrie des cheveux réunie dans la surface existante : toujours 26 surfaces ; tête complète à 99 653 triangles. Pas de texture lourde ajoutée et aucun cheveu traité comme objet individuel.
+- Clignements brefs irréguliers : moyenne de dix par minute au lieu d'environ huit, soit environ 28 % de plus.
+- Réactions de la tête aux patrouilles actives situées derrière le joueur, pondérées par leur distance et leur position latérale. Position, rotation et inclinaison lissées ; les cinq pupilles continuent à converger vers la voiture du joueur.
+- Pause, nouvelle partie, mouvements réduits et finale préservés. Les nouveaux cheveux et leur inscription font partie des mille groupes de fragments.
+- Cache de l'intégration en `oculaire-004` ; modules, véhicules, décors et styles stables conservés en `fld-design-001`.
+
+## Vérifications exécutées pour cette mise à jour
+
+- 113/113 tests Node ; syntaxe de 67 fichiers vérifiée après intégration sur la dernière version de main.
+- Couverture de la partie haute du crâne : 120 rayons sur la vraie géométrie, avec les cheveux devant la peau. Cinq ouvertures d'yeux dégagées.
+- Réactions gauche / droite et proximité des patrouilles ; absence de réaction aux véhicules non révélés, civils, éloignés ou passés devant. Résultat stable à 30 / 60 / 144 Hz, figé en pause et réinitialisé pour une nouvelle partie.
+- Convergence des cinq regards vérifiée pendant les rotations et déplacements du visage, dans plusieurs voies et virages. L'ancien contrôle de cadrage surestimait le volume par une boîte alignée au monde : diagnostic confirmé sur les sommets réellement projetés ; contrôle corrigé sans changer la position céleste de base.
+- Cinq vues raster 3D CPU observées : face, trois quarts, profil, sommet et envers. L'inscription `douaniere` reste lisible et suit le volume de la nouvelle chevelure.
+- Attributs des fragments, avec l'inscription : 13 243 785 octets ; mille groupes dans un appel de rendu.
+- Données sources du portrait inchangées : SHA-256 `c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a`.
+- Rapport de cette session : `course/validation/oculaire-cheveux-report.json`. Planche de contrôle : `course/validation/oculaire-cheveux-cpu.html`.
+
+## Limites et incidents de cette session
+
+- Le navigateur cloud ne crée pas de contexte WebGL : `THREE.WebGLRenderer: Error creating WebGL context.` Diagnostic détaillé : `GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `BindToCurrentSequence failed`. Aucun résultat WebGL nouveau n'est revendiqué pour cette session. Les vues de contrôle sont une rastérisation CPU des vrais maillages, avec un éclairage de contrôle différent du jeu.
+- Le rendu VTK hors écran a échoué avec `bad X server connection. DISPLAY=` ; cette installation ne fournit ni backend EGL ni OSMesa. Changement de méthode vers le raster CPU natif, sans modifier l'infrastructure du navigateur ou le moteur du jeu pour contourner sa limite.
+- Première configuration de prévisualisation : `static.directory must be a relative directory beneath the site root`. Corrigée en préparant le répertoire de prévisualisation `dist`.
+- La branche main a évolué pendant le travail. Réintégration sur `f118e32` et résolution des versions de cache en conservant les nouveaux modules de véhicules, décors et interface. Les fichiers de mécanique, QR et portail ne sont pas modifiés.
+- Pas de test sur iPhone physique ou Safari. La validation publique à effectuer porte sur le déploiement, l'accessibilité HTTP et les octets servis ; elle ne transformera pas les contrôles CPU en test WebGL.
+
+## Publication et reprise
+
+Vérifier le SHA distant de main avant publication, publier le correctif sans écraser de nouveaux changements, puis vérifier le déploiement et les ressources servies. Conserver le dernier résultat sur cette branche.
+
+---
+
+## Historique de la livraison précédente
+
 # OCULAIRE — état de reprise
 
 Date : 29 octobre 2026. Branche : `feat/oculaire-art-direction-20261029`.
