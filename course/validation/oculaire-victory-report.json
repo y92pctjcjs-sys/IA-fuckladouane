@@ -144,5 +144,12 @@
       "sha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706"
     }
   ],
-  "publication": "Prepared, not yet published"
+  "publication": {
+    "status": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+    "published": false,
+    "codeAndProofCommit": "458d981c0f424d54d2677efde211576ae54a6420",
+    "mainAfterRejection": "75b97144c71b5e268f2379677f8135a18872b940",
+    "reason": "Explicit approval to publish this new victory cinematic is required.",
+    "nextStep": "Obtain approval; fetch current main; preserve concurrent changes; publish and verify deployment and public files."
+  }
 }

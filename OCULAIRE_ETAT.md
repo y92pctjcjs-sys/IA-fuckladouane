@@ -3,7 +3,7 @@
 Date : 29 octobre 2026. Branche : `feat/oculaire-victory-drive-20261029`.
 Base distante relue : `75b9714` ; les virages V4, le raccourci forestier et les débris sont conservés.
 Brief complet : `course/OCULAIRE_VICTOIRE_ROUTE_INFINIE.md`.
-Statut : implémenté, contrôlé en calcul et observé en rastérisation CPU ; prêt pour sauvegarde finale et publication.
+Statut : implémenté, contrôlé en calcul et observé en rastérisation CPU ; **sauvegardé mais non publié**. Le contrôle automatique exige un accord explicite pour publier cette nouvelle cinématique.
 
 ## Jalon 1 — mise en scène raccordée
 
@@ -31,6 +31,15 @@ Statut : implémenté, contrôlé en calcul et observé en rastérisation CPU ; 
 - Première préparation de sauvegarde distante interrompue par `SyntaxError: Unexpected token W, Warning: t... is not valid JSON` : résultat du terminal tronqué par le budget de sortie. Lecture du contenu Git commité avec un budget adapté, puis sauvegarde vérifiée du jalon initial : `a3a9e516dfbb7618fed77fe4a9ea0e2cf6c9556a`.
 - Vingt-deux sources protégées comparées à la base, identiques octet pour octet : visage, cheveux, finale, 360°, moqueries, logo, livrées, V4, raccourci, atlas, contrôles, scores et portail. Rapport complet `course/validation/oculaire-victory-report.json`.
 - Aucun nouveau test de course WebGL ni d’iPhone/Safari n’est revendiqué. Sauvegarde de la version finale et contrôle du dernier état de main à effectuer avant toute publication.
+
+## Jalon 3 — version finale sauvegardée, publication bloquée
+
+- Code et preuve finale sauvegardés sur `feat/oculaire-victory-drive-20261029` : `458d981c0f424d54d2677efde211576ae54a6420`. Le jalon initial reste `a3a9e516dfbb7618fed77fe4a9ea0e2cf6c9556a`.
+- Tentative de publication avec garde sur main `75b97144c71b5e268f2379677f8135a18872b940` refusée par le contrôle automatique. Erreur exacte : `This action was rejected due to unacceptable risk.` Motif : `Cette mise à jour déplace directement la branche par défaut main et peut déployer le jeu public, mais aucune autorisation explicite de publication de cette nouvelle version n’apparaît dans le contexte utilisateur disponible.`
+- Aucune nouvelle tentative ni publication indirecte. Cette modification n’est pas dans le jeu public. La version de main vérifiée reste `75b97144c71b5e268f2379677f8135a18872b940`.
+- Résultat concret disponible : ralenti, plan sur la vraie portière et le logo tribal, reprise de vitesse, route prolongée et voiture s’éloignant vers l’horizon. Chute/explosion et rencontre amoureuse préservées. 152 tests et 85 fichiers contrôlés ; script inline de prévisualisation valide.
+- Planche CPU ouverte dans le navigateur de contrôle : `http://terminal.local:4173/course/validation/oculaire-victory-cpu.html`. L’atelier 3D du même aperçu propose les deux finales par liens directs. Aucune validation WebGL, Safari ou iPhone n’est revendiquée.
+- Reprise : obtenir l’accord explicite pour publier la cinématique de victoire et le gros plan du logo FLD. Relire le dernier SHA de main et conserver tout changement concurrent, notamment les travaux audio d’une autre conversation. Après publication autorisée : attendre Pages puis comparer les octets servis avec les fichiers testés. Ne pas traiter le présent jalon comme déjà publié.
 
 ---
 
