@@ -68,6 +68,10 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 - Exécution Pages `40812643442` : construction et transfert de l'archive réussis, création du déploiement refusée côté GitHub. Erreur exacte : `HttpError: Server Error` puis `Failed to create deployment (status: 502) with build version c26b996e13ac049d1c068f7a05757cb88152b1e9`.
 - Cause localisée à l'API de déploiement Pages ; aucun échec de compilation ni erreur du jeu. Le jeu public vérifié reste servi par le déploiement précédent réussi.
 - Relance limitée aux tâches en échec demandée et acceptée, restée en file pendant plusieurs minutes. Passage ensuite à une publication complète du journal d’incident à jour par le mécanisme main / Pages existant. Aucune modification des sources du jeu pour traiter cette erreur serveur.
+- Publication complète finalement réussie : commit `764dcc90c33fcc5577fff29ea2499aaab6f064d9`, exécution Pages `40813552314`, statut `completed`, conclusion `success`. `main` vérifié sur ce commit.
+- Après ce déploiement, le journal, le rapport public et l’atelier ont été téléchargés depuis le domaine et comparés : octets identiques aux fichiers validés, sans erreur HTTP.
+- L’ancienne relance isolée `40812643442` était encore en file lors du dernier contrôle ; la publication complète réussie la remplace pour la livraison. Les outils disponibles ne proposent pas son annulation.
+- Le présent compte rendu final est conservé sur la branche de travail ; les fichiers exécutables sont identiques à ceux de main publié.
 
 ## Reprise après livraison
 
