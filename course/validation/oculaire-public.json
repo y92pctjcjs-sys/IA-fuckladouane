@@ -1,0 +1,68 @@
+{
+  "url": "https://ia.fuckladouane.com/course.html?oculaire=264ddc7",
+  "environment": "Direct public HTTPS navigation through environment proxy, Chromium / SwiftShader, portrait 390x844; proxy certificate accepted in browser; no physical iPhone",
+  "errors": [],
+  "files": [
+    {
+      "name": "course.html",
+      "status": 200,
+      "bytes": 11237,
+      "sha256": "4594f0da759d64d23bae4ee9471782de1c96fc47bda639d7e41bdc5a7fe01b1f",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/boot.js",
+      "status": 200,
+      "bytes": 571,
+      "sha256": "98dce1dab9a9659a449e45ff267e91012b8d15cabac75853d7dfb0e7c895f227",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/main.js",
+      "status": 200,
+      "bytes": 13444,
+      "sha256": "c32f436c370428dba8f6ef23577c2690a344c006a5bcaa9cb97606e342b4b58d",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/renderer.js",
+      "status": 200,
+      "bytes": 24204,
+      "sha256": "568d371f0d14d7f846dcb22521bab24dafd974fd2e30fb9358ac97c49ccba815",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/oculaire.js",
+      "status": 200,
+      "bytes": 9694,
+      "sha256": "5f5399d20a16c632262ecbd4dc759d14c21ee028d211604de827cac3e813feb3",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/oculaire-finale.js",
+      "status": 200,
+      "bytes": 9106,
+      "sha256": "c3ba1bf51a573432a6f095ca49610517df9c899d0078bf6bd76f22e90e62b837",
+      "matchesLocal": true
+    },
+    {
+      "name": "course/assets/oculaire/portrait-data.js",
+      "status": 200,
+      "bytes": 1717474,
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a",
+      "matchesLocal": true
+    }
+  ],
+  "status": 200,
+  "head": "ready",
+  "title": "FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB",
+  "pauseResume": true,
+  "visibilityPauseExplicitResume": true,
+  "passed": true,
+  "codeCommit": "264ddc79fd4a5d161d230eeca8984dc8b56f0d73",
+  "deployment": {
+    "run": 40812118519,
+    "status": "completed",
+    "conclusion": "success"
+  }
+}

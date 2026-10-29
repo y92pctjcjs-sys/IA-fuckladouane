@@ -45,7 +45,12 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 - Source d'origine intacte. Le rendu adapté est une simplification pour le jeu, pas un substitut haute définition au modèle d'atelier.
 - Aucun essai sur iPhone physique ou Safari. Les interactions de visibilité du jeu gardent leur logique existante ; interruption de fenêtre testée dans Chromium.
 - Sauvegarde distante du premier jalon vérifiée : `900b818bc1d7f4389cbc1d205aa718518ee58f10`, arbre `78ee91fc96a2de1106474c224c37564e8f536803`.
-- Publication finale en cours ; le code et le déploiement publics doivent encore être vérifiés séparément après mise à jour de main.
+- Code final sauvegardé et publié : `264ddc79fd4a5d161d230eeca8984dc8b56f0d73`, arbre `eadfacbe351cea564690264a442ba338a836a2c5`. Branche de travail : `feat/oculaire-art-direction-20261029` ; même code sur `main`.
+- GitHub Pages : exécution `40812118519`, commit ci-dessus, statut `completed`, conclusion `success`.
+- Version publique réellement ouverte : https://ia.fuckladouane.com/course.html?oculaire=264ddc7 — HTTP 200, OCULAIRE `ready`, course démarrée, pause / reprise effectuées, événements de visibilité interrompant la course puis exigeant une reprise explicite.
+- Sept fichiers publics comparés aux octets testés : entrée, démarrage, logique principale, moteur, OCULAIRE, finale et portrait. HTTP 200 et SHA-256 identiques pour chacun. Portrait : `c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a`.
+- Rendu du jeu public observé en portrait ; aucune erreur JavaScript ou shader. Rapport public consigné dans `course/validation/oculaire-public.json`.
+- Portail, CNAME et sources des mécaniques comparés à la base : identiques, à l'exception des paramètres de cache des modules concernés. Aucun changement au QR ni au tirage 1/30.
 
 ## Incidents d'accès et méthode
 
@@ -57,6 +62,10 @@ Travail de design du jeu : OCULAIRE sert de référence artistique complète. Ne
 - Premier contrôle de préférence : `AssertionError: '75' !== '80'`. Cause : le test supposait 80 % alors que le réglage existant est 75 %. Test corrigé, réglage du jeu inchangé ; contrôle complet réussi ensuite.
 - Premier appel d'arbre GitHub : `tool call rejected because the catalog changed after codex_apps/github.create_tree was prepared`. Catalogue relu et écritures séparées entre code et données ; sauvegarde distante ensuite vérifiée.
 
-## Prochaine action
+## Reprise après livraison
 
-Publier l'arbre final vérifié avec le mécanisme Pages existant. Contrôler le SHA distant, le déploiement Actions, la réponse HTTP et les empreintes des ressources réellement servies, puis le démarrage / pause / reprise de la version publique. Consigner ce résultat ici avant de terminer.
+Les jalons de design, fonctionnement, tests disponibles et publication sont terminés. Pour une correction ultérieure, partir de la branche ci-dessus ou de main, relire ce fichier puis vérifier l'état distant. Ne pas reprendre l'ancien import direct du GLB.
+
+L'atelier public permet d'observer librement les voies, les étapes et les moments de la finale : https://ia.fuckladouane.com/course/oculaire-preview.html .
+
+Limite restante : aucune mesure ou validation sur un iPhone physique / Safari. Les mesures disponibles proviennent de Chromium avec WebGL logiciel et ne garantissent pas une cadence sur téléphone.
