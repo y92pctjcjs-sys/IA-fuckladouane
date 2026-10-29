@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,industrialMaterial,facadeMaterial,softTexture} from './materials.js?v=atelier-002';
+import {surface,industrialMaterial,facadeMaterial,softTexture} from './materials.js?v=oculaire-003';
 const metal=surface('#52596d',.44,.7),concrete=surface('#61636c',.92),dark=surface('#191b27',.83);
 const tube=new T.CylinderGeometry(1,1,1,10);
 function pipe(parent,x,y,z,r,h,mat=metal){const mesh=new T.Mesh(tube,mat);mesh.position.set(x,y,z);mesh.scale.set(r,h,r);parent.add(mesh);return mesh;}

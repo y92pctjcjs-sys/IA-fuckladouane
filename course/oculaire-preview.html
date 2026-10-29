@@ -1,28 +1,22 @@
 <!doctype html>
-<html lang="fr">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex">
-<title>OCULAIRE — vérification de l'import</title>
-<style>
-html,body{margin:0;background:#080710;color:#eee;font:12px monospace}canvas{display:block;width:100vw;height:100dvh}aside{position:fixed;bottom:12px;left:12px;right:12px;padding:12px;background:#080710dc;border:1px solid #706882}label{display:inline-block;margin:6px 12px 0 0}input{vertical-align:middle;width:130px}output{color:#d4ff4f}a{color:#ddd}p{margin:6px 0}
-</style>
-<canvas id="world" aria-label="Rendu réel du modèle OCULAIRE dans le paysage du jeu"></canvas>
-<aside><strong>OCULAIRE / IMPORT V4</strong> <output id="status">Chargement…</output>
-<p>Import seul. Regards, croissance et finale ne sont pas encore activés.</p>
-<label>Distance <input id="distance" type="range" min="0" max="12900" step="50" value="2400"><span id="metres">2400</span> m</label>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="data:,"><title>OCULAIRE — atelier de présence</title>
+<style>html,body{margin:0;background:#080710;color:#ede8f3;font:12px monospace}canvas{display:block;width:100vw;height:100dvh}aside{position:fixed;bottom:10px;left:10px;right:10px;padding:10px;background:#090711eb;border:1px solid #6c617d}label{display:inline-block;margin:5px 10px 0 0}input{vertical-align:middle;width:115px}output{color:#d4ff4f}select,button{padding:5px;background:#1c142c;border:1px solid #756285;color:white}a{color:#c5bef0}#voice{position:fixed;top:43%;left:12%;right:12%;text-align:center;font:15px/1.5 Georgia;pointer-events:none;text-shadow:0 1px 8px black}#status{font-size:10px}aside p{margin:5px 0}@media(max-height:500px){aside{left:auto;max-width:480px;font-size:10px}aside p{margin:2px 0}}</style>
+<canvas id="world" aria-label="OCULAIRE dans le vrai moteur du jeu"></canvas><p id="voice"></p>
+<aside><strong>OCULAIRE / LE CIEL AVAIT UN DOS</strong> <output id="status">Chargement…</output><p>Version adaptée au jeu · regards, silences, envers et fracture.</p>
+<label>Distance <input id="distance" type="range" min="0" max="13000" step="10" value="2400"><span id="metres">2400</span> m</label>
 <label>Voie <input id="lane" type="range" min="-5" max="5" step="1" value="0"></label>
-<label><input id="motion" type="checkbox" style="width:auto">Avancer</label>
-<a href="../course.html">Jeu</a></aside>
+<label>Scène <select id="scene"><option value="race">Course</option><option value="escape">Victoire</option><option value="love">Rencontre 1/30</option><option value="caught">Défaite</option></select></label>
+<label>Finale <input id="cinematic" type="range" min="0" max="14" step="0.02" value="0"></label>
+<label><input id="motion" type="checkbox" style="width:auto">Avancer</label><label><input id="reduced" type="checkbox" style="width:auto">Mouvements réduits</label><button id="reset">Repartir</button> <a href="../course.html">Jeu</a></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=atelier-002';
-import {createRace} from './simulation.js?v=atelier-002';
-const world=document.querySelector('#world'),view=createRenderer(world,true),race=createRace();
-race.state='RACE';race.s=2400;race.speed=48;
-const distance=document.querySelector('#distance'),lane=document.querySelector('#lane'),status=document.querySelector('#status');
-distance.oninput=()=>{race.s=Number(distance.value);view.reset();};lane.oninput=()=>{race.x=Number(lane.value);};
-let last=0;
-function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;if(document.querySelector('#motion').checked){race.s=Math.min(12900,race.s+48*dt);race.time+=dt;distance.value=race.s;}document.querySelector('#metres').textContent=Math.round(race.s);view.render(race,dt);status.textContent=JSON.stringify(view.oculaireStatus);requestAnimationFrame(frame);}
+import {createRenderer} from './renderer.js?v=oculaire-003';
+import {createRace} from './simulation.js?v=oculaire-003';
+const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace();race.state='RACE';race.s=2400;race.speed=48;race.time=50;
+let last=0,playing=false;
+$('distance').oninput=()=>{race.s=+$('distance').value;view.reset();};$('lane').oninput=()=>{race.x=+$('lane').value;};
+function scene(){const mode=$('scene').value;race.result=mode==='race'?null:{won:mode!=='caught',ending:mode};race.state=mode==='race'?'RACE':mode==='caught'?'INTERCEPTION':'ARRIVAL';race.cinematic=+$('cinematic').value;if(mode!=='race')race.s=13000;view.reset();}
+$('scene').onchange=scene;$('cinematic').oninput=()=>{race.cinematic=+$('cinematic').value;};$('reset').onclick=()=>{race.time=0;race.s=0;race.x=0;race.cinematic=0;race.result=null;race.state='RACE';$('scene').value='race';$('cinematic').value=0;view.reset();};
+$('reduced').onchange=()=>view.configure({reduced:$('reduced').checked,quality:'auto'});
+function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;if($('motion').checked){if(race.state==='RACE'){race.s=Math.min(12999,race.s+race.speed*dt);race.time+=dt;}else if(race.state==='ARRIVAL'){race.cinematic=Math.min(14,race.cinematic+dt);$('cinematic').value=race.cinematic;}}view.render(race,dt);$('metres').textContent=Math.round(race.s);const status=view.oculaireStatus;$('status').textContent=status.state+' / '+status.phase+' / '+Math.round(status.growth*100)+' %';$('voice').textContent=status.caption;requestAnimationFrame(frame);}
 window.oculairePreview={view,race};requestAnimationFrame(frame);
-</script>
-</html>
+</script></html>

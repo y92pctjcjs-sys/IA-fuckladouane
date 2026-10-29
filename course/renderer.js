@@ -1,15 +1,15 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=atelier-002';
-import {createVehicle,animateVehicle} from './models.js?v=atelier-002';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=atelier-002';
-import {createDrivingEffects} from './effects.js?v=atelier-002';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=atelier-002';
-import {createDigitalSky} from './sky.js?v=atelier-002';
-import {createQuality} from './quality.js?v=atelier-002';
-import {addRoadPosters} from './posters.js?v=atelier-002';
-import {patrolSkin} from './vehicle-skins.js?v=atelier-002';
-import {setVehicleDetail} from './vehicle-detail.js?v=atelier-002';
-import {createOculaire} from './oculaire.js?v=atelier-002';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=oculaire-003';
+import {createVehicle,animateVehicle} from './models.js?v=oculaire-003';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=oculaire-003';
+import {createDrivingEffects} from './effects.js?v=oculaire-003';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=oculaire-003';
+import {createDigitalSky} from './sky.js?v=oculaire-003';
+import {createQuality} from './quality.js?v=oculaire-003';
+import {addRoadPosters} from './posters.js?v=oculaire-003';
+import {patrolSkin} from './vehicle-skins.js?v=oculaire-003';
+import {setVehicleDetail} from './vehicle-detail.js?v=oculaire-003';
+import {createOculaire} from './oculaire.js?v=oculaire-003';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
 const mats = new Map();
@@ -246,6 +246,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     if (canvas.dataset) {canvas.dataset.oculaire = status.state; canvas.dataset.oculaireError = status.error || '';}
   }});
   if (canvas.dataset) canvas.dataset.oculaire = 'loading';
+  oculaire.setReduced(reduced);
   const cops = Array.from({length: 3}, (_,i) => { const c = car(i?'undercover':'cop',i,i?'':patrolSkin(appearance,0));  scene.add(c); return c; });
   let trafficVariant=0;
   const traffic = Array.from({length: 7}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
@@ -295,6 +296,8 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         playerPerson.visible = true; playerPerson.position.set(-8 + t, 0, -1 - t * .8);
         desired.set(p.x - 14, p.y + 5, p.z - 16); aim.set(p.x - 5, p.y + 1.3, p.z - 5);
       } else playerPerson.visible = false;
+      const celestialShot=oculaire.shot(r);
+      if(celestialShot){desired.lerp(celestialShot.position,celestialShot.blend);aim.lerp(celestialShot.target,celestialShot.blend);}
       if (!initialized) { camera.position.copy(desired); initialized = true; }
       camera.position.lerp(desired, 1 - Math.exp(-Math.min(elapsed, .1) * 5));
       if (!reduced && r.state === 'RACE') camera.position.x += Math.sin(r.time * 70) * r.impact * .12;
@@ -319,8 +322,8 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(marked!==cops[0].userData.skin)replace(cops[0],'cop',0,marked);
       appearance={...next};reportAppearance();
     },
-    reset() { initialized = false; effects.clear();stranger.position.set(-2,0,-1);playerPerson.visible=false; },
-    configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
+    reset() { initialized = false; effects.clear();oculaire.reset();stranger.position.set(-2,0,-1);playerPerson.visible=false; },
+    configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);oculaire.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
     get metrics(){return {fps:quality.fps===null?null:Math.round(quality.fps),level:quality.level,ratio:Math.min(devicePixelRatio||1,quality.ratio),chunks:chunks.filter(c=>Number.isFinite(c.s)).length,calls:renderer.info.render?.calls??null,triangles:renderer.info.render?.triangles??null,geometries:renderer.info.memory?.geometries??null};},
     get oculaireStatus() {return oculaire.status;},
     inspectOculaire() {return oculaire.inspect(camera);},

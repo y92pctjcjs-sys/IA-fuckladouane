@@ -1,8 +1,8 @@
 import * as T from './vendor/three.module.min.js';
-import {surface,softTexture} from './materials.js?v=atelier-002';
-import {vehicleLivery,atlasUV} from './vehicle-livery.js?v=atelier-002';
-import {resolveSkin} from './vehicle-skins.js?v=atelier-002';
-import {primitive,patch,grid,mesh,block,tube,panel,mergeStatic} from './vehicle-mesh.js?v=atelier-002';
+import {surface,softTexture} from './materials.js?v=oculaire-003';
+import {vehicleLivery,atlasUV} from './vehicle-livery.js?v=oculaire-003';
+import {resolveSkin} from './vehicle-skins.js?v=oculaire-003';
+import {primitive,patch,grid,mesh,block,tube,panel,mergeStatic} from './vehicle-mesh.js?v=oculaire-003';
 
 // Metres, front +Z, axle X. Cosmetics stay within the existing collision footprint.
 export const VEHICLE_DESIGNS=Object.freeze({fld:{id:'fld-89-nightrunner',name:'fld® / 89 GT',length:4.13,width:2.08,wheelbase:2.52},cop:{id:'douane-d89-interception',name:'DOUANE / D-89 GT',length:4.17,width:2.08,wheelbase:2.52}});

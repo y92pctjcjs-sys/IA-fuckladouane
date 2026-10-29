@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {createVehicle} from './models.js?v=atelier-002';
-import {VEHICLE_SKINS,skinsFor,resolveSkin,createAppearance} from './vehicle-skins.js?v=atelier-002';
-import {studioEnvironment} from './vehicle-studio.js?v=atelier-002';
+import {createVehicle} from './models.js?v=oculaire-003';
+import {VEHICLE_SKINS,skinsFor,resolveSkin,createAppearance} from './vehicle-skins.js?v=oculaire-003';
+import {studioEnvironment} from './vehicle-studio.js?v=oculaire-003';
 const $=id=>document.getElementById(id),canvas=$('garage');
 let renderer;
 try{renderer=new T.WebGLRenderer({canvas,antialias:true,powerPreference:'default'});}catch{$('unavailable').hidden=false;}

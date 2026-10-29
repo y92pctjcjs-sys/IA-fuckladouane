@@ -1,11 +1,11 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=atelier-002';
-import {createRenderer} from './renderer.js?v=atelier-002';
-import {createInput} from './input.js?v=atelier-002';
-import {createAudio} from './audio.js?v=atelier-002';
-import {createSave,createPreferences} from './storage.js?v=atelier-002';
-import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=atelier-002';
-import {formatTime,resultBadge,createScoreCard} from './results.js?v=atelier-002';
-import {createAppearance,resolveSkin} from './vehicle-skins.js?v=atelier-002';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=oculaire-003';
+import {createRenderer} from './renderer.js?v=oculaire-003';
+import {createInput} from './input.js?v=oculaire-003';
+import {createAudio} from './audio.js?v=oculaire-003';
+import {createSave,createPreferences} from './storage.js?v=oculaire-003';
+import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=oculaire-003';
+import {formatTime,resultBadge,createScoreCard} from './results.js?v=oculaire-003';
+import {createAppearance,resolveSkin} from './vehicle-skins.js?v=oculaire-003';
 const $=id=>document.getElementById(id);
 let storage;try{storage=localStorage;}catch{storage=null;}
 const save=createSave(storage),preferences=createPreferences(storage),systemMotion=matchMedia('(prefers-reduced-motion: reduce)');
@@ -118,6 +118,8 @@ function hud(){
   $('cinemaText').textContent=!race.result.won?race.result.reason:t<3?'Les sirènes restent derrière.':t<5?'MADE IN SWAGISTAN.':love?t<7?'— Tu vas où ?':t<9?'— Je crois que je suis arrivé.':t<11?'— Monte.':'POUR UNE FOIS, T’AS TROUVÉ QUELQU’UN.':'L’origine n’est plus une hypothèse.';
  }
  const m=renderer.metrics;$('renderStats').textContent=`AFFICHAGE ${m.fps??'—'} FPS · DÉFINITION ×${m.ratio} · ${m.calls??'—'} DRAWS · ${m.chunks} TRONÇONS. Mesure de ce navigateur.`;
+ const whisper=renderer.oculaireStatus.caption,caption=$('oculaireWhisper');
+ caption.hidden=race.state!=='RACE'||!whisper||Boolean($('alert').textContent);if(caption.textContent!==whisper)caption.textContent=whisper;
 }
 function animate(now){
  const delta=lastTime?Math.min(.25,(now-lastTime)/1000):0;lastTime=now;clock.advance(delta);if(previousState!==race.state)paintState();
