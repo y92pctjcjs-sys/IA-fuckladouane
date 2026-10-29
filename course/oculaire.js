@@ -4,6 +4,7 @@ import {createOculaireFinale} from './oculaire-finale.js?v=fld-route-003';
 import {adaptOculaireHair} from './oculaire-hair.js?v=fld-route-003';
 
 import {driveSample,SHORTCUT} from './route-options.js?v=fld-route-003';
+import {createDamageSpin} from './oculaire-reactions.js?v=fld-route-003';
 
 export const WORDS=Object.freeze([
  'Tu conduis depuis l’intérieur de mes paupières.',
@@ -71,8 +72,8 @@ export function createPursuitMotion(){
 export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-route-003'),report=()=>{}}={}){
  const root=new T.Group();root.name='OCULAIRE';root.visible=false;scene.add(root);
  const face=new T.Group();root.add(face);
- const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers(),pursuitMotion=createPursuitMotion();
- const status={state:'loading',error:null,meshes:0,triangles:0,growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0}};
+ const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers(),pursuitMotion=createPursuitMotion(),damageSpin=createDamageSpin();
+ const status={state:'loading',error:null,meshes:0,triangles:0,growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0},reaction:{active:false,angle:0,progress:0,serial:0,completed:0,variant:0}};
  const target=new T.Vector3(),worldEye=new T.Vector3(),localTarget=new T.Vector3();
  let meta,finale,disposed=false,reduced=false,seed=-1;
  const ready=Promise.resolve().then(loadModel).then(source=>{
@@ -119,16 +120,18 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
   const slide=motion.side*3.4*strength;
   root.position.set(camera.position.x+dx/d*210+Math.cos(p.angle)*slide,p.y+33-motion.threat*.45*strength,camera.position.z+dz/d*210-Math.sin(p.angle)*slide);
   target.copy(player.position);target.y+=.9;root.lookAt(target);
-  root.rotateY(-motion.side*.085*strength);root.rotateZ(-motion.side*.045*strength);root.rotateX(motion.threat*.023*strength);root.updateMatrixWorld(true);
+  root.rotateY(-motion.side*.085*strength);root.rotateZ(-motion.side*.045*strength);root.rotateX(motion.threat*.023*strength);
+  root.rotateY(status.reaction.angle);root.updateMatrixWorld(true);
  }
- function reset(){seed=-1;whispers.reset();pursuitMotion.reset();finale?.reset();face.visible=true;root.visible=status.state==='ready';Object.assign(status,{growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0}});}
+ function reset(){seed=-1;whispers.reset();pursuitMotion.reset();damageSpin.reset();finale?.reset();face.visible=true;root.visible=status.state==='ready';Object.assign(status,{growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0},reaction:{active:false,angle:0,progress:0,serial:0,completed:0,variant:0}});}
  return {
   root,ready,reset,
   setReduced(value){reduced=Boolean(value);},
   shot(r){return finale?.shot(r);},
   update(r,player,camera){
    if(status.state!=='ready'||disposed)return;
-   if(seed!==r.seed){seed=r.seed;whispers.reset(seed);pursuitMotion.reset();finale.reset();}
+   if(seed!==r.seed){seed=r.seed;whispers.reset(seed);pursuitMotion.reset();damageSpin.reset();finale.reset();}
+   status.reaction=damageSpin.update(r,reduced);
    status.growth=growthAt(r.s);const speech=whispers.update(r);status.caption=speech.text;status.mouth=speech.mouth;
    root.visible=true;face.visible=true;
    if(r.result?.won&&['ARRIVAL','PAUSE','RESULTS'].includes(r.state)){
@@ -141,7 +144,9 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
    target.copy(player.position);target.y+=.9;localTarget.copy(target);root.worldToLocal(localTarget);
    for(const [i,eye]of eyes.entries()){
     const direction=localTarget.clone().sub(eye.assembly.position).normalize();
-    eye.iris.quaternion.setFromUnitVectors(eye.forward,direction);eye.gaze.copy(direction);
+    // Pupils turn with the face during the joke. Re-aiming through the rear of
+    // their sockets would counter-rotate the irises inside the approved skull.
+    if(!status.reaction.active){eye.iris.quaternion.setFromUnitVectors(eye.forward,direction);eye.gaze.copy(direction);}
     eye.blink=blinkAt((r.time||0)+(r.result?.won?r.cinematic||0:0),seed,i,reduced);
     eye.globe.scale.y=1-eye.blink*.98;
    }

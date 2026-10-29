@@ -1,0 +1,153 @@
+{
+  "kind": "OCULAIRE_DAMAGE_SPIN_AND_TAUNTS",
+  "base": "c0acf1e0e5e0eb7232a8d721d2debf08a495feda",
+  "branch": "feat/oculaire-impact-mockeries-20261029",
+  "tests": {
+    "passed": 132,
+    "failed": 0,
+    "syntaxFiles": 77
+  },
+  "rotation": {
+    "seconds": 0.88,
+    "reducedSeconds": 1,
+    "axis": "localY",
+    "cpuFrames": 22,
+    "finalState": {
+      "active": false,
+      "angle": 0,
+      "progress": 0,
+      "serial": 1,
+      "completed": 1,
+      "variant": 0
+    },
+    "frameFormats": [
+      [
+        320,
+        740
+      ],
+      [
+        390,
+        844
+      ],
+      [
+        844,
+        390
+      ]
+    ],
+    "cpuProof": "oculaire-impact-cpu.html",
+    "kind": "CPU_RASTER_OF_REAL_MESHES_NOT_WEBGL"
+  },
+  "audio": {
+    "variants": 3,
+    "ids": [
+      "rire-cascade",
+      "gnagnagna",
+      "prout-ricanement"
+    ],
+    "nativeBrowserContext": "running",
+    "observedBufferBytes": 416304,
+    "bufferBytes48kHz": 453120,
+    "triggeredEachVariant": true,
+    "effectsZeroSuppressesTaunt": true,
+    "soundOffVoices": 0,
+    "soundOffScheduler": false,
+    "nonApplicationErrors": [
+      "Chrome extension metadata errors"
+    ]
+  },
+  "geometry": {
+    "triangles": 99653,
+    "surfaces": 26
+  },
+  "preserved": [
+    {
+      "path": "index.html",
+      "sha256": "231ab72d77805afbe82170809f09ae6395b97ae88929f02889d5c66f9b232ea7"
+    },
+    {
+      "path": "CNAME",
+      "sha256": "3d707f4f3aa6ac76eb3511c24d4cf95e269fa391cf1c2b125dca12645199c47b"
+    },
+    {
+      "path": "app.js",
+      "sha256": "19a4e03cbc52aa43fdd88d5e68cd62a02d0cf0ecd0d0e0dc222c76d13943e7f2"
+    },
+    {
+      "path": "core.js",
+      "sha256": "115f47b2a0892b668e1470ba859d3b31bce3bca22210523804632f972bd60da9"
+    },
+    {
+      "path": "arcade.js",
+      "sha256": "7bb9f99e5f446feabdf9df903208535909a5d5dc0cf77a2e9a02283000b93f15"
+    },
+    {
+      "path": "course/simulation.js",
+      "sha256": "3b6efea69e287b50274b557f35d186cc4f16b858efe9c3efd44d6a860cfa670a"
+    },
+    {
+      "path": "course/track.js",
+      "sha256": "3d40d81d28f1f7c296a1aca9d83a88fcdf97c2b0c5fc7567c7c43004cbc50b8e"
+    },
+    {
+      "path": "course/pursuit.js",
+      "sha256": "573e59924f59d7f194a665508cec7f86b6352d738eaa631a47ce776ec268863c"
+    },
+    {
+      "path": "course/input.js",
+      "sha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb"
+    },
+    {
+      "path": "course/storage.js",
+      "sha256": "acc82e31bfbb9a9ac499629fa1caa849e1b24fcceff6841a1f72fee371750a32"
+    },
+    {
+      "path": "course/ending.js",
+      "sha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706"
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b"
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "sha256": "9db8b6cc3b451d6bd2cbd4e6a3547699d44fb08496d588334a2a7b7f471af9df"
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a"
+    },
+    {
+      "path": "course/world-landscape.js",
+      "sha256": "c0d97bbca2b0e47011a022d904d18a595c57f6e9dbe36f76b1c6cde4f641a709"
+    },
+    {
+      "path": "course/world-landmarks.js",
+      "sha256": "d811e4a2c0ff233c432efdaf0c12611c62538526dc5b023e15cc860f63f73ea2"
+    },
+    {
+      "path": "course/road-vehicles.js",
+      "sha256": "25a81036da3d5c7af21e462731b9e9dd39fbd8b04f88f4cec438d4a0808eebd0"
+    },
+    {
+      "path": "course/vehicle-designs.js",
+      "sha256": "fa53af33aaca0827f161cb2ee3a06a547ecb5112167ebada38eecbb5d929c6d1"
+    },
+    {
+      "path": "course/design-system.css",
+      "sha256": "d6e90c4af783ecadf688ff3b1c74d333ee6b59228525f98f73fdd7b0cc47ba06"
+    }
+  ],
+  "limits": [
+    "Browser WebGL context creation fails: GL_VENDOR = Disabled; GL_RENDERER = Disabled; BindToCurrentSequence failed.",
+    "No physical iPhone/Safari test or phone performance measurement.",
+    "Native WebAudio scheduling and cleanup observed; no recorded loudspeaker output or human listening test claimed."
+  ],
+  "publication": {
+    "status": "AUTHORIZED_PENDING_DEPLOYMENT",
+    "published": false,
+    "authorizedBy": "User explicitly confirmed publication in the conversation on 2026-10-29",
+    "codeAndProofCommit": "113e8d0e7fb8086e7888b32e61473a3ea02c3d2b",
+    "mainVerifiedBeforePublication": "c0acf1e0e5e0eb7232a8d721d2debf08a495feda",
+    "nextStep": "Publish with expected SHA; verify Pages and served bytes."
+  }
+}

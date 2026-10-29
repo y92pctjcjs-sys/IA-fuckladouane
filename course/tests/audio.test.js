@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {scoreEvents,BPM,STEP_SECONDS,frequency} from '../score.js';
 import {createAudio,engineTone} from '../audio.js';
+import {TAUNTS,tauntIndex} from '../oculaire-taunts.js';
+import {createRace,hit,finish} from '../simulation.js';
 
 test('original 108 BPM score develops beyond a short loop and resolves all victories',()=>{
  assert.equal(BPM,108);assert.ok(Math.abs(STEP_SECONDS*16-60/108*4)<1e-9);assert.equal(frequency(69),440);
@@ -50,4 +52,45 @@ test('engine gear hysteresis removes boundary chatter and the soundtrack contain
  const events=Array.from({length:16*24},(_,n)=>scoreEvents(16*16+n,1,80)).flat();
  assert.ok(events.some(e=>e.kind==='lead'));assert.ok(events.some(e=>e.pan<-.2));assert.ok(events.some(e=>e.pan>.2));
  assert.notDeepEqual(scoreEvents(16*16,1),scoreEvents(48*16,1));
+});
+
+const tauntSources=context=>context.sources.filter(s=>s.buffer&&s.buffer.getChannelData(0).length<context.sampleRate);
+test('each accepted hit schedules exactly one cached taunt through the existing effects bus and cleans up its voice',async()=>{
+ const context=fakeContext(),audio=createAudio(()=>{},()=>context),r=createRace(undefined,13);r.state='RACE';r.speed=40;
+ try{
+  await audio.toggle();audio.update(r);const buffers=[];
+  for(let n=1;n<=4;n++){
+   r.invulnerable=0;assert.equal(hit(r,5),true);audio.update(r);
+   assert.equal(audio.diagnostics.tauntCount,n);assert.equal(audio.diagnostics.lastTaunt,TAUNTS[tauntIndex(r.seed,n)].id);
+   for(let frame=0;frame<12;frame++)audio.update(r);assert.equal(audio.diagnostics.tauntCount,n);
+   assert.equal(hit(r,5),false);audio.update(r);assert.equal(audio.diagnostics.tauntCount,n);
+   const source=tauntSources(context).at(-1),gain=source.connections[0],fxBus=gain.connections[0];
+   assert.equal(source.startTime,context.currentTime+.035);assert.equal(gain.gain.value,.34);assert.equal(fxBus.gain.target,.7);buffers.push(source.buffer);
+   const voices=audio.diagnostics.voices;source.onended();assert.equal(audio.diagnostics.voices,voices-1);
+  }
+  assert.equal(new Set(buffers.slice(0,3)).size,3);assert.equal(buffers[0],buffers[3]);assert.ok(audio.diagnostics.tauntBytes<80000);
+  audio.reset();assert.equal(audio.diagnostics.voices,0);assert.equal(audio.diagnostics.tauntCount,0);assert.equal(audio.diagnostics.lastTaunt,null);
+ }finally{audio.dispose();assert.equal(audio.diagnostics.tauntBytes,0);}
+});
+
+test('sound off, zero effects, zero master and suspension consume hit events without a delayed taunt after reactivation',async()=>{
+ const context=fakeContext(),audio=createAudio(()=>{},()=>context),r=createRace();r.state='RACE';
+ const damage=()=>{r.invulnerable=0;hit(r,5);audio.update(r);};
+ try{
+  damage();assert.equal(audio.enabled,false);assert.equal(tauntSources(context).length,0);
+  await audio.toggle();audio.update(r);assert.equal(audio.diagnostics.tauntCount,0);damage();assert.equal(audio.diagnostics.tauntCount,1);
+  audio.configure({effects:0});damage();assert.equal(audio.diagnostics.tauntCount,1);audio.configure({effects:.7});audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);
+  audio.configure({master:0});damage();audio.configure({master:.75});audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);
+  audio.suspend();damage();await audio.resume();audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);
+  await audio.toggle();damage();await audio.toggle();audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);
+  damage();assert.equal(audio.diagnostics.tauntCount,2);
+ }finally{audio.dispose();}
+});
+
+test('a fatal hit retains its taunt during interception and a victory does not fabricate one',async()=>{
+ const context=fakeContext(),audio=createAudio(()=>{},()=>context),r=createRace();r.state='RACE';r.health=5;
+ try{
+  await audio.toggle();audio.update(r);hit(r,11);finish(r,false,'VÉHICULE HORS SERVICE');audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);audio.update(r);assert.equal(audio.diagnostics.tauntCount,1);
+  audio.reset();const winner=createRace();winner.state='RACE';audio.update(winner);finish(winner,true);audio.update(winner);assert.equal(audio.diagnostics.tauntCount,0);
+ }finally{audio.dispose();}
 });

@@ -1,5 +1,5 @@
 {
-  "base": "c0acf1e0e5e0eb7232a8d721d2debf08a495feda",
+  "base": "bb38fe39d1bb449704509cd6e64762cfdd89efe2",
   "kind": "SOURCE_PROTECTION_NOT_GAMEPLAY",
   "resources": [
     {
@@ -60,7 +60,7 @@
       "path": "course/audio.js",
       "exact": false,
       "equalExceptCache": true,
-      "sha256": "6b42c48247b230bce0ea6dc5e6ca615360a10259821e194e84161fca57cfdcbe"
+      "sha256": "c9a56f990ec8bb76bea2469fed1d0de844a788fa5505aec3363dd88d8fcf5904"
     },
     {
       "path": "course/ending.js",
@@ -90,7 +90,7 @@
       "path": "OCULAIRE_ETAT.md",
       "exact": true,
       "equalExceptCache": true,
-      "sha256": "9d5bdadb140b71adbb6a20ff02eb3a6298a26af15dd35362beef67ec5c3e6310"
+      "sha256": "749f0076dc47ccfe34c57bbbda76190d9edbd9755871a9a1b8f1d74f03a9dd20"
     },
     {
       "path": "course/vehicle-skins.js",
@@ -115,6 +115,19 @@
       "exact": true,
       "equalExceptCache": true,
       "sha256": "2f5b27222d4213a59099249bdfda7514339409079a554ffb1f9f6b9e3af87e00"
+    },
+    {
+      "path": "course/oculaire-reactions.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "384ec1300a207afdf7223c51d3e24c35a47fae8aaa9c0b9bc7c6420c5a672a8c"
+    },
+    {
+      "path": "course/oculaire-taunts.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "2644b6613db7cebb5d3dc513dd8dc095b0e2de8392d0d1ab7bdf0b1df8acd16b"
     }
-  ]
+  ],
+  "oculaireRoutePatch": "Only driving-threat gate and sky anchor adapt to branch; incoming spin, gaze policy, audio, hair and finale kept"
 }

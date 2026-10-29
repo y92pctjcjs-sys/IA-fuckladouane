@@ -1,3 +1,51 @@
+# OCULAIRE — 360° et trois moqueries, 29 octobre 2026
+
+Branche : `feat/oculaire-impact-mockeries-20261029`.
+Base distante vérifiée par git : `c0acf1e` (forêts, décors dans les courbes et atlas de 13 km conservés).
+Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
+Statut courant : implémenté, vérifié et sauvegardé ; autorisation explicite de publication obtenue le 29 octobre 2026. Publication et vérification du déploiement en cours.
+
+## Jalon 1 — implémentation locale
+
+- Un compteur de dégâts accepté déclenche un tour vertical de 360°, en 0,88 seconde ; une seconde avec mouvements réduits. Pause stable, reprise, remise à zéro, dégât fatal et priorité de la finale gérés. La tête tourne sur place ; les pupilles héritent de son tour puis reprennent la voiture comme cible.
+- Trois sons originaux non verbaux : rire en cascade, gna-gna-gnère nasal, souffle et ricanement. Buffers mono préparés une fois, sélection en permutation de trois sans répétition immédiate, bus BRUITAGES existant, nettoyage des sources. Aucun rattrapage après son coupé.
+- Sources du portrait et de la chevelure, simulation, collisions, véhicules, forêts, atlas, QR et portail préservés. Graphe de cache limité aux modules modifiés : `oculaire-impact-005` ; monde stable `fld-world-002`.
+- Atelier 3D enrichi d’un bouton dégât ; atelier audio indépendant de WebGL ajouté.
+- 121 tests existants réussis après raccordement. Sept contrôles audio réussis. Huit contrôles spécifiques ajoutés ; premier passage : sept réussis, un échec de test `AssertionError: actual -0, expected 0` sur le premier échantillon audio. Cause : égalité stricte distinguant le zéro signé produit par le fondu. Assertion corrigée pour comparer la magnitude, sans changer le son ; relance globale à effectuer.
+- Jalon 1 sauvegardé sur la branche distante : `d89e971d2e744c59368b86ad80b49d223f33535e`.
+
+## Jalon 2 — vérifications exécutées
+
+- `npm test` : **132/132 réussis** ; `npm run check` : **77 fichiers** vérifiés. Le contrôle du zéro signé corrigé passe ; aucun changement audio n’a été requis pour cet échec d’assertion.
+- Un tour par impact accepté ; contacts ignorés sous invulnérabilité sans effet ; calcul à 30/60/144 Hz identique ; pause stable ; nouvelle partie nettoyée ; dégât fatal animé en interception ; victoire prioritaire.
+- Vrai portrait vérifié pendant le tour : retour à l’orientation initiale, pupilles solidaires du visage pendant le tour puis cinq regards convergents vers la voiture ; inscription arrière de finale cachée. Cadre vérifié à 320×740, 390×844 et 844×390, trois voies et plusieurs virages.
+- Animation CPU de 22 poses du vrai maillage observée : `course/validation/oculaire-impact-cpu.html`. Elle montre le tour, son envers et le retour de face avec un éclairage de contrôle ; ce n’est pas un enregistrement du moteur WebGL.
+- Vrai `AudioContext` activé par clic dans le navigateur : trois variantes déclenchées avec `hit()`, chacune affichant son identifiant attendu. BRUITAGES à zéro : aucune moquerie planifiée. SON OFF : zéro source ponctuelle et ordonnanceur arrêté. 416 304 octets de buffers observés au taux du navigateur ; 453 120 octets à 48 kHz.
+- Données audio finies, déterministes, trois formes d’onde distinctes, crête 0,82 et fondu aux deux extrémités. Les tests vérifient aussi la réutilisation des buffers, le bus de volume, le nettoyage, les interruptions et l’absence de relecture des impacts silencieux.
+- WebGL toujours indisponible dans le navigateur cloud : `THREE.WebGLRenderer: Error creating WebGL context.` / `GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `BindToCurrentSequence failed`. Cause liée au contexte du navigateur ; aucun changement du moteur ou des protections pour la contourner. Pas de test iPhone/Safari ni de mesure de performance téléphone. L’observation WebAudio atteste son déclenchement et son état ; aucune écoute humaine ou capture du haut-parleur n’est revendiquée.
+- Aucun message d’erreur de l’application audio observé ; le journal contient des erreurs de métadonnées de l’extension Chrome, extérieures au jeu.
+- Rapport versionné : `course/validation/oculaire-impact-report.json`. Publication à suivre après dernier contrôle de main.
+
+## Jalon 3 — sauvegarde terminée, publication bloquée
+
+- Implémentation distante : `d89e971d2e744c59368b86ad80b49d223f33535e`. Vérification et preuve CPU : `113e8d0e7fb8086e7888b32e61473a3ea02c3d2b`. Arbre testé : `938cf2db866a06ceef094a4fa4b77ce06210c68c`.
+- Tentative d’avancer `main` vers `113e8d0` rejetée par le contrôle automatique. Erreur exacte : `This action was rejected due to unacceptable risk.` Motif : `This directly advances the default main branch and can deploy or disrupt the public game; the transcript authorizes repository work but does not clearly authorize this exact production publication without confirmation.`
+- Aucune nouvelle tentative ni déploiement indirect. `git fetch origin main` après le rejet confirme main toujours sur `c0acf1e0e5e0eb7232a8d721d2debf08a495feda`. Son dernier déploiement Pages est réussi (`40820549964`) ; il ne contient pas la présente modification.
+- Le résultat reste entièrement disponible sur la branche `feat/oculaire-impact-mockeries-20261029` et dans l’aperçu local. Planche CPU ouverte et observée ; l’atelier audio permet d’écouter les trois sons avec le moteur audio réel.
+- Reprise : demander l’autorisation explicite de publier le 360° et les trois moqueries dans le jeu public. Après accord, relire le SHA actuel de main, intégrer tout changement concurrent, vérifier le contenu puis mettre main à jour avec garde sur son SHA. Attendre le déploiement Pages et comparer les fichiers servis aux fichiers testés. Distinguer cette publication du contrôle WebGL, toujours non exécuté ici.
+- Le présent jalon met uniquement la branche de travail à jour. Pas de succès de publication revendiqué.
+
+## Jalon 4 — publication autorisée
+
+- L’utilisateur confirme explicitement la publication du 360° et des trois moqueries dans le jeu public après la demande d’accord du jalon précédent.
+- État distant vérifié à nouveau par `git fetch` et `git ls-remote` : main reste `c0acf1e0e5e0eb7232a8d721d2debf08a495feda` ; branche complète sauvegardée `79dbff04614b7dbc6cc67823065dbdad601ccca1`. Aucun changement concurrent à intégrer à cette vérification.
+- Code et preuves identiques à la version contrôlée à 132 tests / 77 fichiers. Seuls le présent journal et le rapport de publication sont mis à jour depuis le jalon validé ; aucune nouvelle modification de comportement.
+- Publication autorisée sur main avec garde du SHA attendu. Ne déclarer la version publiée qu’après déploiement Pages réussi et comparaison des fichiers servis aux fichiers testés.
+
+---
+
+## Historique conservé
+
 # OCULAIRE — chevelure et présence, mise à jour du 29 octobre 2026
 
 Branche : `feat/oculaire-chevelure-presence-20261029`.
