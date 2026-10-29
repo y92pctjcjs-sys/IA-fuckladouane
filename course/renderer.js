@@ -114,6 +114,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
   const scene = new T.Scene(); scene.background = new T.Color('#0b0a1c'); scene.fog = new T.FogExp2('#17162b', .004); scene.environment=environmentTexture();
   const camera = new T.PerspectiveCamera(62, 1, .3, 4200);
+  const inspectionCamera=camera.clone();let inspectionAngle=null;
   const sky=createDigitalSky(scene,reduced);
   scene.add(new T.HemisphereLight('#b7c0ed', '#252033', 2.5));
   const moonLight = new T.DirectionalLight('#bbb3ff', 1.7); moonLight.position.set(-80, 120, 20); scene.add(moonLight);
@@ -320,7 +321,11 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
       oculaire.update(r,player,camera);
-      renderer.render(scene, camera);
+      if(inspectionAngle!==null){
+        const offset=new T.Vector3(Math.sin(inspectionAngle)*64,2,Math.cos(inspectionAngle)*64).multiplyScalar(oculaire.status.growth).applyQuaternion(oculaire.root.quaternion);
+        inspectionCamera.position.copy(oculaire.root.position).add(offset);inspectionCamera.aspect=camera.aspect;inspectionCamera.updateProjectionMatrix();inspectionCamera.lookAt(oculaire.root.position);
+      }
+      renderer.render(scene, inspectionAngle===null?camera:inspectionCamera);
     },
     setAppearance(next,seed=0){
       const marked=patrolSkin(next,seed>>>0);
@@ -334,7 +339,8 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);oculaire.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
     get metrics(){return {fps:quality.fps===null?null:Math.round(quality.fps),level:quality.level,ratio:Math.min(devicePixelRatio||1,quality.ratio),chunks:chunks.filter(c=>Number.isFinite(c.s)).length,calls:renderer.info.render?.calls??null,triangles:renderer.info.render?.triangles??null,geometries:renderer.info.memory?.geometries??null};},
     get oculaireStatus() {return oculaire.status;},
-    inspectOculaire() {return oculaire.inspect(camera);},
+    inspectHead(angle=null){inspectionAngle=Number.isFinite(angle)?angle:null;},
+    inspectOculaire() {return oculaire.inspect(inspectionAngle===null?camera:inspectionCamera);},
     dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();oculaire.dispose();renderer.dispose(); },
     info: renderer.info
   };

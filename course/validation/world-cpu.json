@@ -1,6 +1,6 @@
 {
   "kind": "CPU_ONLY_OCULAIRE_READY_NOT_GPU_OR_IPHONE",
-  "date": "2026-10-29T04:31:43.576Z",
+  "date": "2026-10-29T04:49:16.099Z",
   "node": "v24.22.1",
   "rows": [
     {
@@ -10,11 +10,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 1.25,
       "oculaire": "ready",
-      "loadedCpuMs": 1823,
-      "totalCpuMs": 2989,
+      "loadedCpuMs": 983,
+      "totalCpuMs": 1812,
       "maxVisibleMeshes": 353,
-      "maxTrianglesBeforeFrustumCulling": 220948,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 226291,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244
@@ -40,11 +40,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 1.25,
       "oculaire": "ready",
-      "loadedCpuMs": 463,
-      "totalCpuMs": 1188,
+      "loadedCpuMs": 697,
+      "totalCpuMs": 1392,
       "maxVisibleMeshes": 353,
-      "maxTrianglesBeforeFrustumCulling": 220948,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 226291,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244
@@ -70,11 +70,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 0.72,
       "oculaire": "ready",
-      "loadedCpuMs": 793,
-      "totalCpuMs": 1605,
+      "loadedCpuMs": 637,
+      "totalCpuMs": 1421,
       "maxVisibleMeshes": 329,
-      "maxTrianglesBeforeFrustumCulling": 208618,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 213961,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244
@@ -100,11 +100,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 0.72,
       "oculaire": "ready",
-      "loadedCpuMs": 447,
-      "totalCpuMs": 1200,
+      "loadedCpuMs": 468,
+      "totalCpuMs": 1113,
       "maxVisibleMeshes": 329,
-      "maxTrianglesBeforeFrustumCulling": 208618,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 213961,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244
@@ -130,11 +130,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 1.25,
       "oculaire": "ready",
-      "loadedCpuMs": 477,
-      "totalCpuMs": 1308,
+      "loadedCpuMs": 490,
+      "totalCpuMs": 1126,
       "maxVisibleMeshes": 353,
-      "maxTrianglesBeforeFrustumCulling": 220948,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 226291,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244
@@ -160,11 +160,11 @@
       "devicePixelRatio": 3,
       "targetRatio": 1.25,
       "oculaire": "ready",
-      "loadedCpuMs": 530,
-      "totalCpuMs": 1356,
+      "loadedCpuMs": 510,
+      "totalCpuMs": 1150,
       "maxVisibleMeshes": 353,
-      "maxTrianglesBeforeFrustumCulling": 220948,
-      "maxGeometries": 264,
+      "maxTrianglesBeforeFrustumCulling": 226291,
+      "maxGeometries": 265,
       "afterLaps": [
         244,
         244

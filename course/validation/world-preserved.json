@@ -1,0 +1,90 @@
+{
+  "base": "0d69230fc42385fe8d55aa890e528788e20de384",
+  "kind": "SOURCE_COMPARISON_NOT_GAMEPLAY",
+  "resources": [
+    {
+      "path": "course/oculaire.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "3fa095878684a10a26b5c8b802dcb091fc79963138494881e37180e5ab2b1d80"
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "9db8b6cc3b451d6bd2cbd4e6a3547699d44fb08496d588334a2a7b7f471af9df"
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b"
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a"
+    },
+    {
+      "path": "OCULAIRE_ETAT.md",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "9d5bdadb140b71adbb6a20ff02eb3a6298a26af15dd35362beef67ec5c3e6310"
+    },
+    {
+      "path": "course/track.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "3d40d81d28f1f7c296a1aca9d83a88fcdf97c2b0c5fc7567c7c43004cbc50b8e"
+    },
+    {
+      "path": "course/simulation.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "3b6efea69e287b50274b557f35d186cc4f16b858efe9c3efd44d6a860cfa670a"
+    },
+    {
+      "path": "course/input.js",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb"
+    },
+    {
+      "path": "course/audio.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "2d629b184093e9655df9d3782babcb53191b5d1924abc03651d4a1b276bc8308"
+    },
+    {
+      "path": "course/storage.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "acc82e31bfbb9a9ac499629fa1caa849e1b24fcceff6841a1f72fee371750a32"
+    },
+    {
+      "path": "course/results.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "4462c47e4b57eda33433e59f4d700cfd6c90927de924fdb809382c323afc7c6d"
+    },
+    {
+      "path": "course/pursuit.js",
+      "exact": false,
+      "equalExceptCache": true,
+      "sha256": "573e59924f59d7f194a665508cec7f86b6352d738eaa631a47ce776ec268863c"
+    },
+    {
+      "path": "CNAME",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "3d707f4f3aa6ac76eb3511c24d4cf95e269fa391cf1c2b125dca12645199c47b"
+    },
+    {
+      "path": "index.html",
+      "exact": true,
+      "equalExceptCache": true,
+      "sha256": "231ab72d77805afbe82170809f09ae6395b97ae88929f02889d5c66f9b232ea7"
+    }
+  ]
+}

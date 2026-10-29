@@ -1,6 +1,7 @@
 import * as T from './vendor/three.module.min.js';
 import {sample,LENGTH,STAGES,sectorAt,blockadeAhead,beatAt} from './track.js?v=fld-world-002';
 import {createOculaireFinale} from './oculaire-finale.js?v=fld-world-002';
+import {adaptOculaireHair} from './oculaire-hair.js?v=fld-world-002';
 
 export const WORDS=Object.freeze([
  'Tu conduis depuis l’intérieur de mes paupières.',
@@ -29,36 +30,58 @@ export function createWhispers(){
   return {text,mouth};
  }};
 }
-function decode(value,Type){const bytes=Uint8Array.from(atob(value),c=>c.charCodeAt(0));return new Type(bytes.buffer);}
+function decode(value,Type){if(value instanceof Type)return value;const bytes=Uint8Array.from(atob(value),c=>c.charCodeAt(0));return new Type(bytes.buffer);}
 function geometry(surface){
  const g=new T.BufferGeometry(),p=decode(surface.p,Int16Array),n=decode(surface.n,Int8Array);
  g.setAttribute('position',new T.Float32BufferAttribute(Float32Array.from(p,x=>x/8192),3));
  g.setAttribute('normal',new T.BufferAttribute(n,3,true));g.setAttribute('color',new T.BufferAttribute(decode(surface.c,Uint8Array),3,true));
  g.setIndex(new T.BufferAttribute(decode(surface.i,Uint16Array),1));g.computeBoundingSphere();return g;
 }
-function blinkAt(time,seed,i,reduced){
- const cycle=Math.floor(time/7.7),start=1.7+hash(seed+cycle*61)*4.7;
+export function blinkAt(time,seed,i,reduced){
+ const cycle=Math.floor(time/6),start=1.5+hash(seed+cycle*61)*2.8;
  const offset=reduced?0:hash(seed+cycle*73)>.74?i*.018:0;
- const t=(time-cycle*7.7-start-offset)/.21;
+ const t=(time-cycle*6-start-offset)/.19;
  return t>=0&&t<=1?Math.sin(t*Math.PI)**2:0;
+}
+
+export function pursuitSignal(r){
+ let total=0,lateral=0,threat=0;
+ for(const cop of r.cops||[]){
+  const gap=r.s-cop.s;if(!cop.active||gap<0||gap>120||!Number.isFinite(cop.x))continue;
+  const weight=(1-gap/120)**2*(cop.phase==='flank'||cop.phase==='encircle'?1.2:1);
+  total+=weight;lateral+=T.MathUtils.clamp((cop.x-r.x)/6,-1,1)*weight;threat+=weight;
+ }
+ return {side:total?lateral/total*Math.min(1,total):0,threat:Math.min(1,threat)};
+}
+export function createPursuitMotion(){
+ let side=0,threat=0,lastTime=null;
+ function reset(){side=threat=0;lastTime=null;}
+ return {reset,update(r){
+  if(lastTime!==null&&r.time<lastTime)reset();
+  if(r.state!=='RACE'){lastTime=r.time;return {side,threat};}
+  const dt=lastTime===null?0:T.MathUtils.clamp(r.time-lastTime,0,.1);lastTime=r.time;
+  const wanted=pursuitSignal(r),blend=1-Math.exp(-dt*2.8);side+=(wanted.side-side)*blend;threat+=(wanted.threat-threat)*blend;
+  return {side,threat};
+ }};
 }
 
 // Reuses the approved surfaces as a bounded game asset. The source file stays intact.
 export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-world-002'),report=()=>{}}={}){
  const root=new T.Group();root.name='OCULAIRE';root.visible=false;scene.add(root);
  const face=new T.Group();root.add(face);
- const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers();
- const status={state:'loading',error:null,meshes:0,triangles:0,growth:1,caption:'',mouth:-1,phase:'sky',fragments:0};
+ const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers(),pursuitMotion=createPursuitMotion();
+ const status={state:'loading',error:null,meshes:0,triangles:0,growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0}};
  const target=new T.Vector3(),worldEye=new T.Vector3(),localTarget=new T.Vector3();
  let meta,finale,disposed=false,reduced=false,seed=-1;
- const ready=Promise.resolve().then(loadModel).then(data=>{
+ const ready=Promise.resolve().then(loadModel).then(source=>{
   if(disposed)return;
-  if(!data.META||!Array.isArray(data.SURFACES))throw new Error('OCULAIRE: données de portrait absentes.');
+  if(!source.META||!Array.isArray(source.SURFACES))throw new Error('OCULAIRE: données de portrait absentes.');
+  const data=adaptOculaireHair(source);
   meta=data.META;
   const materials=new Map();
   function material(finish){
    if(!materials.has(finish)){
-    const m=new T.MeshStandardMaterial({vertexColors:true,roughness:finish==='iris'?.27:finish==='metal'?.22:.77,metalness:finish==='metal'?.7:0,side:T.DoubleSide,fog:false,toneMapped:false});
+    const m=new T.MeshStandardMaterial({vertexColors:true,roughness:finish==='iris'?.27:finish==='metal'?.22:finish==='hair'?.43:.77,metalness:finish==='metal'?.7:0,side:T.DoubleSide,fog:false,toneMapped:false});
     resources.add(m);materials.set(finish,m);
    }
    return materials.get(finish);
@@ -89,18 +112,21 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
  }).catch(error=>{status.state='error';status.error=`${error.name}: ${error.message}`;root.visible=false;report({...status});console.error('OCULAIRE adaptation:',error);});
  function sky(r,player,camera){
   const p=sample(Math.min(LENGTH+200,r.s+40));const dx=p.x-camera.position.x,dz=p.z-camera.position.z,d=Math.hypot(dx,dz)||1;
+  const motion=pursuitMotion.update(r),strength=reduced?.32:1;status.pursuit=motion;
   const scale=34/meta.height*growthAt(r.s);root.scale.setScalar(scale);
-  root.position.set(camera.position.x+dx/d*210,p.y+33,camera.position.z+dz/d*210);
-  target.copy(player.position);target.y+=.9;root.lookAt(target);root.updateMatrixWorld(true);
+  const slide=motion.side*3.4*strength;
+  root.position.set(camera.position.x+dx/d*210+Math.cos(p.angle)*slide,p.y+33-motion.threat*.45*strength,camera.position.z+dz/d*210-Math.sin(p.angle)*slide);
+  target.copy(player.position);target.y+=.9;root.lookAt(target);
+  root.rotateY(-motion.side*.085*strength);root.rotateZ(-motion.side*.045*strength);root.rotateX(motion.threat*.023*strength);root.updateMatrixWorld(true);
  }
- function reset(){seed=-1;whispers.reset();finale?.reset();face.visible=true;root.visible=status.state==='ready';Object.assign(status,{growth:1,caption:'',mouth:-1,phase:'sky',fragments:0});}
+ function reset(){seed=-1;whispers.reset();pursuitMotion.reset();finale?.reset();face.visible=true;root.visible=status.state==='ready';Object.assign(status,{growth:1,caption:'',mouth:-1,phase:'sky',fragments:0,pursuit:{side:0,threat:0}});}
  return {
   root,ready,reset,
   setReduced(value){reduced=Boolean(value);},
   shot(r){return finale?.shot(r);},
   update(r,player,camera){
    if(status.state!=='ready'||disposed)return;
-   if(seed!==r.seed){seed=r.seed;whispers.reset(seed);finale.reset();}
+   if(seed!==r.seed){seed=r.seed;whispers.reset(seed);pursuitMotion.reset();finale.reset();}
    status.growth=growthAt(r.s);const speech=whispers.update(r);status.caption=speech.text;status.mouth=speech.mouth;
    root.visible=true;face.visible=true;
    if(r.result?.won&&['ARRIVAL','PAUSE','RESULTS'].includes(r.state)){
@@ -124,10 +150,16 @@ export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/po
   inspect(camera){
    if(!meta)return {...status};
    root.updateMatrixWorld(true);camera.updateMatrixWorld(true);
-   const box=new T.Box3().setFromObject(face),screen=new T.Box2();
-   for(const x of[box.min.x,box.max.x])for(const y of[box.min.y,box.max.y])for(const z of[box.min.z,box.max.z]){
-    const p=new T.Vector3(x,y,z).project(camera);screen.expandByPoint(new T.Vector2(p.x,p.y));
-   }
+   const screen=new T.Box2(),point=new T.Vector3();
+   // Project each local mesh bound through its real transform. A world-aligned
+   // box followed by another projection falsely grows the head in road bends.
+   face.traverseVisible(object=>{
+    if(!object.isMesh)return;const g=object.geometry;if(!g.boundingBox)g.computeBoundingBox();const box=g.boundingBox;
+    for(const x of[box.min.x,box.max.x])for(const y of[box.min.y,box.max.y])for(const z of[box.min.z,box.max.z]){
+     point.set(x,y,z).applyMatrix4(object.matrixWorld).project(camera);screen.expandByPoint(new T.Vector2(point.x,point.y));
+    }
+   });
+   if(screen.isEmpty()){point.copy(root.position).project(camera);screen.expandByPoint(new T.Vector2(point.x,point.y));}
    const direction=root.position.clone().sub(camera.position),objects=[];
    scene.traverseVisible(o=>{if(!o.isMesh)return;for(let parent=o;parent;parent=parent.parent)if(parent===root||parent===finale?.effects)return;if(o.material.depthWrite&&o.material.opacity>.95)objects.push(o);});
    const hits=new T.Raycaster(camera.position,direction.clone().normalize(),camera.near,Math.max(.31,direction.length()-20)).intersectObjects(objects,false);
