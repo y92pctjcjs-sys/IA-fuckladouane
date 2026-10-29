@@ -142,5 +142,13 @@
     "No physical iPhone/Safari test or phone performance measurement.",
     "Native WebAudio scheduling and cleanup observed; no recorded loudspeaker output or human listening test claimed."
   ],
-  "publication": "Not published at this checkpoint"
+  "publication": {
+    "status": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+    "published": false,
+    "codeAndProofCommit": "113e8d0e7fb8086e7888b32e61473a3ea02c3d2b",
+    "mainAfterRejection": "c0acf1e0e5e0eb7232a8d721d2debf08a495feda",
+    "action": "Advance main to the tested OCULAIRE damage-spin update",
+    "reason": "Exact production publication requires explicit user approval.",
+    "nextStep": "Obtain approval; re-read main; integrate concurrent changes; publish; verify Pages and served bytes."
+  }
 }

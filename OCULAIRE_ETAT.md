@@ -3,6 +3,7 @@
 Branche : `feat/oculaire-impact-mockeries-20261029`.
 Base distante vérifiée par git : `c0acf1e` (forêts, décors dans les courbes et atlas de 13 km conservés).
 Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
+Statut courant : implémenté, vérifié et sauvegardé sur la branche ; **non publié**. Publication bloquée par contrôle automatique, autorisation utilisateur explicite à obtenir.
 
 ## Jalon 1 — implémentation locale
 
@@ -24,6 +25,15 @@ Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
 - WebGL toujours indisponible dans le navigateur cloud : `THREE.WebGLRenderer: Error creating WebGL context.` / `GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `BindToCurrentSequence failed`. Cause liée au contexte du navigateur ; aucun changement du moteur ou des protections pour la contourner. Pas de test iPhone/Safari ni de mesure de performance téléphone. L’observation WebAudio atteste son déclenchement et son état ; aucune écoute humaine ou capture du haut-parleur n’est revendiquée.
 - Aucun message d’erreur de l’application audio observé ; le journal contient des erreurs de métadonnées de l’extension Chrome, extérieures au jeu.
 - Rapport versionné : `course/validation/oculaire-impact-report.json`. Publication à suivre après dernier contrôle de main.
+
+## Jalon 3 — sauvegarde terminée, publication bloquée
+
+- Implémentation distante : `d89e971d2e744c59368b86ad80b49d223f33535e`. Vérification et preuve CPU : `113e8d0e7fb8086e7888b32e61473a3ea02c3d2b`. Arbre testé : `938cf2db866a06ceef094a4fa4b77ce06210c68c`.
+- Tentative d’avancer `main` vers `113e8d0` rejetée par le contrôle automatique. Erreur exacte : `This action was rejected due to unacceptable risk.` Motif : `This directly advances the default main branch and can deploy or disrupt the public game; the transcript authorizes repository work but does not clearly authorize this exact production publication without confirmation.`
+- Aucune nouvelle tentative ni déploiement indirect. `git fetch origin main` après le rejet confirme main toujours sur `c0acf1e0e5e0eb7232a8d721d2debf08a495feda`. Son dernier déploiement Pages est réussi (`40820549964`) ; il ne contient pas la présente modification.
+- Le résultat reste entièrement disponible sur la branche `feat/oculaire-impact-mockeries-20261029` et dans l’aperçu local. Planche CPU ouverte et observée ; l’atelier audio permet d’écouter les trois sons avec le moteur audio réel.
+- Reprise : demander l’autorisation explicite de publier le 360° et les trois moqueries dans le jeu public. Après accord, relire le SHA actuel de main, intégrer tout changement concurrent, vérifier le contenu puis mettre main à jour avec garde sur son SHA. Attendre le déploiement Pages et comparer les fichiers servis aux fichiers testés. Distinguer cette publication du contrôle WebGL, toujours non exécuté ici.
+- Le présent jalon met uniquement la branche de travail à jour. Pas de succès de publication revendiqué.
 
 ---
 
