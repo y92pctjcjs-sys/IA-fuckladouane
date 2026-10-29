@@ -17,7 +17,7 @@ function canvasEnvironment(run){
 test('right and left inputs move to the matching side of the actual chase camera projection',()=>canvasEnvironment(()=>{
  let actualCamera;
  const sink={setPixelRatio(){},setSize(){},dispose(){},info:{},render(scene,camera){scene.updateMatrixWorld(true);camera.updateMatrixWorld(true);actualCamera=camera;}};
- const view=createRenderer({},true,()=>sink);
+ const view=createRenderer({},true,()=>sink,'auto',undefined,{oculaire:{loadModel:()=>new Promise(()=>{})}});
  for(const direction of [-1,1]){
   const r=createRace();r.state='RACE';r.s=3000;r.speed=48;view.reset();view.render(r,1/60);
   for(let i=0;i<120;i++)step(r,1/120,{...emptyInput(),steer:direction*.5});

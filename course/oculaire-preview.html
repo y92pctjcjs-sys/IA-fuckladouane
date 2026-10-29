@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>OCULAIRE — vérification de l'import</title>
+<style>
+html,body{margin:0;background:#080710;color:#eee;font:12px monospace}canvas{display:block;width:100vw;height:100dvh}aside{position:fixed;bottom:12px;left:12px;right:12px;padding:12px;background:#080710dc;border:1px solid #706882}label{display:inline-block;margin:6px 12px 0 0}input{vertical-align:middle;width:130px}output{color:#d4ff4f}a{color:#ddd}p{margin:6px 0}
+</style>
+<canvas id="world" aria-label="Rendu réel du modèle OCULAIRE dans le paysage du jeu"></canvas>
+<aside><strong>OCULAIRE / IMPORT V4</strong> <output id="status">Chargement…</output>
+<p>Import seul. Regards, croissance et finale ne sont pas encore activés.</p>
+<label>Distance <input id="distance" type="range" min="0" max="12900" step="50" value="2400"><span id="metres">2400</span> m</label>
+<label>Voie <input id="lane" type="range" min="-5" max="5" step="1" value="0"></label>
+<label><input id="motion" type="checkbox" style="width:auto">Avancer</label>
+<a href="../course.html">Jeu</a></aside>
+<script type="module">
+import {createRenderer} from './renderer.js?v=atelier-002';
+import {createRace} from './simulation.js?v=atelier-002';
+const world=document.querySelector('#world'),view=createRenderer(world,true),race=createRace();
+race.state='RACE';race.s=2400;race.speed=48;
+const distance=document.querySelector('#distance'),lane=document.querySelector('#lane'),status=document.querySelector('#status');
+distance.oninput=()=>{race.s=Number(distance.value);view.reset();};lane.oninput=()=>{race.x=Number(lane.value);};
+let last=0;
+function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;if(document.querySelector('#motion').checked){race.s=Math.min(12900,race.s+48*dt);race.time+=dt;distance.value=race.s;}document.querySelector('#metres').textContent=Math.round(race.s);view.render(race,dt);status.textContent=JSON.stringify(view.oculaireStatus);requestAnimationFrame(frame);}
+window.oculairePreview={view,race};requestAnimationFrame(frame);
+</script>
+</html>
