@@ -143,11 +143,19 @@
     "Native WebAudio scheduling and cleanup observed; no recorded loudspeaker output or human listening test claimed."
   ],
   "publication": {
-    "status": "AUTHORIZED_PENDING_DEPLOYMENT",
-    "published": false,
-    "authorizedBy": "User explicitly confirmed publication in the conversation on 2026-10-29",
-    "codeAndProofCommit": "113e8d0e7fb8086e7888b32e61473a3ea02c3d2b",
-    "mainVerifiedBeforePublication": "c0acf1e0e5e0eb7232a8d721d2debf08a495feda",
-    "nextStep": "Publish with expected SHA; verify Pages and served bytes."
+    "status": "PUBLISHED_AND_PUBLIC_BYTES_VERIFIED",
+    "published": true,
+    "release": "bb38fe39d1bb449704509cd6e64762cfdd89efe2",
+    "deployment": {
+      "id": 40823543026,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "publicResourcesVerified": 20,
+    "publicReport": "oculaire-impact-public.json",
+    "browserAudioVerified": true,
+    "visualProof": "CPU geometry raster only",
+    "webglGameplayVerified": false,
+    "iphoneOrSafariVerified": false
   }
 }

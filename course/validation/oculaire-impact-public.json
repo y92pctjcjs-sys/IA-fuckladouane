@@ -1,0 +1,228 @@
+{
+  "release": "bb38fe39d1bb449704509cd6e64762cfdd89efe2",
+  "deployment": {
+    "id": 40823543026,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "resources": [
+    {
+      "path": "course.html",
+      "url": "https://ia.fuckladouane.com/course.html?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 12123,
+      "sha256": "9fff5db15142a11ac9e462711cf81ef9294f711b219deda82bc6f54eabe07c0b",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/boot.js",
+      "url": "https://ia.fuckladouane.com/course/boot.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 578,
+      "sha256": "c54d4f11d48ea7e5d9e071fa4ff3c8a85f8c489835d086a7a7ec750466d6ef03",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/main.js",
+      "url": "https://ia.fuckladouane.com/course/main.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 13773,
+      "sha256": "5116f3a7d959e001f058cb4d1d8bed41f5b5ea5455ecebd9df41a9346e0bcfe7",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/renderer.js",
+      "url": "https://ia.fuckladouane.com/course/renderer.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 25470,
+      "sha256": "e32333f18a86876b8a7df776d796a5a0d73c5391c860bf2842826c2358dbc160",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire.js",
+      "url": "https://ia.fuckladouane.com/course/oculaire.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 12308,
+      "sha256": "da5b5c3cc0b3db2c5ff8538e5b2bd2121376d6d31a220c6a8cc3f02ad8de2a76",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-reactions.js",
+      "url": "https://ia.fuckladouane.com/course/oculaire-reactions.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 1867,
+      "sha256": "384ec1300a207afdf7223c51d3e24c35a47fae8aaa9c0b9bc7c6420c5a672a8c",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-taunts.js",
+      "url": "https://ia.fuckladouane.com/course/oculaire-taunts.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 2890,
+      "sha256": "1d246e00a4ca08d2b5d3806b6bd104bfc3d7df2ae353cfe25b2a3fcbf22f18cb",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/audio.js",
+      "url": "https://ia.fuckladouane.com/course/audio.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 11691,
+      "sha256": "02931651c894f049c01eac4d0a914f0f91d063985622772ea017ff1535cb13f4",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-preview.html",
+      "url": "https://ia.fuckladouane.com/course/oculaire-preview.html?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 7170,
+      "sha256": "186ad57364927a0aeb80afa828569c695013ef792a7b6d8fd8bfc93e55279781",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-impact-audio.html",
+      "url": "https://ia.fuckladouane.com/course/oculaire-impact-audio.html?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 4547,
+      "sha256": "021a0708d1c125f4bb0ca25a697024d9555d4741a54f5d84d84d176c8c7874c8",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/validation/oculaire-impact-cpu.html",
+      "url": "https://ia.fuckladouane.com/course/validation/oculaire-impact-cpu.html?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 687015,
+      "sha256": "a3150ddc784e23a42f17814c31c1f6e61a195af8018f500ceeac2a734c2cc068",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/OCULAIRE_IMPACTS_MOQUERIES.md",
+      "url": "https://ia.fuckladouane.com/course/OCULAIRE_IMPACTS_MOQUERIES.md?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 4311,
+      "sha256": "de2effcf6a12efb32571ae1b0fb9484dde07114382d7501346223fe43bad1268",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "url": "https://ia.fuckladouane.com/course/assets/oculaire/portrait-data.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 1717474,
+      "sha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "url": "https://ia.fuckladouane.com/course/oculaire-finale.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 9136,
+      "sha256": "9db8b6cc3b451d6bd2cbd4e6a3547699d44fb08496d588334a2a7b7f471af9df",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/oculaire-hair.js",
+      "url": "https://ia.fuckladouane.com/course/oculaire-hair.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 8762,
+      "sha256": "f3927412f2b8d1761ec1e81a25c10b3a53390c575805a95f2a91ca5a6ce6aa5b",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/track.js",
+      "url": "https://ia.fuckladouane.com/course/track.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 3730,
+      "sha256": "3d40d81d28f1f7c296a1aca9d83a88fcdf97c2b0c5fc7567c7c43004cbc50b8e",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/world-landscape.js",
+      "url": "https://ia.fuckladouane.com/course/world-landscape.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 8811,
+      "sha256": "c0d97bbca2b0e47011a022d904d18a595c57f6e9dbe36f76b1c6cde4f641a709",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/road-vehicles.js",
+      "url": "https://ia.fuckladouane.com/course/road-vehicles.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 12902,
+      "sha256": "25a81036da3d5c7af21e462731b9e9dd39fbd8b04f88f4cec438d4a0808eebd0",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "course/route-atlas.js",
+      "url": "https://ia.fuckladouane.com/course/route-atlas.js?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 5570,
+      "sha256": "ac2d48245bf9a692362b22c483eccdd7c8f1c85688c0d0269bae2c4dd20b7be0",
+      "matchesTestedFile": true
+    },
+    {
+      "path": "index.html",
+      "url": "https://ia.fuckladouane.com/index.html?release=bb38fe3",
+      "http": "200",
+      "exit": 0,
+      "error": "",
+      "bytes": 19234,
+      "sha256": "231ab72d77805afbe82170809f09ae6395b97ae88929f02889d5c66f9b232ea7",
+      "matchesTestedFile": true
+    }
+  ],
+  "passed": true,
+  "browser": {
+    "audioPage": "https://ia.fuckladouane.com/course/oculaire-impact-audio.html",
+    "nativeAudioContext": "running",
+    "tauntBytes": 416304,
+    "variantsTriggered": [
+      "rire-cascade",
+      "gnagnagna",
+      "prout-ricanement"
+    ],
+    "soundOffVoices": 0,
+    "soundOffScheduler": false,
+    "cpuProofObserved": "https://ia.fuckladouane.com/course/validation/oculaire-impact-cpu.html",
+    "gameEntryOpened": "https://ia.fuckladouane.com/course.html?oculaire=bb38fe3",
+    "gameplayWebGLTested": false,
+    "gameplayLimit": "THREE.WebGLRenderer: Error creating WebGL context. GL_VENDOR = Disabled, GL_RENDERER = Disabled, BindToCurrentSequence failed.",
+    "physicalIphoneOrSafariTested": false
+  }
+}

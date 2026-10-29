@@ -3,7 +3,7 @@
 Branche : `feat/oculaire-impact-mockeries-20261029`.
 Base distante vérifiée par git : `c0acf1e` (forêts, décors dans les courbes et atlas de 13 km conservés).
 Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
-Statut courant : implémenté, vérifié et sauvegardé ; autorisation explicite de publication obtenue le 29 octobre 2026. Publication et vérification du déploiement en cours.
+Statut courant : **publié et vérifié sur les ressources servies**. Version publique `bb38fe39d1bb449704509cd6e64762cfdd89efe2`, déploiement Pages `40823543026` réussi. Contrôle visuel CPU et contrôle WebAudio exécutés ; WebGL/iPhone/Safari non validés pour cette version.
 
 ## Jalon 1 — implémentation locale
 
@@ -41,6 +41,16 @@ Statut courant : implémenté, vérifié et sauvegardé ; autorisation explicite
 - État distant vérifié à nouveau par `git fetch` et `git ls-remote` : main reste `c0acf1e0e5e0eb7232a8d721d2debf08a495feda` ; branche complète sauvegardée `79dbff04614b7dbc6cc67823065dbdad601ccca1`. Aucun changement concurrent à intégrer à cette vérification.
 - Code et preuves identiques à la version contrôlée à 132 tests / 77 fichiers. Seuls le présent journal et le rapport de publication sont mis à jour depuis le jalon validé ; aucune nouvelle modification de comportement.
 - Publication autorisée sur main avec garde du SHA attendu. Ne déclarer la version publiée qu’après déploiement Pages réussi et comparaison des fichiers servis aux fichiers testés.
+
+## Jalon 5 — publication et contrôles publics terminés
+
+- Main avancé avec garde de l’ancien SHA vers `bb38fe39d1bb449704509cd6e64762cfdd89efe2`, après accord explicite. Arbre publié `67dc7c59da7bd0dcc049f8055e605b0729dd7ecc`, identique au contenu local sauvegardé avant publication. Les différences depuis le code contrôlé sont limitées au journal et au statut du rapport.
+- GitHub Pages : `40823543026`, SHA ci-dessus, état `completed`, conclusion `success`, mise à jour `2026-10-29T05:28:18Z` (06:28:18 à Paris).
+- Vingt ressources publiques réellement téléchargées : HTTP 200, octets et SHA-256 identiques aux fichiers validés. Entrée du jeu, graphe de démarrage, contrôleur OCULAIRE, effets audio, ateliers, preuve CPU, prompt maître et plusieurs ressources préservées dont portrait, finale, cheveux, route, atlas et portail. Rapport détaillé `course/validation/oculaire-impact-public.json`.
+- Atelier audio public ouvert : les trois identifiants attendus déclenchés par leurs boutons via le vrai `hit()` et `AudioContext` en état `running`. 416 304 octets de buffers. Coupure SON : zéro voix ponctuelle et ordonnanceur arrêté. Aucun nouveau message d’erreur de l’application audio observé ; erreurs de métadonnées de l’extension Chrome extérieures au jeu.
+- Planche CPU publique ouverte et observée : `https://ia.fuckladouane.com/course/validation/oculaire-impact-cpu.html`. Elle représente le tour complet du vrai maillage, avec éclairage de contrôle.
+- Entrée publique ouverte : `https://ia.fuckladouane.com/course.html?oculaire=bb38fe3`. Le navigateur cloud échoue avant le chargement de la tête à créer son contexte WebGL : `THREE.WebGLRenderer: Error creating WebGL context.` / `GL_VENDOR = Disabled`, `GL_RENDERER = Disabled`, `BindToCurrentSequence failed`. La version des modules demandés est bien `oculaire-impact-005`. Aucun test de course WebGL ou d’iPhone/Safari physique n’est revendiqué.
+- La publication est terminée. Le présent bilan final est sauvegardé sur la branche de travail, sans redéployer les seuls fichiers de journal. Pour reprendre, partir de la version courante de main et lire le présent état sur `feat/oculaire-impact-mockeries-20261029`.
 
 ---
 
