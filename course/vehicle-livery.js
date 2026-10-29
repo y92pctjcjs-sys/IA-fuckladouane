@@ -1,5 +1,5 @@
 import * as T from './vendor/three.module.min.js';
-import {resolveSkin} from './vehicle-skins.js?v=atelier-002';
+import {resolveSkin} from './vehicle-skins.js?v=oculaire-003';
 // Ink is part of the body UVs, never a floating rectangular decal plane.
 const cache=new Map(),pending=new Set(),pigments=new Map();
 const regions={side:[0,0,1024,256],hood:[0,256,512,512],roof:[512,256,512,256],rear:[512,512,512,128],plate:[512,640,512,128],rim:[0,768,256,256],banner:[256,768,768,128],front:[256,896,384,128],blank:[768,896,256,128]};

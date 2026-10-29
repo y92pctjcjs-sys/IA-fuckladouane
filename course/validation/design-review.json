@@ -1,7 +1,7 @@
 {
   "date": "2026-10-29",
   "branch": "feat/swagistan-design-prototype-20261029",
-  "base": "e40304b73d5127b7d6be2b5daa5b701ed0b984ec",
+  "base": "764dcc90c33fcc5577fff29ea2499aaab6f064d9",
   "auditCommit": "9510abca036631aa3a2dcb6333f8db97ee385363",
   "status": {
     "designed": "B01, C01, one pause panel, one industrial yard",
@@ -31,9 +31,9 @@
     ]
   },
   "checks": {
-    "testsPassed": 98,
+    "testsPassed": 106,
     "testsFailed": 0,
-    "javascriptFilesChecked": 57,
+    "javascriptFilesChecked": 63,
     "protectedBytesEqual": {
       "CNAME": true,
       "index.html": true,
@@ -54,10 +54,27 @@
       "course/vehicle-skins.js": true,
       "course/vehicle-designs.js": true,
       "course/assets/fld-tribal.png": true,
-      "course/sky.js": true
+      "course/sky.js": true,
+      "OCULAIRE_ETAT.md": true,
+      "course/OCULAIRE.md": true,
+      "course/assets/oculaire/README.md": true,
+      "course/assets/oculaire/portrait-data.js": true,
+      "course/oculaire.js": true,
+      "course/oculaire-finale.js": true,
+      "course/oculaire-preview.html": true,
+      "course/boot.js": true,
+      "course/style.css": true,
+      "course/quality.js": true,
+      "course/materials.js": true,
+      "course/vehicle-livery.js": true
     },
-    "sameSixReferenceRuns": true,
-    "sameTwelveSeededEncounters": true
+    "latestPublicResourcesEqual": 32,
+    "oculaireCPUReady": true,
+    "sameGeometryAfterTwoTraversalsAndEightResets": true,
+    "initialSixReferenceRunsIdentical": true,
+    "initialTwelveSeededEncountersIdentical": true,
+    "helpEscapeFocusReturned": "pauseHelp",
+    "latestLocalBoot": "WebGL context disabled; error panel observed"
   },
   "cpuOnlyScene": {
     "baseline": {
@@ -79,5 +96,12 @@
     "timingCaveat": "Single runs, process load not controlled. Do not infer mobile FPS or speedup."
   },
   "blocker": "Error creating WebGL context. GL_VENDOR = Disabled, GL_RENDERER = Disabled; BindToCurrentSequence failed.",
-  "nextGate": "Real chase-camera observation at normal speed, curves, portrait and landscape; reveal, braking, blockades and timing profiles. No production merge until this passes."
+  "nextGate": "Real chase-camera observation at normal speed, curves, portrait and landscape; reveal, braking, blockades and timing profiles. No production merge until this passes.",
+  "initialBase": "e40304b73d5127b7d6be2b5daa5b701ed0b984ec",
+  "firstPrototypeCommit": "c8bb47d55495ce12f947eda7c8288cab4b8d8a32",
+  "cpuWithOculaire": {
+    "baseline": "design-oculaire-baseline-cpu.json",
+    "prototype": "design-oculaire-prototype-cpu.json",
+    "notGpuOrPhone": true
+  }
 }

@@ -35,3 +35,8 @@ body[data-race-state=RESULTS] .overlay{padding-top:calc(76px + env(safe-area-ins
 #scoreProof{width:min(500px,calc(100vw - 26px))}#scoreProof h2{font-size:34px;letter-spacing:-1px}#proofImage{display:block;width:100%;height:auto;border:1px solid #756187}#scoreProof .primary{justify-content:center;font-size:12px}#proofHint{font:11px/1.6 monospace}
 @media(max-width:350px){.result-panel{padding:18px 14px}.result-panel h2{font-size:35px}.result-badge span{font-size:11px}.result-panel .result-grid dd{font-size:20px}}
 @media(orientation:landscape) and (max-height:540px){.result-panel{max-width:490px}.result-panel h2{font-size:34px}.result-score{margin:10px 0}.result-score strong{font-size:56px}.result-panel .result-grid{grid-template-columns:repeat(3,1fr)}.result-panel .result-grid div:last-child{grid-column:auto}.result-panel .result-grid dd{font-size:20px}}
+
+/* OCULAIRE: one quiet voice in the horizon, separated from driving warnings. */
+.oculaire-whisper{position:fixed;z-index:3;top:42%;left:50%;transform:translateX(-50%);margin:0;width:min(480px,78vw);text-align:center;font:400 15px/1.6 Georgia,serif;letter-spacing:.035em;color:#f7e5e3;text-shadow:0 1px 5px #000,0 0 18px #08101b;background:radial-gradient(ellipse,#0b0a1c99,transparent 73%);padding:10px 14px;pointer-events:none}
+@media(max-width:600px){.oculaire-whisper{font-size:14px;top:42%;width:80vw;line-height:1.5}}
+@media(orientation:landscape) and (max-height:540px){.oculaire-whisper{font-size:12px;top:40%;width:40vw;padding:5px}}

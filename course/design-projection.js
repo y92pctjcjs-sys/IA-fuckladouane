@@ -1,8 +1,8 @@
 // Software projection of the exact meshes, for structural review only.
 // Does not render Three.js materials, reflections, glazing, fog or WebGL shaders.
 import * as T from './vendor/three.module.min.js';
-import {createRoadPrototype} from './road-vehicles.js?v=atelier-002';
-import {setVehicleDetail} from './vehicle-detail.js?v=atelier-002';
+import {createRoadPrototype} from './road-vehicles.js?v=oculaire-003';
+import {setVehicleDetail} from './vehicle-detail.js?v=oculaire-003';
 export function projectDesignVolumes(){
 const panels=[],report={kind:'CPU_GEOMETRY_ONLY_NOT_WEBGL',models:[]};
 function inspect(type,x,y,angle,label){
@@ -33,6 +33,6 @@ for(const [i,type]of ['compact','city'].entries()){
  const car=createRoadPrototype(type);let near=0,far=0;car.traverseVisible(o=>{if(o.isMesh&&!o.userData.cpuTextureOnly)near+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});
  setVehicleDetail(car,true);car.traverseVisible(o=>{if(o.isMesh&&!o.userData.cpuTextureOnly)far+=(o.geometry.index?.count||o.geometry.attributes.position.count)/3;});report.models.push({type,nearTriangles:near,farTriangles:far});
 }
-const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="1268" height="1040" viewBox="0 0 1268 1040"><rect width="1268" height="1040" fill="#090b12"/><g font-family="Arial,sans-serif"><text x="24" y="43" fill="#f2f1ea" font-size="28" font-weight="900">fld® / VOLUMES DU PROTOTYPE</text><text x="24" y="72" fill="#b6c0cf" font-size="13">Projection des maillages réels / coques, vitrages, roues et optiques</text><text x="24" y="96" fill="#ffb54c" font-size="12">Contrôle de structure CPU — sans matières finales, reflets ni validation WebGL.</text>${panels.join('')}</g></svg>`;
+const svg=`<svg width="1268" height="1040" viewBox="0 0 1268 1040"><rect width="1268" height="1040" fill="#090b12"/><g font-family="Arial,sans-serif"><text x="24" y="43" fill="#f2f1ea" font-size="28" font-weight="900">fld® / VOLUMES DU PROTOTYPE</text><text x="24" y="72" fill="#b6c0cf" font-size="13">Projection des maillages réels / coques, vitrages, roues et optiques</text><text x="24" y="96" fill="#ffb54c" font-size="12">Contrôle de structure CPU — sans matières finales, reflets ni validation WebGL.</text>${panels.join('')}</g></svg>`;
 return {svg,report};
 }

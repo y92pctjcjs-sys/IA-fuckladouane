@@ -1,0 +1,133 @@
+{
+  "kind": "CPU_ONLY_OCULAIRE_READY_NOT_GPU_OR_IPHONE",
+  "date": "2026-10-29T03:53:29.404Z",
+  "node": "v24.22.1",
+  "rows": [
+    {
+      "profile": "auto",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 1786,
+      "totalCpuMs": 3256,
+      "maxVisibleMeshes": 351,
+      "maxTrianglesBeforeFrustumCulling": 205520,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    },
+    {
+      "profile": "auto",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 974,
+      "totalCpuMs": 1621,
+      "maxVisibleMeshes": 351,
+      "maxTrianglesBeforeFrustumCulling": 205520,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    },
+    {
+      "profile": "eco",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 0.72,
+      "oculaire": "ready",
+      "loadedCpuMs": 1061,
+      "totalCpuMs": 1731,
+      "maxVisibleMeshes": 321,
+      "maxTrianglesBeforeFrustumCulling": 204660,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    },
+    {
+      "profile": "eco",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 0.72,
+      "oculaire": "ready",
+      "loadedCpuMs": 960,
+      "totalCpuMs": 2008,
+      "maxVisibleMeshes": 321,
+      "maxTrianglesBeforeFrustumCulling": 204660,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    },
+    {
+      "profile": "high",
+      "width": 390,
+      "height": 844,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 623,
+      "totalCpuMs": 1365,
+      "maxVisibleMeshes": 351,
+      "maxTrianglesBeforeFrustumCulling": 205520,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    },
+    {
+      "profile": "high",
+      "width": 844,
+      "height": 390,
+      "devicePixelRatio": 3,
+      "targetRatio": 1.25,
+      "oculaire": "ready",
+      "loadedCpuMs": 430,
+      "totalCpuMs": 1006,
+      "maxVisibleMeshes": 351,
+      "maxTrianglesBeforeFrustumCulling": 205520,
+      "maxGeometries": 228,
+      "afterLaps": [
+        198,
+        198
+      ],
+      "beforeReplays": 198,
+      "afterReplays": 198,
+      "replayAllocations": 0,
+      "sharedGeometryAfterDispose": 126
+    }
+  ]
+}

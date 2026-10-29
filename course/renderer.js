@@ -1,16 +1,17 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=atelier-002';
-import {createVehicle,animateVehicle} from './models.js?v=atelier-002';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=atelier-002';
-import {createDrivingEffects} from './effects.js?v=atelier-002';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=atelier-002';
-import {createDigitalSky} from './sky.js?v=atelier-002';
-import {createQuality} from './quality.js?v=atelier-002';
-import {addRoadPosters} from './posters.js?v=atelier-002';
-import {patrolSkin} from './vehicle-skins.js?v=atelier-002';
-import {setVehicleDetail} from './vehicle-detail.js?v=atelier-002';
-import {resetRoadPrototype} from './road-vehicles.js?v=atelier-002';
-import {industrialPrototype} from './design-scenery.js?v=atelier-002';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=oculaire-003';
+import {createVehicle,animateVehicle} from './models.js?v=oculaire-003';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=oculaire-003';
+import {createDrivingEffects} from './effects.js?v=oculaire-003';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=oculaire-003';
+import {createDigitalSky} from './sky.js?v=oculaire-003';
+import {createQuality} from './quality.js?v=oculaire-003';
+import {addRoadPosters} from './posters.js?v=oculaire-003';
+import {patrolSkin} from './vehicle-skins.js?v=oculaire-003';
+import {setVehicleDetail} from './vehicle-detail.js?v=oculaire-003';
+import {resetRoadPrototype} from './road-vehicles.js?v=oculaire-003';
+import {industrialPrototype} from './design-scenery.js?v=oculaire-003';
+import {createOculaire} from './oculaire.js?v=oculaire-003';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
 const mats = new Map();
@@ -104,7 +105,7 @@ function person(parent,x,z,jacket) {
   for(const side of[-1,1])cube(g,side*.065,1.80,.177,.027,.023,.015,'#332b33');
   return g;
 }
-export function createRenderer(canvas, reduced = false, makeRenderer = options => new T.WebGLRenderer(options), qualityMode='auto', appearance={fld:'nightrunner',cop:'mixed'}) {
+export function createRenderer(canvas, reduced = false, makeRenderer = options => new T.WebGLRenderer(options), qualityMode='auto', appearance={fld:'nightrunner',cop:'mixed'}, assets={}) {
   const quality=createQuality(qualityMode);
   const renderer = makeRenderer({canvas, antialias: false, powerPreference: 'default'});
   renderer.setPixelRatio(Math.min(devicePixelRatio || 1,quality.ratio)); renderer.outputColorSpace = T.SRGBColorSpace;
@@ -245,6 +246,11 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   const warm = new T.PointLight('#f4ca94', 22, 30, 2); warm.position.set(-2, 4.5, -6); station.add(warm);
   const movingStation=new Set();for(const object of[waitingCar,stranger,playerPerson])object.traverse(n=>movingStation.add(n));batch(station,movingStation);
   const player = car('fld',0,appearance.fld); scene.add(player);
+  const oculaire = createOculaire(scene, {...assets.oculaire, report(status) {
+    if (canvas.dataset) {canvas.dataset.oculaire = status.state; canvas.dataset.oculaireError = status.error || '';}
+  }});
+  if (canvas.dataset) canvas.dataset.oculaire = 'loading';
+  oculaire.setReduced(reduced);
   const cops = Array.from({length: 3}, (_,i) => { const c = car(i?'undercover':'cop',i,i?'':patrolSkin(appearance,0));  scene.add(c); return c; });
   let trafficVariant=0;
   const traffic = Array.from({length: 7}, () => { const c = car('traffic',Math.floor(trafficVariant++)); scene.add(c); return c; });
@@ -294,6 +300,8 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         playerPerson.visible = true; playerPerson.position.set(-8 + t, 0, -1 - t * .8);
         desired.set(p.x - 14, p.y + 5, p.z - 16); aim.set(p.x - 5, p.y + 1.3, p.z - 5);
       } else playerPerson.visible = false;
+      const celestialShot=oculaire.shot(r);
+      if(celestialShot){desired.lerp(celestialShot.position,celestialShot.blend);aim.lerp(celestialShot.target,celestialShot.blend);}
       if (!initialized) { camera.position.copy(desired); initialized = true; }
       camera.position.lerp(desired, 1 - Math.exp(-Math.min(elapsed, .1) * 5));
       if (!reduced && r.state === 'RACE') camera.position.x += Math.sin(r.time * 70) * r.impact * .12;
@@ -307,6 +315,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       glow.position.copy(player.position);glow.position.y+=1.5;glow.color.set(love&&r.cinematic>5?'#e8b992':'#956bf1');
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
+      oculaire.update(r,player,camera);
       renderer.render(scene, camera);
     },
     setAppearance(next,seed=0){
@@ -317,10 +326,12 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(marked!==cops[0].userData.skin)replace(cops[0],'cop',0,marked);
       appearance={...next};reportAppearance();
     },
-    reset() { initialized = false; effects.clear();for(const vehicle of [...traffic,...cops])resetRoadPrototype(vehicle);stranger.position.set(-2,0,-1);playerPerson.visible=false; },
-    configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
+    reset() { initialized = false; effects.clear();oculaire.reset();for(const vehicle of [...traffic,...cops])resetRoadPrototype(vehicle);stranger.position.set(-2,0,-1);playerPerson.visible=false; },
+    configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);oculaire.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
     get metrics(){return {fps:quality.fps===null?null:Math.round(quality.fps),level:quality.level,ratio:Math.min(devicePixelRatio||1,quality.ratio),chunks:chunks.filter(c=>Number.isFinite(c.s)).length,calls:renderer.info.render?.calls??null,triangles:renderer.info.render?.triangles??null,geometries:renderer.info.memory?.geometries??null};},
-    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();renderer.dispose(); },
+    get oculaireStatus() {return oculaire.status;},
+    inspectOculaire() {return oculaire.inspect(camera);},
+    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();oculaire.dispose();renderer.dispose(); },
     info: renderer.info
   };
 }

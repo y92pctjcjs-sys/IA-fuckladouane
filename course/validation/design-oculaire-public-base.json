@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-29T03:51:50.737Z",
+  "kind": "HTTP_BYTES_NOT_WEBGL",
+  "base": "764dcc90c33fcc5577fff29ea2499aaab6f064d9",
+  "host": "https://ia.fuckladouane.com/",
+  "allEqual": true,
+  "resources": [
+    {
+      "path": "course.html",
+      "status": 200,
+      "bytes": 11237,
+      "transferMs": 5362,
+      "localSha256": "4594f0da759d64d23bae4ee9471782de1c96fc47bda639d7e41bdc5a7fe01b1f",
+      "servedSha256": "4594f0da759d64d23bae4ee9471782de1c96fc47bda639d7e41bdc5a7fe01b1f",
+      "equal": true
+    },
+    {
+      "path": "course/assets/fld-tribal.png",
+      "status": 200,
+      "bytes": 236471,
+      "transferMs": 5912,
+      "localSha256": "d391b8832aef4a0b15d94a9da614598e6bea0592709fde3ba496caebccee020c",
+      "servedSha256": "d391b8832aef4a0b15d94a9da614598e6bea0592709fde3ba496caebccee020c",
+      "equal": true
+    },
+    {
+      "path": "course/assets/oculaire/portrait-data.js",
+      "status": 200,
+      "bytes": 1717474,
+      "transferMs": 605,
+      "localSha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a",
+      "servedSha256": "c01342482ab7389412ea34134db81fef4d5f7ad7fa533f2f97c71fe9da50924a",
+      "equal": true
+    },
+    {
+      "path": "course/assets/vehicle-data.js",
+      "status": 200,
+      "bytes": 107772,
+      "transferMs": 189,
+      "localSha256": "c29a3be4c36808c994968d6a8a87514aeb698869298a278ace07e36e9672e30e",
+      "servedSha256": "c29a3be4c36808c994968d6a8a87514aeb698869298a278ace07e36e9672e30e",
+      "equal": true
+    },
+    {
+      "path": "course/audio.js",
+      "status": 200,
+      "bytes": 10473,
+      "transferMs": 238,
+      "localSha256": "bf9c2c39b5eb4c1f91cbb30d332a4c2ce2734b28939a11bfad8379e88c2eed4a",
+      "servedSha256": "bf9c2c39b5eb4c1f91cbb30d332a4c2ce2734b28939a11bfad8379e88c2eed4a",
+      "equal": true
+    },
+    {
+      "path": "course/boot.js",
+      "status": 200,
+      "bytes": 571,
+      "transferMs": 5680,
+      "localSha256": "98dce1dab9a9659a449e45ff267e91012b8d15cabac75853d7dfb0e7c895f227",
+      "servedSha256": "98dce1dab9a9659a449e45ff267e91012b8d15cabac75853d7dfb0e7c895f227",
+      "equal": true
+    },
+    {
+      "path": "course/effects.js",
+      "status": 200,
+      "bytes": 3463,
+      "transferMs": 172,
+      "localSha256": "7771424d2be98652b1f1dba7808d8425a269634dd284530c91d2ed4cc2e6ad32",
+      "servedSha256": "7771424d2be98652b1f1dba7808d8425a269634dd284530c91d2ed4cc2e6ad32",
+      "equal": true
+    },
+    {
+      "path": "course/ending.js",
+      "status": 200,
+      "bytes": 511,
+      "transferMs": 124,
+      "localSha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706",
+      "servedSha256": "3932b8607cc5953bb6f0db4e10c8372e4a6a5eb0ef4e71a416d330a90a768706",
+      "equal": true
+    },
+    {
+      "path": "course/input.js",
+      "status": 200,
+      "bytes": 3680,
+      "transferMs": 157,
+      "localSha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb",
+      "servedSha256": "9296eb77086d74e1df056b03123c8423713e856db937f5a6d5c6777b06bc39fb",
+      "equal": true
+    },
+    {
+      "path": "course/main.js",
+      "status": 200,
+      "bytes": 13444,
+      "transferMs": 216,
+      "localSha256": "c32f436c370428dba8f6ef23577c2690a344c006a5bcaa9cb97606e342b4b58d",
+      "servedSha256": "c32f436c370428dba8f6ef23577c2690a344c006a5bcaa9cb97606e342b4b58d",
+      "equal": true
+    },
+    {
+      "path": "course/materials.js",
+      "status": 200,
+      "bytes": 4282,
+      "transferMs": 128,
+      "localSha256": "4eb02fea1f7362fedf21d52b00bc63044e2dafe0dbae480119c379fbbc20ddd9",
+      "servedSha256": "4eb02fea1f7362fedf21d52b00bc63044e2dafe0dbae480119c379fbbc20ddd9",
+      "equal": true
+    },
+    {
+      "path": "course/models.js",
+      "status": 200,
+      "bytes": 4935,
+      "transferMs": 143,
+      "localSha256": "f88019873e5a772c189d524e08265ae019a5c6a4429b59be28e5894d47939d26",
+      "servedSha256": "f88019873e5a772c189d524e08265ae019a5c6a4429b59be28e5894d47939d26",
+      "equal": true
+    },
+    {
+      "path": "course/oculaire-finale.js",
+      "status": 200,
+      "bytes": 9106,
+      "transferMs": 144,
+      "localSha256": "c3ba1bf51a573432a6f095ca49610517df9c899d0078bf6bd76f22e90e62b837",
+      "servedSha256": "c3ba1bf51a573432a6f095ca49610517df9c899d0078bf6bd76f22e90e62b837",
+      "equal": true
+    },
+    {
+      "path": "course/oculaire.js",
+      "status": 200,
+      "bytes": 9694,
+      "transferMs": 152,
+      "localSha256": "5f5399d20a16c632262ecbd4dc759d14c21ee028d211604de827cac3e813feb3",
+      "servedSha256": "5f5399d20a16c632262ecbd4dc759d14c21ee028d211604de827cac3e813feb3",
+      "equal": true
+    },
+    {
+      "path": "course/posters.js",
+      "status": 200,
+      "bytes": 7549,
+      "transferMs": 140,
+      "localSha256": "25d0475082c9623965dc6db691c99927f97cdfd9d8e9968e9ca281bbab0bcba6",
+      "servedSha256": "25d0475082c9623965dc6db691c99927f97cdfd9d8e9968e9ca281bbab0bcba6",
+      "equal": true
+    },
+    {
+      "path": "course/pursuit.js",
+      "status": 200,
+      "bytes": 4708,
+      "transferMs": 125,
+      "localSha256": "09a6b019bc867acf05b4e2dab5b40c87b17702ee098bda1fe87abc9f8688e547",
+      "servedSha256": "09a6b019bc867acf05b4e2dab5b40c87b17702ee098bda1fe87abc9f8688e547",
+      "equal": true
+    },
+    {
+      "path": "course/quality.js",
+      "status": 200,
+      "bytes": 812,
+      "transferMs": 147,
+      "localSha256": "2f5b27222d4213a59099249bdfda7514339409079a554ffb1f9f6b9e3af87e00",
+      "servedSha256": "2f5b27222d4213a59099249bdfda7514339409079a554ffb1f9f6b9e3af87e00",
+      "equal": true
+    },
+    {
+      "path": "course/renderer.js",
+      "status": 200,
+      "bytes": 24204,
+      "transferMs": 145,
+      "localSha256": "568d371f0d14d7f846dcb22521bab24dafd974fd2e30fb9358ac97c49ccba815",
+      "servedSha256": "568d371f0d14d7f846dcb22521bab24dafd974fd2e30fb9358ac97c49ccba815",
+      "equal": true
+    },
+    {
+      "path": "course/results.js",
+      "status": 200,
+      "bytes": 2764,
+      "transferMs": 164,
+      "localSha256": "a5e781faf799da1eb7c7b5df93fa2530c6f69bd4076c841333553e1212756f8c",
+      "servedSha256": "a5e781faf799da1eb7c7b5df93fa2530c6f69bd4076c841333553e1212756f8c",
+      "equal": true
+    },
+    {
+      "path": "course/scenery.js",
+      "status": 200,
+      "bytes": 5574,
+      "transferMs": 306,
+      "localSha256": "5d82c99a270ee8bfb5b517f8035613bd1f05563c711f3b023181b3a977672c22",
+      "servedSha256": "5d82c99a270ee8bfb5b517f8035613bd1f05563c711f3b023181b3a977672c22",
+      "equal": true
+    },
+    {
+      "path": "course/score.js",
+      "status": 200,
+      "bytes": 2887,
+      "transferMs": 139,
+      "localSha256": "a3f42fd656ad27885f923c718df63d0c9a9e343c98102d466d63adb92b5ffbfa",
+      "servedSha256": "a3f42fd656ad27885f923c718df63d0c9a9e343c98102d466d63adb92b5ffbfa",
+      "equal": true
+    },
+    {
+      "path": "course/simulation.js",
+      "status": 200,
+      "bytes": 6481,
+      "transferMs": 122,
+      "localSha256": "da2a26dd2e47f557b87343e27fbccdaaf223b6649da7074932b3d9edf8980c6a",
+      "servedSha256": "da2a26dd2e47f557b87343e27fbccdaaf223b6649da7074932b3d9edf8980c6a",
+      "equal": true
+    },
+    {
+      "path": "course/sky.js",
+      "status": 200,
+      "bytes": 3301,
+      "transferMs": 222,
+      "localSha256": "d55183f3d3052e60b22e2f258dadafc60a9599f16431d2348357eea55e867362",
+      "servedSha256": "d55183f3d3052e60b22e2f258dadafc60a9599f16431d2348357eea55e867362",
+      "equal": true
+    },
+    {
+      "path": "course/storage.js",
+      "status": 200,
+      "bytes": 2624,
+      "transferMs": 184,
+      "localSha256": "94ac0030a97a0d634c4c97577d56025a43819eb6f3c90e415d9f7ea2ed277582",
+      "servedSha256": "94ac0030a97a0d634c4c97577d56025a43819eb6f3c90e415d9f7ea2ed277582",
+      "equal": true
+    },
+    {
+      "path": "course/style.css",
+      "status": 200,
+      "bytes": 19586,
+      "transferMs": 5317,
+      "localSha256": "3b8cb15cce8e09532b17c915087e0fbda2693cb3b87c70801bf38931d288dd91",
+      "servedSha256": "3b8cb15cce8e09532b17c915087e0fbda2693cb3b87c70801bf38931d288dd91",
+      "equal": true
+    },
+    {
+      "path": "course/track.js",
+      "status": 200,
+      "bytes": 3730,
+      "transferMs": 117,
+      "localSha256": "3d40d81d28f1f7c296a1aca9d83a88fcdf97c2b0c5fc7567c7c43004cbc50b8e",
+      "servedSha256": "3d40d81d28f1f7c296a1aca9d83a88fcdf97c2b0c5fc7567c7c43004cbc50b8e",
+      "equal": true
+    },
+    {
+      "path": "course/vehicle-designs.js",
+      "status": 200,
+      "bytes": 21722,
+      "transferMs": 303,
+      "localSha256": "d8991b9c91621e3e8e58aef0bbe9cc869b9f8e71c18c387ba2706e0c8ee9720f",
+      "servedSha256": "d8991b9c91621e3e8e58aef0bbe9cc869b9f8e71c18c387ba2706e0c8ee9720f",
+      "equal": true
+    },
+    {
+      "path": "course/vehicle-detail.js",
+      "status": 200,
+      "bytes": 2673,
+      "transferMs": 266,
+      "localSha256": "1393853452cfe6c9118ca3d606ff51b6ea0365344aebde26b27b7271c16adda8",
+      "servedSha256": "1393853452cfe6c9118ca3d606ff51b6ea0365344aebde26b27b7271c16adda8",
+      "equal": true
+    },
+    {
+      "path": "course/vehicle-livery.js",
+      "status": 200,
+      "bytes": 8804,
+      "transferMs": 3718,
+      "localSha256": "d137093397a7e88368bfeccb4a766968fd857725e6398051bc6cd4ebf0c1eb23",
+      "servedSha256": "d137093397a7e88368bfeccb4a766968fd857725e6398051bc6cd4ebf0c1eb23",
+      "equal": true
+    },
+    {
+      "path": "course/vehicle-mesh.js",
+      "status": 200,
+      "bytes": 4353,
+      "transferMs": 251,
+      "localSha256": "4a35b9d32acfe5844cfdc85789a99d5003920f3ff3311d7b7779695677c4f3d7",
+      "servedSha256": "4a35b9d32acfe5844cfdc85789a99d5003920f3ff3311d7b7779695677c4f3d7",
+      "equal": true
+    },
+    {
+      "path": "course/vehicle-skins.js",
+      "status": 200,
+      "bytes": 3465,
+      "transferMs": 142,
+      "localSha256": "739c936982e8612d223389ca1c163eedfde1d0a19f3a6915ae023089c6332d94",
+      "servedSha256": "739c936982e8612d223389ca1c163eedfde1d0a19f3a6915ae023089c6332d94",
+      "equal": true
+    },
+    {
+      "path": "course/vendor/three.module.min.js",
+      "status": 200,
+      "bytes": 670681,
+      "transferMs": 201,
+      "localSha256": "3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6",
+      "servedSha256": "3e690ac7d180b0aadf0891bea39eec643e29e2d3e75c99b18689518665f69ba6",
+      "equal": true
+    }
+  ]
+}

@@ -2,6 +2,6 @@
 import {writeFileSync} from 'node:fs';
 import {projectDesignVolumes} from '../design-projection.js';
 const {svg,report}=projectDesignVolumes();
-if(process.argv[2])writeFileSync(process.argv[2],svg);
+if(process.argv[2])writeFileSync(process.argv[2],svg.replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '));
 writeFileSync(new URL('../validation/design-model-geometry.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify(report));

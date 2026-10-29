@@ -1,7 +1,9 @@
 # FLD / SWAGISTAN MOTOR CLUB — état design
 
 Date : 29 octobre 2026. Branche : `feat/swagistan-design-prototype-20261029`.
-Base : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec` (main). Aucun changement local préexistant, aucun AGENTS.md dans le dépôt.
+Base initiale : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec`. Base actuelle intégrée : `764dcc90c33fcc5577fff29ea2499aaab6f064d9` (main a évolué pendant la mission). Aucun changement local préexistant, aucun AGENTS.md dans le dépôt.
+
+Sauvegardes distantes : audit `9510abca036631aa3a2dcb6333f8db97ee385363` ; premier prototype `c8bb47d55495ce12f947eda7c8288cab4b8d8a32`. Le jalon de raccord réunit ce prototype et la nouvelle base OCULAIRE, avec leurs deux historiques conservés.
 
 ## Jalon 1 — audit
 
@@ -11,12 +13,14 @@ Base : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec` (main). Aucun changement local
 - Gabarits de collision inchangés : trafic ±0,95 m / ±2,05 m ; poursuivant ±0,98 m / ±2,12 m. Les nouveaux modèles doivent remplir ce gabarit suffisamment pour ne pas tromper le joueur ; aucune variation de taille par transformation globale.
 - `npm test` : 92/92 ; `npm run check` : 51 fichiers. Mesures de référence : `course/validation/design-baseline-cpu.json`. Construction scène CPU 1 075 ms ; deux traversées CPU 2 546 ms ; maximum 346 maillages visibles, 170 géométries vivantes, dix tronçons. Ces nombres dépendent de l’hôte et ne sont pas des appels GPU ni une mesure de fluidité.
 
-## OCULAIRE — état protégé
+## OCULAIRE — état actuel protégé
 
-- Absent de main et de sa page publique ; aucune reconstruction, aucun import dans cette mission.
-- Branche `feat/oculaire-integration-20261029` : `6bde5dc9c484e9f855d5079e5f0911e9b6cf4ce5`.
-- Branche `feat/oculaire-art-direction-20261029` : `900b818bc1d7f4389cbc1d205aa718518ee58f10` ; son `OCULAIRE_ETAT.md` a été lu. Adaptation v4, regards, paroles et finale déclarés implémentés ; contrôles restants et absence de publication explicitement consignés. Ce compte rendu n’est pas une revalidation.
-- Les deux branches et leurs ressources restent intactes. Ne pas les fusionner implicitement avec cette refonte.
+- À l’audit initial, OCULAIRE était absent de main. Pendant cette mission, main a reçu son intégration et son journal de publication ; cette évolution a été détectée avant la livraison.
+- Nouvelle base `764dcc9`, code OCULAIRE publié indiqué par son journal : `264ddc7`. Branche artistique actuelle : `2b6202a63c7ac20d4bac6356773ff7ffe3e65db1`. Ancienne branche d’import `6bde5dc9c484e9f855d5079e5f0911e9b6cf4ce5` préservée.
+- `OCULAIRE_ETAT.md` actuel lu intégralement puis conservé sans modification. Visage, pigments, cinq regards, occultation, paroles et finale restent ceux de main. L’import, l’animation, l’appel de caméra, la remise à zéro et la libération OCULAIRE sont conservés dans renderer.js.
+- Les surfaces du portrait, les modules `oculaire.js` / `oculaire-finale.js`, le journal et les autres sources protégées sont identiques octet pour octet à cette nouvelle base ; détails dans `course/validation/design-review.json`.
+- 32 ressources publiques comparées au nouveau commit de base, HTTP 200 et SHA-256 identiques : `course/validation/design-oculaire-public-base.json`. Ce contrôle porte sur les octets servis ; le rendu WebGL de cette mission reste non observé.
+- Aucun nouveau visage, aucune reconstruction, aucune écriture sur les branches OCULAIRE ou sur main.
 
 ## Références examinées
 
@@ -29,6 +33,7 @@ Base : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec` (main). Aucun changement local
 - Recherche web sur la page du jeu : `URL https://ia.fuckladouane.com/course.html is not accessible via this tool.` Lecture HTTP et navigateur utilisés pour les contrôles adaptés.
 - Navigateur cloud, Chrome, fenêtre 1365 × 936 environ : `THREE.WebGLRenderer: A WebGL context could not be created. Reason: Could not create a WebGL context ... GL_VENDOR = Disabled, GL_RENDERER = Disabled ... ErrorMessage = BindToCurrentSequence failed:` puis `Error creating WebGL context.` Le panneau MOTEUR INDISPONIBLE est visible sur la version publique de base. C’est une limite de cet environnement ; aucune preuve que le jeu échoue sur l’appareil du joueur.
 - Pas de rendu de course, de FPS GPU, de régularité des images, de mémoire GPU ou de temps au premier rendu disponibles. Aucun essai sur iPhone physique. Les trois profils restent à mesurer ; aucun budget GPU définitif fixé.
+- Chargement de la version réunie dans le navigateur de revue : même refus de contexte WebGL à `renderer.js?v=oculaire-003:110`, remonté jusqu’à `main.js:15`. Le panneau d’échec du jeu est correctement visible ; aucun résultat de course n’est déduit de ce chargement.
 - Ne pas utiliser les anciens fichiers de validation ou une projection CPU comme preuve d’un rendu WebGL actuel.
 
 ## Jalon 2 — prototype implémenté, validation en course en attente
@@ -41,7 +46,7 @@ Base : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec` (main). Aucun changement local
 
 ## Vérifications exécutées sur le prototype
 
-- `npm test` : 98/98 (92 existants + six contrôles de contrat du prototype) ; `npm run check` : 57 fichiers JavaScript. Les scripts de revue inline sont chargés dans le navigateur, séparément du contrôle Node.
+- Premier prototype avant raccord OCULAIRE : `npm test` 98/98. Après raccord à la nouvelle base : `npm test` **106/106** (100 de la base + six contrôles de contrat du prototype), `npm run check` **63 fichiers JavaScript**. Les scripts de revue inline sont chargés dans le navigateur, séparément du contrôle Node. Après raccord OCULAIRE, aide ouverte en paysage puis fermée avec Échap : focus revenu à `pauseHelp`. Panneau entièrement compris entre y=74 et y=325,5 dans le cadre interne 842 × 388 (cadre externe 844 × 390 avec bordure).
 - Gabarits avec modules bleus et freins allumés : largeur ≤1,90 m, longueur ≤4,10 m. Les petits volumes périphériques sont inclus, ombre exclue. Coques fermées vérifiées par rayons aux deux extrémités ; sommets et normales finis ; absence de rampe de toit.
 - Roues : rotation, direction, freinage par décélération propre, gel en pause et remise à zéro contrôlés. Coque / peinture civile et banalisée identiques ; signaux cachés au départ. Niveaux de détail restaurables et mis en cache.
 - Géométrie par modèle : 5 512 triangles proches ; 4 224 éloignés pour B01, 4 296 pour C01. Douze maillages visibles par voiture normale hors ombre, quinze avec signaux et freins allumés. Ce décompte CPU n’est pas une mesure des appels GPU réels.
@@ -49,7 +54,7 @@ Base : `e40304b73d5127b7d6be2b5daa5b701ed0b984ec` (main). Aucun changement local
 - Chrome cloud, cadres CSS : 390 × 844, 320 × 568 et 844 × 390. Panneau réellement observé, réglages ouverts puis fermés, focus rendu au bouton de réglages. En 320 px : reprise 241 × 64,8 px, commandes et réglages 116,5 × 48 px, retour 241 × 48 px. Défilement vertical disponible en petit portrait ; actions toutes visibles en paysage après correction de la grille. Encoches réelles, clavier virtuel et préférence système de mouvement réduit non essayés sur téléphone physique.
 - La simulation, ses tests de pause / reprise, les entrées multitactiles, l’audio séparé, les records, les barrages et le tirage amoureux sont couverts par la suite existante. Cela ne remplace pas une partie manuelle dans le navigateur.
 
-## Mesures et budget provisoire
+## Mesures initiales sans OCULAIRE — historique
 
 Rapports : `course/validation/design-prototype-cpu.json` et `design-review.json`. Linux x86_64 / Node (version exacte dans le rapport), récepteur de scène CPU, cadre 390 × 844 et DPR simulé 3, résolution cible du profil automatique plafonnée à ×1,25 ; aucun contexte GPU.
 
@@ -62,7 +67,7 @@ Rapports : `course/validation/design-prototype-cpu.json` et `design-review.json`
 
 Dernier relevé prototype : construction 421 ms, deux traversées 1 150 ms. Les exécutions ponctuelles n’ont pas une charge CPU contrôlée ; les temps ne démontrent aucun gain de fluidité par rapport à la base. La baisse du nombre de maillages s’accompagne de 30 géométries partagées supplémentaires. Il reste à mesurer les octets réellement résidents GPU et les textures avant de fixer le budget final.
 
-Les six parcours à cadences 30/60/144 Hz et les douze rencontres à graines fixées donnent les mêmes résultats simulés que la base. Vingt fichiers protégés (portail, CNAME, logique, audio, données, voiture principale, patrouille, skins, ciel Matrix et vrai logo) sont identiques octet pour octet ; liste exacte dans le rapport.
+Dans la comparaison initiale avant raccord OCULAIRE, les six parcours à cadences 30/60/144 Hz et les douze rencontres à graines fixées donnent les mêmes résultats simulés que cette base initiale. Le contrôle initial portait sur vingt fichiers protégés. Le rapport final compare de nouveau les sources protégées, cette fois à main `764dcc9`, et inclut les sources OCULAIRE ; toutes sont identiques octet pour octet.
 
 | Profil | Navigateur disponible | Fluidité / régularité / mémoire GPU | Appareil physique |
 | --- | --- | --- | --- |
@@ -72,8 +77,26 @@ Les six parcours à cadences 30/60/144 Hz et les douze rencontres à graines fix
 
 60 et 30 images/s restent des objectifs. Aucun budget de rendu définitif ni temps au premier rendu n’est annoncé.
 
+## Mesures actuelles avec OCULAIRE chargé
+
+`measure-design-scene.mjs` attend explicitement le statut `ready` du portrait. Les anciens relevés du récepteur de scène synchrone n’attendaient pas cet import asynchrone ; ils restent archivés comme référence du premier prototype.
+
+Comparaison de la nouvelle base isolée dans un checkout sans modifications avec le prototype réuni : Linux x86_64, Node v24.22.1, CPU uniquement, cadres 390 × 844 et 844 × 390, DPR simulé 3, intensité décorative réduite. Rapports `design-oculaire-baseline-cpu.json` et `design-oculaire-prototype-cpu.json`.
+
+| Mesure structurelle | Base avec OCULAIRE | Prototype avec OCULAIRE |
+| --- | ---: | ---: |
+| Maillages visibles maximum, adaptatif / détaillé | 372 | 351 |
+| Maillages visibles maximum, économique | 342 | 321 |
+| Géométries vivantes maximum | 198 | 228 |
+| Géométries en fin de parcours, deux traversées | 168 / 168 | 198 / 198 |
+| Nouvelles géométries après huit remises à zéro | 0 | 0 |
+
+Le portrait atteint `ready` dans les six cas de chaque version. Le nombre de géométries est stable entre les deux traversées et les huit remises à zéro. Ces opérations ne valident ni shaders, ni mémoire GPU, ni pause / reprise manuelle. La baisse des maillages et les trente géométries partagées supplémentaires restent un budget CPU provisoire, sans conversion en FPS.
+
 ## Sauvegardes et incidents traités
 
+- Réunion avec main : trois conflits de contenu dans `course.html`, `models.js` et `renderer.js`. Les imports utilisent la version actuelle `oculaire-003` ; les appels OCULAIRE sont conservés et la remise à zéro du prototype est ajoutée à côté de celle du portrait. Tests relancés après résolution.
+- Premier contrôle après ce raccord : `AssertionError [ERR_ASSERTION]: design-projection.js` dans la règle interdisant les URL réseau des modules de jeu. Cause : la déclaration XML du namespace SVG, sans requête réseau. L’aperçu HTML utilise désormais son namespace SVG implicite ; l’export SVG autonome ajoute la déclaration dans l’outil Node. La protection n’est pas affaiblie ; 106/106 ensuite.
 - Audit sauvegardé à distance : `9510abca036631aa3a2dcb6333f8db97ee385363` sur la branche dédiée. L’envoi Git direct avait échoué : `fatal: could not read Username for 'https://github.com': No such device or address`. Cause : absence de credential CLI pour l’écriture ; l’API de la connexion GitHub a permis une création atomique d’arbre, commit et branche. Pas de nouvelle tentative identique.
 - Prévisualisation : `static.directory must be a relative directory beneath the site root` pour `.`. Correction : copie locale dans `dist`, configuration ignorée dans Git. Prévisualisation gérée démarrée ensuite sur l’URL retournée, sans nouvel hébergement public ni projet Sites.
 - Premier contrôle de géométrie : `body end cap must face the real approaching camera` sur C01, rayon à 0,78 m au-dessus du bord du capot incliné. Diagnostic par rayons à plusieurs hauteurs : coque fermée ; test corrigé pour viser 0,65 m au niveau du pare-chocs. Le test reste exigeant aux deux extrémités.
@@ -88,4 +111,4 @@ Observer le prototype dans le vrai rendu du jeu à vitesse normale, en virage, p
 
 ## Prochaine action
 
-Terminer la sauvegarde du prototype et du rapport de comparaison, puis ouvrir une revue en brouillon. Reprendre au jalon 3 dans un navigateur fournissant un contexte WebGL : observer les deux silhouettes et le quai depuis la caméra de course, les modules bleus en approche / révélation, les freins, virages et barrages dans les deux orientations ; mesurer les trois profils et plusieurs redémarrages. Ensuite seulement décliner B02–B05, les civils C02–C08 et le reste des panneaux / décors. Avant une publication future : changer la version de cache de manière cohérente et vérifier le graphe associé. Aucune modification de main, aucun déploiement de ce prototype.
+Raccord sauvegardé sur la branche dédiée avec rapports finaux pour une revue en brouillon. Reprendre au jalon 3 dans un navigateur fournissant un contexte WebGL : observer les deux silhouettes et le quai depuis la caméra de course, les modules bleus en approche / révélation, les freins, virages et barrages dans les deux orientations ; mesurer les trois profils et plusieurs redémarrages. Ensuite seulement décliner B02–B05, les civils C02–C08 et le reste des panneaux / décors. Avant une publication future : changer la version de cache de manière cohérente et vérifier le graphe associé. Aucune modification de main, aucun déploiement de ce prototype.

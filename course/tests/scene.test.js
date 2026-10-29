@@ -18,7 +18,7 @@ test('actual Three scene, track and instanced vehicles build without missing geo
   assert.ok(instances>20);maxDraws=Math.max(maxDraws,draws);assert.ok(draws<350,`visible draw calls ${draws}`);
  }};
  try {
-  const view=createRenderer({},true,()=>fake), r=createRace(()=> 'love');
+  const view=createRenderer({},true,()=>fake,'auto',undefined,{oculaire:{loadModel:()=>new Promise(()=>{})}}), r=createRace(()=> 'love');
   for(const s of [0,1700,3000,5500,7000,8500,11900]){r.state='RACE';r.s=s;r.speed=48;r.cops.forEach(c=>{c.s=s-12;c.active=true;});r.traffic.forEach((c,i)=>c.s=s+50+i*100);view.render(r,1/60);assert.ok(view.metrics.chunks<=10);}
   r.s=LENGTH;r.result={won:true,ending:'love'};r.state='ARRIVAL';for(const time of [0,4,6,10,13]){r.cinematic=time;view.render(r,1/60);assert.ok(view.metrics.chunks<=10);}
   r.result={won:true,ending:'escape'};r.cinematic=4;view.render(r,1/60);r.result={won:false,ending:'caught'};r.state='INTERCEPTION';view.render(r,1/60);
@@ -34,7 +34,7 @@ test('skin equipment and random marked liveries preserve the same two hidden civ
  const sink={setPixelRatio(){},setSize(){},dispose(){},info:{},render(value){scene=value;}};
  const canvas={dataset:{}},race=createRace();let view;
  try{
-  view=createRenderer(canvas,true,()=>sink,'auto',{fld:'seraph',cop:'infernal'});view.render(race,1/60);
+  view=createRenderer(canvas,true,()=>sink,'auto',{fld:'seraph',cop:'infernal'},{oculaire:{loadModel:()=>new Promise(()=>{})}});view.render(race,1/60);
   const hidden=[];scene.traverse(o=>{if(o.userData.kind==='undercover')hidden.push(o);});assert.equal(hidden.length,2);
   const paint=hidden.map(o=>o.userData.paint),geometry=hidden.map(o=>o.getObjectByName('Chassis').geometry);
   for(const [fld,cop]of [['cursed','wreck'],['nightrunner','patrol'],['seraph','mixed']])for(const seed of [0,1,2]){
