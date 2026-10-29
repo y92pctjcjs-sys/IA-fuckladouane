@@ -9,15 +9,15 @@
 <label>Douane arrière <select id="patrol"><option value="none">Aucune</option><option value="left">À gauche</option><option value="right">À droite</option><option value="moving">Gauche / droite</option><option value="hidden">Banalisée non révélée</option></select></label>
 <label>Écart douane <input id="gap" type="range" min="3" max="150" step="1" value="18"> m</label>
 <label>Scène <select id="scene"><option value="race">Course</option><option value="escape">Victoire</option><option value="love">Rencontre 1/30</option><option value="caught">Défaite</option></select></label>
-<label>Finale <input id="cinematic" type="range" min="0" max="14" step="0.02" value="0"></label>
+<label>Finale <input id="cinematic" type="range" min="0" max="24" step="0.02" value="0"></label>
 <label><input id="motion" type="checkbox" style="width:auto">Avancer</label><label><input id="living" type="checkbox" checked style="width:auto">Animer les yeux</label><label><input id="reduced" type="checkbox" style="width:auto">Mouvements réduits</label>
 <button id="pausePreview">Pause</button> <button id="damage">Dégât réel + 360°</button> <button id="sound">SON OFF</button> <button id="blink">Figer un clignement</button> <button id="reset">Repartir</button> <a href="../course.html">Jeu</a> · <a href="oculaire-lab.html">Formats téléphone</a> · <a href="oculaire-impact-audio.html">Trois moqueries</a>
 <details><summary>Contrôles du rendu</summary><pre id="diagnostics">Chargement…</pre></details></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=fld-route-003';
-import {createRace,pause,resume,hit} from './simulation.js?v=fld-route-003';
+import {createRenderer} from './renderer.js?v=oculaire-victory-006';
+import {createRace,pause,resume,hit} from './simulation.js?v=oculaire-victory-006';
 import {blinkAt} from './oculaire.js?v=fld-route-003';
-import {createAudio} from './audio.js?v=fld-route-003';
+import {createAudio} from './audio.js?v=oculaire-victory-006';
 const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace(),audio=createAudio(()=>pause(race));race.state='RACE';race.s=2400;race.speed=48;race.time=50;
 audio.configure({music:0,engineEnabled:false});
 let last=0,lastReport=0;
@@ -37,9 +37,9 @@ function frame(now){const dt=last?Math.min(.05,(now-last)/1000):0;last=now;
   if($('living').checked||$('motion').checked)race.time+=dt;
   race.invulnerable=Math.max(0,race.invulnerable-dt);race.impact=Math.max(0,race.impact-dt*2);
   if($('motion').checked)race.s=Math.min(12999,race.s+race.speed*dt);
- }else if(race.state==='ARRIVAL'&&$('motion').checked){race.cinematic=Math.min(14,race.cinematic+dt);$('cinematic').value=race.cinematic;}
+ }else if(race.state==='ARRIVAL'&&$('motion').checked){race.cinematic=Math.min(24,race.cinematic+dt);$('cinematic').value=race.cinematic;}
  patrol();view.render(race,dt);audio.update(race);$('metres').textContent=Math.round(race.s);const status=view.oculaireStatus;$('status').textContent=status.state+' / '+status.phase+' / '+Math.round(status.growth*100)+' %';$('voice').textContent=status.caption;
- if(now-lastReport>300&&status.state==='ready'){const a=view.inspectOculaire();$('diagnostics').textContent=JSON.stringify({state:race.state,time:race.time,phase:a.phase,pursuit:a.pursuit,reaction:a.reaction,audio:audio.diagnostics,position:a.position,blink:a.gazes.map(e=>Number(e.blink.toFixed(3))),maxGazeError:Math.max(...a.gazes.map(e=>e.errorRadians)),markVisible:a.markVisible,fragments:a.fragments,headTriangles:a.triangles,gpuBytes:a.gpuBytes,draws:view.metrics.calls,format:[innerWidth,innerHeight]},null,2);lastReport=now;}
+ if(now-lastReport>300&&status.state==='ready'){const a=view.inspectOculaire();$('diagnostics').textContent=JSON.stringify({state:race.state,time:race.time,phase:a.phase,pursuit:a.pursuit,reaction:a.reaction,victory:view.inspectVictory(),audio:audio.diagnostics,position:a.position,blink:a.gazes.map(e=>Number(e.blink.toFixed(3))),maxGazeError:Math.max(...a.gazes.map(e=>e.errorRadians)),markVisible:a.markVisible,fragments:a.fragments,headTriangles:a.triangles,gpuBytes:a.gpuBytes,draws:view.metrics.calls,format:[innerWidth,innerHeight]},null,2);lastReport=now;}
  requestAnimationFrame(frame);
 }
 window.oculairePreview={view,race};requestAnimationFrame(frame);

@@ -69,7 +69,7 @@ test('resistance loss stops the run; no score, damage or ending mutation after t
 });
 test('finish requires a drivable vehicle and fixes exactly one ending draw', () => {
  let calls=0; const r=running(()=>{calls++;return 'love';}); r.s=LENGTH-.1;r.speed=40;step(r,.01);
- assert.equal(r.state,'ARRIVAL');assert.equal(calls,1);const result=r.result;for(let i=0;i<20;i++) finish(r,true);advance(r,14.1);
+ assert.equal(r.state,'ARRIVAL');assert.equal(calls,1);const result=r.result;for(let i=0;i<20;i++) finish(r,true);advance(r,21.9);
  assert.equal(r.result,result);assert.equal(calls,1);assert.equal(r.state,'RESULTS');assert.equal(result.ending,'love');
  const failed=running(()=>{throw Error('defeat must not draw');}); failed.health=0;step(failed,.01);assert.equal(failed.result.won,false);
 });
@@ -90,7 +90,7 @@ test('complete controller-driven run crosses all sectors and can be replayed', (
    seen.add(sectorAt(r.s));
    step(r,1/120,driver(r));
   }
-  assert.equal(r.result?.won,true,`run ${run}: ${r.result?.reason}, s=${r.s}, health=${r.health}`);assert.equal(seen.size,5);assert.ok(r.time>240&&r.time<360);advance(r,7.1);assert.equal(r.state,'RESULTS');
+  assert.equal(r.result?.won,true,`run ${run}: ${r.result?.reason}, s=${r.s}, health=${r.health}`);assert.equal(seen.size,5);assert.ok(r.time>240&&r.time<360);advance(r,14.9);assert.equal(r.state,'RESULTS');
  }
 });
 

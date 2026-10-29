@@ -1,3 +1,30 @@
+# OCULAIRE — victoire, ralenti et route infinie
+
+Date : 29 octobre 2026. Branche : `feat/oculaire-victory-drive-20261029`.
+Base distante relue : `75b9714` ; les virages V4, le raccourci forestier et les débris sont conservés.
+Brief complet : `course/OCULAIRE_VICTOIRE_ROUTE_INFINIE.md`.
+Statut : implémenté et contrôlé en calcul ; préparation de la preuve visuelle et de la livraison.
+
+## Jalon 1 — mise en scène raccordée
+
+- Sept premières secondes de la finale normale conservées : chute, envers, impact et fracture. Après la fracture, ralenti de la voiture et des roues, accompagnement en trois-quarts, reprise de vitesse puis caméra laissée derrière tandis que la voiture s’éloigne dans la brume.
+- Quatorze premières secondes de la rencontre amoureuse conservées. Le départ de la station et le raccordement à la route suivent les dialogues. Durée totale : 14,8 secondes en fin normale, 21,8 secondes pour la rencontre ; défaite inchangée à 4,5 secondes.
+- Mouvement visuel analytique : score, chronomètre, distance de course et résultat figés à l’arrivée. Roues animées par distance réellement parcourue par le modèle. Pause stable, remise à zéro au rejeu et accompagnement plus discret avec mouvements réduits.
+- Route de sortie au-delà des échantillons du tracé, dans un seul nouveau maillage fixe avec brume. Aucun nouveau tronçon créé par image. Déplacement conservé derrière les résultats jusqu’à disparition visuelle ; animation de fond bornée à 60 secondes pour éviter une croissance indéfinie de coordonnées.
+- Son de moteur lié à la vitesse visuelle et atténué avec l’éloignement, sur le bus moteur existant. Musique et moqueries conservées.
+- Quatorze tests ciblés réussis : cadrage des vrais sommets visibles à trois formats, caméra, roues, pause, score, reprise et bus audio. Tests complets et contrôles CPU consignés au jalon suivant.
+
+## Corrections effectuées pendant le contrôle
+
+- Premier contrôle audio : `assert.ok(engine.frequency.target<60)` échoue. Cause : assertion supposant un régime arbitraire, incompatible avec le modèle de boîte de vitesses existant ; contrôle corrigé pour le régime calculé à la vitesse visuelle de 6,5 m/s. Fin normale rendue déterministe dans ce test.
+- Première trajectoire de caméra observée en raster CPU : passage derrière un lampadaire. Arc ramené dans le corridor de la route, en trois-quarts arrière, sans grande traversée des accessoires de bord de route.
+- Contrôle de cadrage initial par boîte alignée au monde : `vehicle frame escape/320/0: -1.017304…` puis `love/320/0: -1.110326…`. Distance affinée pour les formats étroits et test remplacé par la projection des vrais sommets visibles, instances comprises, afin de ne pas confondre une boîte fictive avec le maillage rendu. Contrôles ciblés réussis ensuite.
+- Aucune observation WebGL ou validation iPhone/Safari nouvelle à ce jalon. Le raster CPU contrôle la géométrie et la caméra, avec un éclairage de contrôle.
+
+---
+
+## Historique conservé
+
 # OCULAIRE — 360° et trois moqueries, 29 octobre 2026
 
 Branche : `feat/oculaire-impact-mockeries-20261029`.

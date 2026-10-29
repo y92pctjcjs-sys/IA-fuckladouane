@@ -94,3 +94,14 @@ test('a fatal hit retains its taunt during interception and a victory does not f
   audio.reset();const winner=createRace();winner.state='RACE';audio.update(winner);finish(winner,true);audio.update(winner);assert.equal(audio.diagnostics.tauntCount,0);
  }finally{audio.dispose();}
 });
+
+test('the victory engine follows the slow departure, fades into the distance and retains its separate mute bus',async()=>{
+ const context=fakeContext(),audio=createAudio(()=>{},()=>context),r=createRace(()=> 'escape');r.state='RACE';r.speed=48;
+ try{
+  await audio.toggle();audio.update(r);finish(r,true);r.cinematic=6;audio.update(r);
+  const engine=context.sources.find(s=>s.type==='triangle'&&s.startTime===undefined),gain=engine.connections[0],bus=gain.connections[0].connections[0];assert.equal(gain.gain.target,0);
+  r.cinematic=7.5;audio.update(r);const close=gain.gain.target;assert.ok(close>0&&close<.024);assert.equal(engine.frequency.target,engineTone(6.5).hz);
+  r.cinematic=13;audio.update(r);assert.ok(gain.gain.target<close/3);
+  audio.configure({engineEnabled:false});assert.equal(bus.gain.target,0);assert.equal(audio.diagnostics.effectsLevel,.7);assert.equal(audio.diagnostics.tauntCount,0);
+ }finally{audio.dispose();}
+});

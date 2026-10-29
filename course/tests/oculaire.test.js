@@ -64,5 +64,5 @@ test('only victory reveals the reverse; impact creates exactly 1000 pigmented su
 });
 
 test('both existing victory durations leave time for impact without changing the single ending draw',()=>{
- for(const ending of['love','escape']){let calls=0;const r=createRace(()=>{calls++;return ending;});Object.assign(r,{state:'RACE',s:13000,speed:48});finish(r,true);for(let i=0;i<600;i++)step(r,1/120);assert.equal(r.state,'ARRIVAL');assert.ok(r.cinematic>4.7);for(let i=0;i<1200;i++)step(r,1/120);assert.equal(r.state,'RESULTS');assert.equal(calls,1);}
+ for(const ending of['love','escape']){let calls=0;const r=createRace(()=>{calls++;return ending;});Object.assign(r,{state:'RACE',s:13000,speed:48});finish(r,true);for(let i=0;i<600;i++)step(r,1/120);assert.equal(r.state,'ARRIVAL');assert.ok(r.cinematic>4.7);for(let i=0;i<2100;i++)step(r,1/120);assert.equal(r.state,'RESULTS');assert.equal(calls,1);}
 });

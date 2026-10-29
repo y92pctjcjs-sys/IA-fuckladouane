@@ -1,6 +1,7 @@
 import {LENGTH,ROUTE_ID,HALF_WIDTH,BLOCKADES,DIMENSIONS,blockadeAhead,screenSteerToRoad} from './track.js?v=fld-route-003';
 import {SHORTCUT,DEBRIS,driveSample,drivingCurvature} from './route-options.js?v=fld-route-003';
 import {drawEnding} from './ending.js?v=fld-route-003';
+import {cinematicDuration} from './victory-drive.js?v=oculaire-victory-006';
 import {createPursuers,updatePursuit,moveCivilian} from './pursuit.js?v=fld-route-003';
 export const FIXED_DT=1/120;
 export const emptyInput=()=>({steer:0,brake:false,drift:false,nitro:false});
@@ -43,7 +44,7 @@ export function step(r,dt,input=emptyInput()){
   if(['MENU','PAUSE','RESULTS'].includes(r.state))return;
   dt=clamp(dt,0,.05);
   if(r.state==='COUNTDOWN'){r.countdown-=dt;if(r.countdown<=0){r.state='RACE';r.countdown=0;}return;}
-  if(r.state==='ARRIVAL'||r.state==='INTERCEPTION'){r.cinematic+=dt;if(r.cinematic>=(r.result.ending==='love'?14:r.result.won?7:4.5))r.state='RESULTS';return;}
+  if(r.state==='ARRIVAL'||r.state==='INTERCEPTION'){r.cinematic+=dt;if(r.cinematic>=cinematicDuration(r.result))r.state='RESULTS';return;}
   r.time+=dt;r.invulnerable=Math.max(0,r.invulnerable-dt);r.impact=Math.max(0,r.impact-dt*2);
   const speedFactor=1-clamp((r.speed-40)/100,0,.22),gripRequest=Boolean(input.drift&&Math.abs(r.steer)>.18&&r.speed>18);
   r.steer+=(screenSteerToRoad(clamp(input.steer,-1,1))-r.steer)*Math.min(1,dt*(input.steer?7.5:9));

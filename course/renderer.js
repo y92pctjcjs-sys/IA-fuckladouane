@@ -1,4 +1,6 @@
 import * as T from './vendor/three.module.min.js';
+import {victoryPose,victoryShot,victorySample,createVictoryTail} from './victory-drive.js?v=oculaire-victory-006';
+import {createVictoryRoad} from './victory-road.js?v=oculaire-victory-006';
 import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-route-003';
 import {createVehicle,animateVehicle} from './models.js?v=fld-route-003';
 import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-route-003';
@@ -254,6 +256,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   const warm = new T.PointLight('#f4ca94', 22, 30, 2); warm.position.set(-2, 4.5, -6); station.add(warm);
   const movingStation=new Set();for(const object of[waitingCar,stranger,playerPerson])object.traverse(n=>movingStation.add(n));batch(station,movingStation);
   const player = car('fld',0,appearance.fld); scene.add(player);
+  const victoryRoad=createVictoryRoad(scene),victoryTail=createVictoryTail();let victoryInspection=null;
   const oculaire = createOculaire(scene, {...assets.oculaire, report(status) {
     if (canvas.dataset) {canvas.dataset.oculaire = status.state; canvas.dataset.oculaireError = status.error || '';}
   }});
@@ -274,17 +277,19 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   reportAppearance();
   return {
     render(r, elapsed = 1 / 60) {
+      const renderDelta=r.state==='PAUSE'?0:Math.min(.1,Math.max(0,elapsed));
+      const tail=victoryTail.update(r,renderDelta),drive=victoryPose(r,tail),carShot=victoryShot(r,camera.aspect,reduced,tail);
       const love = r.result?.ending === 'love' && ['ARRIVAL', 'RESULTS', 'PAUSE'].includes(r.state);
       const ending = r.result && r.state !== 'RACE';
       let s = r.s, lateral = r.x, yaw = r.yaw;
-      if (ending && r.result.won) {
-        const t = Math.min(1, r.cinematic / (love ? 5 : 7)); s = LENGTH + t * (love ? 65 : 145); lateral = r.x * (1 - t) + (love ? 11 : 0) * t; yaw *= 1 - t;
-      }
+      if(drive){s=drive.s;lateral=drive.lateral;yaw=drive.yaw;}victoryRoad.setVisible(Boolean(drive));
       if(quality.update(elapsed,r.state==='RACE')){renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();}
       stream(s);destination.visible=s>STAGES[4].start-300;
       overpass.visible=Math.abs(s-8200)<430;station.visible=s>LENGTH-300;finishGate.visible=s>LENGTH-380;
       positionOn(player, s, lateral, .015, yaw,r.branch);
-      animateVehicle(player,r,r.state==='RACE'?Math.min(elapsed,.05):0);
+      if(drive){const p=drive.position,back=victorySample(s-2),ahead=victorySample(s+2);player.position.set(p.x,p.y+.015,p.z);player.rotation.set(-Math.atan((ahead.y-back.y)/4),p.angle+yaw,0);}
+      animateVehicle(player,drive?{...r,speed:drive.speed,steer:drive.yaw,boosting:false}:r,r.state==='RACE'?Math.min(elapsed,.05):0);
+      if(drive)for(const wheel of player.userData.wheels){wheel.rolling.rotation.x=drive.wheelDistance/(player.userData.wheelRadius||.33)%(Math.PI*2);}
       player.userData.flame.visible = r.boosting && r.state === 'RACE';
       player.userData.flame.scale.z=reduced?1:.8+Math.sin(r.time*40)*.25;
       for (let i = 0; i < cops.length; i++) {
@@ -308,22 +313,26 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if (love && r.cinematic > 5) {
         const p = sample(LENGTH + 65, 20); const t = Math.min(1, (r.cinematic - 5) / 4);
         stranger.position.set(-2 - t * 4, 0, -1 - t * .8);
-        playerPerson.visible = true; playerPerson.position.set(-8 + t, 0, -1 - t * .8);
+        playerPerson.visible = !drive?.departing||drive.elapsed<.7; playerPerson.position.set(-8 + t, 0, -1 - t * .8);
         desired.set(p.x - 14, p.y + 5, p.z - 16); aim.set(p.x - 5, p.y + 1.3, p.z - 5);
       } else playerPerson.visible = false;
+      stranger.visible=!love||!drive?.departing||drive.elapsed<.7;
       const celestialShot=oculaire.shot(r);
       if(celestialShot){desired.lerp(celestialShot.position,celestialShot.blend);aim.lerp(celestialShot.target,celestialShot.blend);}
+      if(carShot){desired.lerp(new T.Vector3().fromArray(carShot.position),carShot.blend);aim.lerp(new T.Vector3().fromArray(carShot.target),carShot.blend);}
       if (!initialized) { camera.position.copy(desired); initialized = true; }
-      camera.position.lerp(desired, 1 - Math.exp(-Math.min(elapsed, .1) * 5));
+      if(carShot&&r.state!=='PAUSE')camera.position.copy(desired);else camera.position.lerp(desired, 1 - Math.exp(-renderDelta * 5));
       if (!reduced && r.state === 'RACE') camera.position.x += Math.sin(r.time * 70) * r.impact * .12;
       camera.lookAt(aim);
-      const targetFov=62+(r.boosting&&!reduced?4:0),fov=camera.fov+(targetFov-camera.fov)*(1-Math.exp(-elapsed*4)); if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
+      const targetFov=carShot?62+(carShot.fov-62)*carShot.blend:62+(r.boosting&&!reduced?4:0),fov=carShot&&r.state!=='PAUSE'?targetFov:camera.fov+(targetFov-camera.fov)*(1-Math.exp(-renderDelta*4)); if (camera.fov !== fov) { camera.fov = fov; camera.updateProjectionMatrix(); }
+      player.visible=!drive||player.position.distanceTo(camera.position)<1800;
+      victoryInspection=drive?{...drive,camera:camera.position.toArray(),target:aim.toArray(),fov:camera.fov,wheels:player.userData.wheels.map(w=>w.rolling.rotation.x),visible:player.visible}:null;
       const welcoming=r.result?.won||r.s>12000;
       scene.fog.color.lerp(new T.Color(welcoming?'#433443':stageAt(r.s).fog),.04);scene.background.copy(scene.fog.color).multiplyScalar(.43);
       scene.fog.density=stageAt(r.s).kind==='tunnel'?.005:.0033;
       sky.update(r,camera,quality.level);
       const front=driveSample(s+7*routeScale,lateral,r.branch);headPool.position.set(front.x,front.y+.018,front.z);headPool.rotation.y=front.angle;
-      glow.position.copy(player.position);glow.position.y+=1.5;glow.color.set(love&&r.cinematic>5?'#e8b992':'#956bf1');
+      glow.position.copy(player.position);glow.position.y+=1.5;glow.color.set(drive?.departing?'#c0b0ff':love&&r.cinematic>5?'#e8b992':'#956bf1');
       moon.position.set(camera.position.x-190,camera.position.y+180,camera.position.z+500);
       effects.setReduced(reduced||quality.level===0);effects.update(r,camera);
       const headRace=r.branch?{...r,cops:r.cops.filter(c=>{const p=sample(c.s,c.x);return Math.hypot(p.x-player.position.x,p.z-player.position.z)<90;})}:r;
@@ -342,13 +351,14 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(marked!==cops[0].userData.skin)replace(cops[0],'cop',0,marked);
       appearance={...next};reportAppearance();
     },
-    reset() { initialized = false; effects.clear();oculaire.reset();for(const vehicle of [...traffic,...cops])resetRoadPrototype(vehicle);stranger.position.set(-2,0,-1);playerPerson.visible=false; },
+    reset() { initialized = false; effects.clear();oculaire.reset();victoryTail.reset();victoryInspection=null;victoryRoad.setVisible(false);player.visible=true;stranger.visible=true;for(const vehicle of [...traffic,...cops])resetRoadPrototype(vehicle);stranger.position.set(-2,0,-1);playerPerson.visible=false; },
     configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);oculaire.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
     get metrics(){return {fps:quality.fps===null?null:Math.round(quality.fps),level:quality.level,ratio:Math.min(devicePixelRatio||1,quality.ratio),chunks:chunks.filter(c=>Number.isFinite(c.s)).length,calls:renderer.info.render?.calls??null,triangles:renderer.info.render?.triangles??null,geometries:renderer.info.memory?.geometries??null};},
     get oculaireStatus() {return oculaire.status;},
     inspectHead(angle=null){inspectionAngle=Number.isFinite(angle)?angle:null;},
     inspectOculaire() {return oculaire.inspect(inspectionAngle===null?camera:inspectionCamera);},
-    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();shortcutScenery.dispose();debrisScenery.dispose();oculaire.dispose();renderer.dispose(); },
+    inspectVictory(){return victoryInspection?structuredClone(victoryInspection):null;},
+    dispose() { removeEventListener('resize', resize);globalThis.visualViewport?.removeEventListener('resize',resize);for(const chunk of chunks)releaseChunk(chunk.g);sky.dispose();effects.dispose();shortcutScenery.dispose();debrisScenery.dispose();victoryRoad.dispose();oculaire.dispose();renderer.dispose(); },
     info: renderer.info
   };
 }

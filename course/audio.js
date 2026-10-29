@@ -1,6 +1,7 @@
 import {sectorAt,stageAt} from './track.js?v=fld-route-003';
 import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-route-003';
 import {TAUNTS,synthesizeTaunt,tauntIndex} from './oculaire-taunts.js?v=fld-route-003';
+import {victoryPose} from './victory-drive.js?v=oculaire-victory-006';
 export {BPM};
 export function engineTone(speed,previousGear=1){
  const limits=[0,10,21,33,46,61,76];let gear=Math.max(1,Math.min(6,previousGear));
@@ -102,9 +103,9 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
    // Consume the event even while silent. Enabling sound must not replay an old hit.
    const serial=r.hitSerial||0,hitChanged=serial>lastHit;lastHit=serial;
    latest=r;if(!active||!context||context.state!=='running'||userSuspended)return;
-   const on=r.state==='RACE',now=context.currentTime,tone=engineTone(r.speed,gear);gear=tone.gear;
+   const on=r.state==='RACE',drive=victoryPose(r),departure=Boolean(drive?.departing&&r.state==='ARRIVAL'),fade=departure?Math.exp(-drive.elapsed*.42)*.5:0,now=context.currentTime,tone=engineTone(departure?drive.speed:r.speed,gear);gear=tone.gear;
    smooth(engine.node.frequency,tone.hz,.11);smooth(sub.node.frequency,tone.hz*.5,.14);smooth(engineFilter.frequency,tone.cutoff,.12);
-   smooth(engine.gain.gain,on?.024:0);smooth(sub.gain.gain,on?.020:0);
+   smooth(engine.gain.gain,on?.024:.024*fade);smooth(sub.gain.gain,on?.020:.020*fade);
    smooth(wind.gain.gain,on?.016*(r.speed/55)**2:0);smooth(wind.filter.frequency,500+r.speed*24);
    smooth(skid.gain.gain,on&&r.drifting?.026*r.driftBlend: r.scraping?.015:0);
    smooth(boost.gain.gain,on&&r.boosting?.038:0);

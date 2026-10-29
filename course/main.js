@@ -1,7 +1,8 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-route-003';
-import {createRenderer} from './renderer.js?v=fld-route-003';
+import {victoryPose} from './victory-drive.js?v=oculaire-victory-006';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=oculaire-victory-006';
+import {createRenderer} from './renderer.js?v=oculaire-victory-006';
 import {createInput} from './input.js?v=fld-route-003';
-import {createAudio} from './audio.js?v=fld-route-003';
+import {createAudio} from './audio.js?v=oculaire-victory-006';
 import {createSave,createPreferences} from './storage.js?v=fld-route-003';
 import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-route-003';
 import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-route-003';
@@ -118,9 +119,10 @@ function hud(){
  $('alert').textContent=race.capture>.15?`ENCERCLÉ / REPARTEZ AVANT ${Math.ceil(4-race.capture)} S`:row?`BARRAGE ${Math.ceil((row.s-race.s)/10)*10} M / OUVERTURE ${direction}`:debris?`DÉBRIS ${Math.ceil((debris.s-race.s)/10)*10} M / ${debris.x>0?'PASSER À DROITE':debris.x<0?'PASSER À GAUCHE':'GAUCHE OU DROITE'}`:revealed?'VÉHICULE BANALISÉ / DOUANE À BORD':race.branch&&race.s-SHORTCUT.entry<220?'LISIÈRE 89 / PASSAGE TROUVÉ':race.branch&&SHORTCUT.exit-race.s<210?'RACCORDEMENT / ROUTE PRINCIPALE':race.drifting?'DRIFT / NITRO EN RECHARGE':showBeat?beat.label:'';
  if(race.state==='COUNTDOWN')$('countdown').textContent=Math.max(1,Math.ceil(race.countdown));
  if(['ARRIVAL','INTERCEPTION'].includes(race.state)){
-  const t=race.cinematic,love=race.result.ending==='love';
+  const t=race.cinematic,love=race.result.ending==='love',departure=victoryPose(race);
   $('cinemaKicker').textContent=race.result.won?t<3?'DERNIÈRE FRONTIÈRE / FRANCHIE':'SWAGISTAN / VOUS ÊTES ARRIVÉ':'CONTRÔLE TERMINÉ';
   $('cinemaText').textContent=!race.result.won?race.result.reason:t<3?'Les sirènes restent derrière.':t<5?'MADE IN SWAGISTAN.':love?t<7?'— Tu vas où ?':t<9?'— Je crois que je suis arrivé.':t<11?'— Monte.':'POUR UNE FOIS, T’AS TROUVÉ QUELQU’UN.':'L’origine n’est plus une hypothèse.';
+  if(departure?.departing){$('cinemaKicker').textContent=departure.phase==='horizon'?'FLD® / SANS FRONTIÈRE':'FLD® / FUITE RÉUSSIE';$('cinemaText').textContent=departure.phase==='horizon'?'La route ne s’arrête pas ici.':'MADE IN SWAGISTAN.';}
  }
  const m=renderer.metrics;$('renderStats').textContent=`AFFICHAGE ${m.fps??'—'} FPS · DÉFINITION ×${m.ratio} · ${m.calls??'—'} DRAWS · ${m.chunks} TRONÇONS. Mesure de ce navigateur.`;
  const whisper=renderer.oculaireStatus.caption,caption=$('oculaireWhisper');
