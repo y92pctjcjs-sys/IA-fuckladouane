@@ -114,3 +114,10 @@ Observer le prototype dans le vrai rendu du jeu à vitesse normale, en virage, p
 ## Prochaine action
 
 Raccord sauvegardé sur la branche dédiée avec rapports finaux pour une revue en brouillon. Reprendre au jalon 3 dans un navigateur fournissant un contexte WebGL : observer les deux silhouettes et le quai depuis la caméra de course, les modules bleus en approche / révélation, les freins, virages et barrages dans les deux orientations ; mesurer les trois profils et plusieurs redémarrages. Ensuite seulement décliner B02–B05, les civils C02–C08 et le reste des panneaux / décors. Avant une publication future : changer la version de cache de manière cohérente et vérifier le graphe associé. Aucune modification de main, aucun déploiement de ce prototype.
+
+
+## Publication demandée après la revue
+
+Le 29 octobre 2026, l’utilisateur demande explicitement de mettre ce prototype en ligne puis de poursuivre les décors, la forêt, la lecture des virages et la cartographie complète. Cette instruction remplace la mise en attente de publication du jalon précédent. La limite WebGL du navigateur de contrôle reste déclarée : aucune cadence mobile ni validation visuelle en course supplémentaire n’est annoncée. Cache des modules unifié : `fld-design-001`.
+
+Prochain jalon autorisé : publication par la PR 6 / Pages, contrôle des octets publics, puis extension du monde sur une nouvelle branche et seconde publication.

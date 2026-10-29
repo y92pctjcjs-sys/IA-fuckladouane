@@ -1,11 +1,11 @@
-import {createRace,createClock,start,pause,resume} from './simulation.js?v=oculaire-003';
-import {createRenderer} from './renderer.js?v=oculaire-003';
-import {createInput} from './input.js?v=oculaire-003';
-import {createAudio} from './audio.js?v=oculaire-003';
-import {createSave,createPreferences} from './storage.js?v=oculaire-003';
-import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=oculaire-003';
-import {formatTime,resultBadge,createScoreCard} from './results.js?v=oculaire-003';
-import {createAppearance,resolveSkin} from './vehicle-skins.js?v=oculaire-003';
+import {createRace,createClock,start,pause,resume} from './simulation.js?v=fld-design-001';
+import {createRenderer} from './renderer.js?v=fld-design-001';
+import {createInput} from './input.js?v=fld-design-001';
+import {createAudio} from './audio.js?v=fld-design-001';
+import {createSave,createPreferences} from './storage.js?v=fld-design-001';
+import {LENGTH,RULESET,STAGES,SECTORS,sectorAt,blockadeAhead,beatAt,screenSide} from './track.js?v=fld-design-001';
+import {formatTime,resultBadge,createScoreCard} from './results.js?v=fld-design-001';
+import {createAppearance,resolveSkin} from './vehicle-skins.js?v=fld-design-001';
 const $=id=>document.getElementById(id);
 let storage;try{storage=localStorage;}catch{storage=null;}
 const save=createSave(storage),preferences=createPreferences(storage),systemMotion=matchMedia('(prefers-reduced-motion: reduce)');

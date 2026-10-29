@@ -1,8 +1,8 @@
 // Software projection of the exact meshes, for structural review only.
 // Does not render Three.js materials, reflections, glazing, fog or WebGL shaders.
 import * as T from './vendor/three.module.min.js';
-import {createRoadPrototype} from './road-vehicles.js?v=oculaire-003';
-import {setVehicleDetail} from './vehicle-detail.js?v=oculaire-003';
+import {createRoadPrototype} from './road-vehicles.js?v=fld-design-001';
+import {setVehicleDetail} from './vehicle-detail.js?v=fld-design-001';
 export function projectDesignVolumes(){
 const panels=[],report={kind:'CPU_GEOMETRY_ONLY_NOT_WEBGL',models:[]};
 function inspect(type,x,y,angle,label){
