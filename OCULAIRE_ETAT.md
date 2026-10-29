@@ -3,7 +3,7 @@
 Branche : `feat/oculaire-impact-mockeries-20261029`.
 Base distante vérifiée par git : `c0acf1e` (forêts, décors dans les courbes et atlas de 13 km conservés).
 Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
-Statut courant : implémenté, vérifié et sauvegardé sur la branche ; **non publié**. Publication bloquée par contrôle automatique, autorisation utilisateur explicite à obtenir.
+Statut courant : implémenté, vérifié et sauvegardé ; autorisation explicite de publication obtenue le 29 octobre 2026. Publication et vérification du déploiement en cours.
 
 ## Jalon 1 — implémentation locale
 
@@ -34,6 +34,13 @@ Statut courant : implémenté, vérifié et sauvegardé sur la branche ; **non p
 - Le résultat reste entièrement disponible sur la branche `feat/oculaire-impact-mockeries-20261029` et dans l’aperçu local. Planche CPU ouverte et observée ; l’atelier audio permet d’écouter les trois sons avec le moteur audio réel.
 - Reprise : demander l’autorisation explicite de publier le 360° et les trois moqueries dans le jeu public. Après accord, relire le SHA actuel de main, intégrer tout changement concurrent, vérifier le contenu puis mettre main à jour avec garde sur son SHA. Attendre le déploiement Pages et comparer les fichiers servis aux fichiers testés. Distinguer cette publication du contrôle WebGL, toujours non exécuté ici.
 - Le présent jalon met uniquement la branche de travail à jour. Pas de succès de publication revendiqué.
+
+## Jalon 4 — publication autorisée
+
+- L’utilisateur confirme explicitement la publication du 360° et des trois moqueries dans le jeu public après la demande d’accord du jalon précédent.
+- État distant vérifié à nouveau par `git fetch` et `git ls-remote` : main reste `c0acf1e0e5e0eb7232a8d721d2debf08a495feda` ; branche complète sauvegardée `79dbff04614b7dbc6cc67823065dbdad601ccca1`. Aucun changement concurrent à intégrer à cette vérification.
+- Code et preuves identiques à la version contrôlée à 132 tests / 77 fichiers. Seuls le présent journal et le rapport de publication sont mis à jour depuis le jalon validé ; aucune nouvelle modification de comportement.
+- Publication autorisée sur main avec garde du SHA attendu. Ne déclarer la version publiée qu’après déploiement Pages réussi et comparaison des fichiers servis aux fichiers testés.
 
 ---
 
