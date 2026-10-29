@@ -9,8 +9,8 @@
 <label>Finale <input id="cinematic" type="range" min="0" max="14" step="0.02" value="0"></label>
 <label><input id="motion" type="checkbox" style="width:auto">Avancer</label><label><input id="reduced" type="checkbox" style="width:auto">Mouvements réduits</label><button id="reset">Repartir</button> <a href="../course.html">Jeu</a></aside>
 <script type="module">
-import {createRenderer} from './renderer.js?v=oculaire-003';
-import {createRace} from './simulation.js?v=oculaire-003';
+import {createRenderer} from './renderer.js?v=fld-design-001';
+import {createRace} from './simulation.js?v=fld-design-001';
 const $=id=>document.getElementById(id),view=createRenderer($('world'),false),race=createRace();race.state='RACE';race.s=2400;race.speed=48;race.time=50;
 let last=0,playing=false;
 $('distance').oninput=()=>{race.s=+$('distance').value;view.reset();};$('lane').oninput=()=>{race.x=+$('lane').value;};

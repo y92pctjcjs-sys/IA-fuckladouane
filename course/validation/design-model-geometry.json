@@ -1,0 +1,15 @@
+{
+  "kind": "CPU_GEOMETRY_ONLY_NOT_WEBGL",
+  "models": [
+    {
+      "type": "compact",
+      "nearTriangles": 5512,
+      "farTriangles": 4224
+    },
+    {
+      "type": "city",
+      "nearTriangles": 5512,
+      "farTriangles": 4296
+    }
+  ]
+}

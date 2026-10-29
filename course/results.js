@@ -1,4 +1,4 @@
-import {LENGTH, RULESET} from './track.js?v=oculaire-003';
+import {LENGTH, RULESET} from './track.js?v=fld-design-001';
 
 export function formatTime(t){const cs=Math.max(0,Math.round((Number.isFinite(t)?t:0)*100));return `${Math.floor(cs/6000)}:${String(Math.floor(cs/100)%60).padStart(2,'0')}.${String(cs%100).padStart(2,'0')}`;}
 export function resultBadge(result){

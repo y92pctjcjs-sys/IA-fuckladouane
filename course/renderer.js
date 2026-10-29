@@ -1,15 +1,17 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=oculaire-003';
-import {createVehicle,animateVehicle} from './models.js?v=oculaire-003';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=oculaire-003';
-import {createDrivingEffects} from './effects.js?v=oculaire-003';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=oculaire-003';
-import {createDigitalSky} from './sky.js?v=oculaire-003';
-import {createQuality} from './quality.js?v=oculaire-003';
-import {addRoadPosters} from './posters.js?v=oculaire-003';
-import {patrolSkin} from './vehicle-skins.js?v=oculaire-003';
-import {setVehicleDetail} from './vehicle-detail.js?v=oculaire-003';
-import {createOculaire} from './oculaire.js?v=oculaire-003';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-design-001';
+import {createVehicle,animateVehicle} from './models.js?v=fld-design-001';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-design-001';
+import {createDrivingEffects} from './effects.js?v=fld-design-001';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=fld-design-001';
+import {createDigitalSky} from './sky.js?v=fld-design-001';
+import {createQuality} from './quality.js?v=fld-design-001';
+import {addRoadPosters} from './posters.js?v=fld-design-001';
+import {patrolSkin} from './vehicle-skins.js?v=fld-design-001';
+import {setVehicleDetail} from './vehicle-detail.js?v=fld-design-001';
+import {resetRoadPrototype} from './road-vehicles.js?v=fld-design-001';
+import {industrialPrototype} from './design-scenery.js?v=fld-design-001';
+import {createOculaire} from './oculaire.js?v=fld-design-001';
 const box = new T.BoxGeometry(1, 1, 1);
 const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
 const mats = new Map();
@@ -159,12 +161,14 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         cube(p, -side * 3, 10.8, 0, 1.4, .08, .6, '#f0e9b9', true);
         const pool=lightPool(p,side<0?'#af7aff':'#cfd5ac',12,22);pool.position.x=-side*8;
         if (stage.kind==='industrial') {
+         if(s===0&&side===-1){industrialPrototype(p,side);}else{
           industrialDetail(p,s,side,cube);
           const h = 5 + ((s / 80 + (side + 1) * 3) % 5) * 2;
           cube(p, side * 17, h / 2, 8, 22, h, 30, side < 0 ? '#353145' : '#2b3448').material=industrialMaterial('steel');
           cube(p, side * 17, h + .3, 8, 23, .5, 31, '#5a4d68');
           for (let k = 0; k < 4; k++) cube(p, side * 17 + (k - 1.5) * 4, 3.8, -7.05, 2, 1, .05, '#b99e58', true);
           for (let k = 0; k < 2; k++) cube(p, side * 7, 1.6 + k * 3.1, -10, 6, 3, 12, k ? '#5a365d' : '#354757').material=industrialMaterial(k?'purple':'steel');
+         }
         } else {
           for (let k = 0; k < 3; k++) {
             const tree = new T.Mesh(treeGeometry, material(stage.kind==='frontier'?'#34413d':'#202b35'));tree.scale.set(3+k,10+k*2,3+k);
@@ -281,7 +285,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         if(m.visible&&m.userData.staticBatched)setVehicleDetail(m,Math.abs(c.s-r.s)>(quality.level===0?55:85));
         m.userData.blue.visible = c.active&&(reduced || Math.sin(r.time * 6 + i) > 0); m.userData.red.visible = c.active&&(reduced || !m.userData.blue.visible);
       }
-      for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0); }
+      for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0);if(traffic[i].visible&&traffic[i].userData.prototype)setVehicleDetail(traffic[i],Math.abs(t.s-r.s)>(quality.level===0?55:85)); }
       for (const {s:start,g} of chunks)g.visible=start>s-160&&start<s+(quality.level===0?300:380);
       barriers.forEach(g => { g.visible = Math.abs(g.userData.s-s)<(quality.level===0?300:450) && !ending; });
       const chaseDistance=10.5+Math.min(2,r.speed/34)+(r.boosting?1:0);
@@ -322,7 +326,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(marked!==cops[0].userData.skin)replace(cops[0],'cop',0,marked);
       appearance={...next};reportAppearance();
     },
-    reset() { initialized = false; effects.clear();oculaire.reset();stranger.position.set(-2,0,-1);playerPerson.visible=false; },
+    reset() { initialized = false; effects.clear();oculaire.reset();for(const vehicle of [...traffic,...cops])resetRoadPrototype(vehicle);stranger.position.set(-2,0,-1);playerPerson.visible=false; },
     configure(settings) {reduced=settings.reduced;sky.setReduced(reduced);oculaire.setReduced(reduced);quality.setMode(settings.quality);renderer.setPixelRatio(Math.min(devicePixelRatio||1,quality.ratio));resize();},
     get metrics(){return {fps:quality.fps===null?null:Math.round(quality.fps),level:quality.level,ratio:Math.min(devicePixelRatio||1,quality.ratio),chunks:chunks.filter(c=>Number.isFinite(c.s)).length,calls:renderer.info.render?.calls??null,triangles:renderer.info.render?.triangles??null,geometries:renderer.info.memory?.geometries??null};},
     get oculaireStatus() {return oculaire.status;},
