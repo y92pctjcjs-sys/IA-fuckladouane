@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><link rel="icon" href="data:,"><title>OCULAIRE — trois moqueries</title>
+<style>*{box-sizing:border-box}body{margin:0;background:#0b0814;color:#f2edf7;font:16px/1.6 system-ui,sans-serif}main{max-width:900px;margin:auto;padding:42px 22px}h1{font-size:clamp(32px,7vw,64px);line-height:1.05;letter-spacing:-.05em}small{color:#b3a7c2}button{font:inherit;cursor:pointer;padding:12px 18px;border:1px solid #655470;background:#21182e;color:inherit;border-radius:5px}button:disabled{opacity:.45;cursor:default}button:focus-visible,a:focus-visible{outline:3px solid #dfff31;outline-offset:4px}#sound{background:#dfff31;color:#0b0814;font-weight:800}.sounds{display:grid;gap:14px;margin:26px 0}.sounds button{text-align:left;display:flex;justify-content:space-between;gap:20px}canvas{width:100%;height:140px;border:1px solid #45374f;background:#100c1b}pre{font:12px/1.5 monospace;white-space:pre-wrap;color:#b9dfbd;padding:14px;background:#100d18}a{color:#c0a5ff}label{display:block;margin:16px 0}input{width:200px;vertical-align:middle}#status{min-height:2em;color:#dfff31}</style>
+<main><small>FLD® / ATELIER TECHNIQUE OCULAIRE</small><h1>360°.<br>Trois moqueries.</h1><p>Trois bruitages originaux synthétisés pour les dégâts. Chaque bouton produit un dégât accepté avec le vrai contrôleur audio du jeu. Le volume suit le bus BRUITAGES. Cet atelier audio fonctionne sans WebGL.</p>
+<button id="sound" aria-pressed="false">ACTIVER LE SON</button><label>BRUITAGES <input id="volume" aria-label="Volume des bruitages" type="range" min="0" max="100" value="70"></label>
+<div class="sounds" id="sounds"></div><p id="status" role="status">Son désactivé. Activez-le pour écouter.</p><canvas id="wave" width="840" height="140" aria-label="Forme d’onde du dernier bruitage"></canvas>
+<details open><summary>Diagnostic audio réel</summary><pre id="diagnostics">Aucun AudioContext créé.</pre></details><p><a href="oculaire-preview.html">Atelier 3D et vrais dégâts</a> · <a href="../course.html">Jouer</a> · <a href="OCULAIRE_IMPACTS_MOQUERIES.md">Prompt maître</a></p></main>
+<script type="module">
+import {createAudio} from './audio.js?v=oculaire-impact-005';
+import {TAUNTS,synthesizeTaunt} from './oculaire-taunts.js?v=oculaire-impact-005';
+import {createRace,hit} from './simulation.js?v=fld-world-002';
+const $=id=>document.getElementById(id),audio=createAudio(()=>{$('status').textContent='Audio interrompu par l’appareil. Réactivez le son.';}),buttons=[];
+audio.configure({music:0,engineEnabled:false,effects:.7});
+function diagnostics(){ $('diagnostics').textContent=JSON.stringify(audio.diagnostics,null,2); }
+function wave(index){const c=$('wave').getContext('2d'),data=synthesizeTaunt(index,8000);c.clearRect(0,0,840,140);c.strokeStyle='#b8ff67';c.beginPath();for(let x=0;x<840;x++){let lo=0,hi=0;for(let i=Math.floor(x*data.length/840);i<Math.floor((x+1)*data.length/840);i++){lo=Math.min(lo,data[i]);hi=Math.max(hi,data[i]);}c.moveTo(x,70-lo*64);c.lineTo(x,70-hi*64);}c.stroke();}
+TAUNTS.forEach((t,index)=>{const button=document.createElement('button');button.disabled=true;button.textContent=`${index+1}. ${t.label} — ${t.duration.toFixed(2)} s`;button.onclick=async()=>{
+ audio.reset();await audio.resume();const race=createRace(undefined,index);Object.assign(race,{state:'RACE',time:10,speed:0,cops:[]});audio.update(race);if(!hit(race,5))throw new Error('Le dégât de contrôle a été refusé.');audio.update(race);
+ $('status').textContent=`${t.label} · dégât n° ${race.hitSerial} · résistance ${race.health} %`;wave(index);diagnostics();
+};$('sounds').append(button);buttons.push(button);});
+$('sound').onclick=async()=>{const on=await audio.toggle();$('sound').textContent=on?'COUPER LE SON':'ACTIVER LE SON';$('sound').setAttribute('aria-pressed',String(on));buttons.forEach(b=>b.disabled=!on);$('status').textContent=on?'Audio actif. Les trois extraits sont prêts.':'Son désactivé.';diagnostics();};
+$('volume').oninput=()=>{audio.configure({effects:Number($('volume').value)/100});diagnostics();};
+const timer=setInterval(diagnostics,300);addEventListener('pagehide',()=>{clearInterval(timer);audio.dispose();},{once:true});document.addEventListener('visibilitychange',()=>{if(document.hidden)audio.suspend();else if(audio.enabled){$('status').textContent='Revenez à un extrait pour reprendre explicitement l’audio.';}});
+</script></html>

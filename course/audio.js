@@ -1,5 +1,6 @@
 import {sectorAt,stageAt} from './track.js?v=fld-world-002';
 import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-world-002';
+import {TAUNTS,synthesizeTaunt,tauntIndex} from './oculaire-taunts.js?v=oculaire-impact-005';
 export {BPM};
 export function engineTone(speed,previousGear=1){
  const limits=[0,10,21,33,46,61,76];let gear=Math.max(1,Math.min(6,previousGear));
@@ -12,7 +13,7 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
  let context,master,musicBus,fxBus,engineBus,engineFilter,compressor,engine,sub,siren,wind,skid,boost,tunnel;
  let active=false,userSuspended=false,timer=null,nextTime=0,nextStep=0,lastHit=0,lastSector=-1,lastArrival=false,lastReveal=0,gear=1;
  let latest={state:'MENU',s:0,time:0,speed:0,pressure:0,drifting:false,boosting:false,hitSerial:0};
- let volumes={master:.75,music:.72,effects:.7,engine:.28,engineEnabled:true},noiseBuffer;
+ let volumes={master:.75,music:.72,effects:.7,engine:.28,engineEnabled:true},noiseBuffer,tauntBuffers=[],lastTaunt=null,tauntCount=0;
  const voices=new Set(),loops=[];
  function smooth(param,value,tau=.08){param.setTargetAtTime(value,context.currentTime,tau);}
  function oscillator(type,bus){
@@ -36,6 +37,7 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
   }
   noiseBuffer=context.createBuffer(1,context.sampleRate*2,context.sampleRate);const bytes=noiseBuffer.getChannelData(0);
   let random=0x89f1;for(let i=0;i<bytes.length;i++){random=(Math.imul(random,1664525)+1013904223)>>>0;bytes[i]=random/2147483648-1;}
+  tauntBuffers=TAUNTS.map((_,i)=>{const data=synthesizeTaunt(i,context.sampleRate),buffer=context.createBuffer(1,data.length,context.sampleRate);buffer.getChannelData(0).set(data);return buffer;});
   engine=oscillator('triangle',engineFilter);sub=oscillator('sine',engineFilter);siren=oscillator('sine',fxBus);
   wind=noiseLoop('lowpass',1400);skid=noiseLoop('bandpass',1700);boost=noiseLoop('highpass',600);tunnel=noiseLoop('lowpass',220);
   context.onstatechange=()=>{if(active&&!userSuspended&&['interrupted','suspended'].includes(context.state)){stopTimer();onInterruption();}};
@@ -65,6 +67,12 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
   const entry={source,cleanup(){source.disconnect();filter.disconnect();gain.disconnect();pan.disconnect();voices.delete(entry);}};
   voices.add(entry);source.onended=entry.cleanup;source.start(time);source.stop(time+duration+release+.02);
  }
+ function taunt(index,time){
+  if(voices.size>=96||volumes.master<=0||volumes.effects<=0)return;
+  const source=context.createBufferSource(),gain=context.createGain();source.buffer=tauntBuffers[index];gain.gain.value=.34;source.connect(gain);gain.connect(fxBus);
+  const entry={source,cleanup(){source.disconnect();gain.disconnect();voices.delete(entry);}};voices.add(entry);source.onended=entry.cleanup;
+  source.start(time);source.stop(time+TAUNTS[index].duration+.02);lastTaunt=TAUNTS[index].id;tauntCount++;
+ }
  function tick(){
   if(!active||context?.state!=='running'||userSuspended)return;
   // Drop late notes after an OS stall; never fire a burst of old beats.
@@ -79,7 +87,7 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
  function startTimer(){stopTimer();if(!active||userSuspended||context.state!=='running')return;tick();timer=setInterval(tick,25);}
  function silenceLoops(){if(!context)return;for(const layer of[engine,sub,siren,wind,skid,boost,tunnel])smooth(layer.gain.gain,0,.03);}
  return {get enabled(){return active;},get status(){return !active?'off':context?.state||'off';},
-  get diagnostics(){return {voices:voices.size,scheduler:timer!==null,bpm:BPM,step:nextStep,state:context?.state||'uninitialized',engineLevel:volumes.engineEnabled?volumes.engine:0,effectsLevel:volumes.effects,musicLevel:volumes.music,gear};},
+  get diagnostics(){return {voices:voices.size,scheduler:timer!==null,bpm:BPM,step:nextStep,state:context?.state||'uninitialized',engineLevel:volumes.engineEnabled?volumes.engine:0,effectsLevel:volumes.effects,musicLevel:volumes.music,gear,tauntCount,lastTaunt,tauntVariants:TAUNTS.length,tauntBytes:tauntBuffers.reduce((n,b)=>n+b.getChannelData(0).byteLength,0)};},
   configure(settings){volumes={...volumes,...settings};applyVolumes();},
   async toggle(){
    try{
@@ -89,8 +97,10 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
   },
   suspend(){userSuspended=true;stopTimer();if(context&&context.state!=='closed')context.suspend().catch(()=>{});},
   async resume(){if(!active||!context)return;userSuspended=false;try{await context.resume();if(nextTime<context.currentTime)nextTime=context.currentTime+.035;startTimer();}catch{userSuspended=true;onInterruption();}},
-  reset(){stopTimer();cancelVoices();nextStep=0;lastHit=0;lastSector=-1;lastArrival=false;lastReveal=0;gear=1;if(context){nextTime=context.currentTime+.045;silenceLoops();}latest={state:'COUNTDOWN',s:0,speed:0,pressure:0,time:0,hitSerial:0,revealSerial:0};},
+  reset(){stopTimer();cancelVoices();nextStep=0;lastHit=0;lastSector=-1;lastArrival=false;lastReveal=0;gear=1;lastTaunt=null;tauntCount=0;if(context){nextTime=context.currentTime+.045;silenceLoops();}latest={state:'COUNTDOWN',s:0,speed:0,pressure:0,time:0,hitSerial:0,revealSerial:0};},
   update(r){
+   // Consume the event even while silent. Enabling sound must not replay an old hit.
+   const serial=r.hitSerial||0,hitChanged=serial>lastHit;lastHit=serial;
    latest=r;if(!active||!context||context.state!=='running'||userSuspended)return;
    const on=r.state==='RACE',now=context.currentTime,tone=engineTone(r.speed,gear);gear=tone.gear;
    smooth(engine.node.frequency,tone.hz,.11);smooth(sub.node.frequency,tone.hz*.5,.14);smooth(engineFilter.frequency,tone.cutoff,.12);
@@ -102,10 +112,10 @@ export function createAudio(onInterruption=()=>{},makeContext=()=>new (globalThi
    const proximity=Math.max(0,...(r.cops||[]).filter(c=>c.active).map(c=>1-Math.abs(r.s-c.s)/95));
    const sirenGate=(Math.sin(r.time*1.6)>-.3?1:.22);smooth(siren.node.frequency,600+Math.sin(r.time*4.2)*180,.07);smooth(siren.gain.gain,on?.013*proximity*sirenGate:0,.25);
    if(on&&r.revealSerial&&r.revealSerial!==lastReveal){lastReveal=r.revealSerial;for(const [i,n] of [57,64,69].entries())voice({kind:'bell',midi:n,duration:.24,volume:.065},now+i*.085,fxBus);}
-   if(r.hitSerial!==lastHit&&on){lastHit=r.hitSerial;voice({kind:r.impactKind==='scrape'?'scrape':'crash',midi:0,duration:.16,volume:.13},now,fxBus);voice({kind:'impact',midi:40,duration:.22,volume:.22},now,fxBus);}
+   if(hitChanged&&(on||r.state==='INTERCEPTION')){voice({kind:r.impactKind==='scrape'?'scrape':'crash',midi:0,duration:.16,volume:.13},now,fxBus);voice({kind:'impact',midi:40,duration:.22,volume:.22},now,fxBus);taunt(tauntIndex(r.seed,serial),now+.035);}
    const sector=sectorAt(r.s);if(on&&sector!==lastSector){if(lastSector>=0)for(const [i,n] of[64,67,71].entries())voice({kind:'bell',midi:n,duration:.25,volume:.07},now+i*.09,fxBus);lastSector=sector;}
    if(r.result?.won&&!lastArrival){lastArrival=true;cancelVoices();nextTime=now+.04;nextStep=Math.ceil(nextStep/16)*16;for(const [i,n] of[52,59,64,67].entries())voice({kind:'bell',midi:n,duration:1.8,volume:.08},now+i*.12,fxBus);}
   },
-  dispose(){active=false;stopTimer();cancelVoices();for(const node of loops){try{node.stop?.();}catch{}node.disconnect();}if(context){context.onstatechange=null;context.close().catch(()=>{});}}
+  dispose(){active=false;stopTimer();cancelVoices();tauntBuffers=[];for(const node of loops){try{node.stop?.();}catch{}node.disconnect();}if(context){context.onstatechange=null;context.close().catch(()=>{});}}
  };
 }

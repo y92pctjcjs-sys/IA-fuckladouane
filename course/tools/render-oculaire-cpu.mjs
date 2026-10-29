@@ -2,7 +2,8 @@
 import * as T from '../vendor/three.module.min.js';
 import {createOculaire} from '../oculaire.js';
 import {META,SURFACES} from '../assets/oculaire/portrait-data.js';
-import {createRace} from '../simulation.js';
+import {createRace,hit} from '../simulation.js';
+import {SPIN_SECONDS} from '../oculaire-reactions.js';
 import {sample} from '../track.js';
 import {writeFileSync,mkdirSync} from 'node:fs';
 import {resolve} from 'node:path';
@@ -14,12 +15,12 @@ if(view.status.state!=='ready')throw new Error(view.status.error);
 const r=createRace();Object.assign(r,{state:'RACE',s:3000,x:0,time:70,speed:48});r.cops.forEach(c=>c.active=false);
 const player=new T.Group(),p=sample(r.s),behind=sample(r.s-12),ahead=sample(r.s+24);player.position.set(p.x,p.y,p.z);scene.add(player);
 const chase=new T.PerspectiveCamera(62,390/844,.3,4200);chase.position.set(behind.x,behind.y+4.3,behind.z);chase.lookAt(ahead.x,ahead.y+1.1,ahead.z);chase.updateMatrixWorld(true);view.update(r,player,chase);
-const width=800,height=1000,light=new T.Vector3(-.4,.7,1).normalize();
+const impactMode=process.argv.includes('--impact'),width=impactMode?400:800,height=impactMode?500:1000,light=new T.Vector3(-.4,.7,1).normalize(),restFrame=view.root.matrixWorld.clone().invert();
 function srgb(v){v=T.MathUtils.clamp(v,0,1);return v<=.0031308?v*12.92:1.055*v**(1/2.4)-.055;}
 function render(name,angle,up=.05){
  const image=new Uint8Array(width*height*3),depth=new Float32Array(width*height).fill(Infinity);for(let i=0;i<image.length;i+=3){image[i]=8;image[i+1]=7;image[i+2]=16;}
  const cam=new T.PerspectiveCamera(35,width/height,.01,20);cam.position.set(Math.sin(angle)*6,up,Math.cos(angle)*6);cam.lookAt(0,0,0);cam.updateMatrixWorld(true);
- view.root.updateMatrixWorld(true);const inverse=view.root.matrixWorld.clone().invert(),projection=cam.projectionMatrix.clone().multiply(cam.matrixWorldInverse);let faces=0;
+ view.root.updateMatrixWorld(true);const inverse=impactMode?restFrame:view.root.matrixWorld.clone().invert(),projection=cam.projectionMatrix.clone().multiply(cam.matrixWorldInverse);let faces=0;
  view.root.traverseVisible(mesh=>{
   if(!mesh.isMesh||mesh.material.isShaderMaterial)return;
   const geom=mesh.geometry,a=geom.attributes,m=inverse.clone().multiply(mesh.matrixWorld),nm=new T.Matrix3().getNormalMatrix(m),count=a.position.count;
@@ -49,6 +50,12 @@ function render(name,angle,up=.05){
  });
  writeFileSync(resolve(output,name+'.ppm'),Buffer.concat([Buffer.from(`P6\n${width} ${height}\n255\n`),image]));console.log(name,faces,'surface triangles');
 }
-render('face',0);render('three-quarter',.64);render('profile',1.57);render('crown',0,2.5);
-r.state='ARRIVAL';r.result={won:true,ending:'escape'};r.cinematic=2.6;view.update(r,player,chase);render('reverse',Math.PI);
-writeFileSync(resolve(output,'geometry.json'),JSON.stringify({kind:'CPU_GEOMETRY_RASTER_NOT_BROWSER_WEBGL',status:view.status,inspection:view.inspect(chase)},null,2));view.dispose();
+const frames=[];
+if(impactMode){
+ hit(r,5,0,'vehicle');view.update(r,player,chase);
+ for(let n=0;n<22;n++){r.time=70+SPIN_SECONDS*n/21;view.update(r,player,chase);const name=`impact-${String(n).padStart(3,'0')}`;render(name,0);frames.push({name,time:r.time-70,reaction:view.status.reaction,rotation:view.root.quaternion.toArray()});}
+}else{
+ render('face',0);render('three-quarter',.64);render('profile',1.57);render('crown',0,2.5);
+ r.state='ARRIVAL';r.result={won:true,ending:'escape'};r.cinematic=2.6;view.update(r,player,chase);render('reverse',Math.PI);
+}
+writeFileSync(resolve(output,'geometry.json'),JSON.stringify({kind:'CPU_GEOMETRY_RASTER_NOT_BROWSER_WEBGL',status:view.status,inspection:view.inspect(chase),frames},null,2));view.dispose();

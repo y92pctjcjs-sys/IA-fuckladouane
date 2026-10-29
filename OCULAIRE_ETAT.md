@@ -1,3 +1,22 @@
+# OCULAIRE — 360° et trois moqueries, 29 octobre 2026
+
+Branche : `feat/oculaire-impact-mockeries-20261029`.
+Base distante vérifiée par git : `c0acf1e` (forêts, décors dans les courbes et atlas de 13 km conservés).
+Brief courant complet : `course/OCULAIRE_IMPACTS_MOQUERIES.md`.
+
+## Jalon 1 — implémentation locale
+
+- Un compteur de dégâts accepté déclenche un tour vertical de 360°, en 0,88 seconde ; une seconde avec mouvements réduits. Pause stable, reprise, remise à zéro, dégât fatal et priorité de la finale gérés. La tête tourne sur place ; les pupilles héritent de son tour puis reprennent la voiture comme cible.
+- Trois sons originaux non verbaux : rire en cascade, gna-gna-gnère nasal, souffle et ricanement. Buffers mono préparés une fois, sélection en permutation de trois sans répétition immédiate, bus BRUITAGES existant, nettoyage des sources. Aucun rattrapage après son coupé.
+- Sources du portrait et de la chevelure, simulation, collisions, véhicules, forêts, atlas, QR et portail préservés. Graphe de cache limité aux modules modifiés : `oculaire-impact-005` ; monde stable `fld-world-002`.
+- Atelier 3D enrichi d’un bouton dégât ; atelier audio indépendant de WebGL ajouté.
+- 121 tests existants réussis après raccordement. Sept contrôles audio réussis. Huit contrôles spécifiques ajoutés ; premier passage : sept réussis, un échec de test `AssertionError: actual -0, expected 0` sur le premier échantillon audio. Cause : égalité stricte distinguant le zéro signé produit par le fondu. Assertion corrigée pour comparer la magnitude, sans changer le son ; relance globale à effectuer.
+- Implémentation locale uniquement à ce jalon. Aucune nouvelle observation WebGL ou publication annoncée. Les preuves CPU et les vérifications publiques suivent.
+
+---
+
+## Historique conservé
+
 # OCULAIRE — chevelure et présence, mise à jour du 29 octobre 2026
 
 Branche : `feat/oculaire-chevelure-presence-20261029`.
