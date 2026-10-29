@@ -1,6 +1,6 @@
-import {LENGTH,ROUTE_ID,HALF_WIDTH,BLOCKADES,DIMENSIONS,curvature,blockadeAhead,screenSteerToRoad} from './track.js?v=fld-design-001';
-import {drawEnding} from './ending.js?v=fld-design-001';
-import {createPursuers,updatePursuit,moveCivilian} from './pursuit.js?v=fld-design-001';
+import {LENGTH,ROUTE_ID,HALF_WIDTH,BLOCKADES,DIMENSIONS,curvature,blockadeAhead,screenSteerToRoad} from './track.js?v=fld-world-002';
+import {drawEnding} from './ending.js?v=fld-world-002';
+import {createPursuers,updatePursuit,moveCivilian} from './pursuit.js?v=fld-world-002';
 export const FIXED_DT=1/120;
 export const emptyInput=()=>({steer:0,brake:false,drift:false,nitro:false});
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,n));

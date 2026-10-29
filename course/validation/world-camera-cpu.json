@@ -1,0 +1,162 @@
+{
+  "kind": "CPU_GEOMETRY_RASTER_REAL_CHASE_CAMERA_NOT_WEBGL",
+  "report": [
+    {
+      "file": "forest-390x844.png",
+      "s": 2800,
+      "width": 390,
+      "height": 844,
+      "faces": 135171,
+      "instances": 644,
+      "camera": [
+        132.21783650130294,
+        8.233650018237812,
+        2635.716611152832
+      ]
+    },
+    {
+      "file": "relay-curve-390x844.png",
+      "s": 3700,
+      "width": 390,
+      "height": 844,
+      "faces": 132680,
+      "instances": 643,
+      "camera": [
+        104.74865321944657,
+        16.12167959317201,
+        3514.8006295798837
+      ]
+    },
+    {
+      "file": "tunnel-entry-390x844.png",
+      "s": 5180,
+      "width": 390,
+      "height": 844,
+      "faces": 129639,
+      "instances": 542,
+      "camera": [
+        408.195445512126,
+        -0.3114910075053663,
+        4918.973979077172
+      ]
+    },
+    {
+      "file": "tunnel-exit-390x844.png",
+      "s": 7380,
+      "width": 390,
+      "height": 844,
+      "faces": 130383,
+      "instances": 655,
+      "camera": [
+        300.8610768287772,
+        3.3151733484757555,
+        6989.109293396578
+      ]
+    },
+    {
+      "file": "control-390x844.png",
+      "s": 7800,
+      "width": 390,
+      "height": 844,
+      "faces": 126359,
+      "instances": 827,
+      "camera": [
+        470.7616874250769,
+        3.0668668484923822,
+        7372.352609176868
+      ]
+    },
+    {
+      "file": "swagistan-390x844.png",
+      "s": 11610,
+      "width": 390,
+      "height": 844,
+      "faces": 131333,
+      "instances": 637,
+      "camera": [
+        400.9707583230055,
+        6.8996999159755426,
+        11004.583565003932
+      ]
+    },
+    {
+      "file": "forest-844x390.png",
+      "s": 2800,
+      "width": 844,
+      "height": 390,
+      "faces": 141910,
+      "instances": 644,
+      "camera": [
+        132.21783650130294,
+        8.233650018237812,
+        2635.716611152832
+      ]
+    },
+    {
+      "file": "relay-curve-844x390.png",
+      "s": 3700,
+      "width": 844,
+      "height": 390,
+      "faces": 138745,
+      "instances": 643,
+      "camera": [
+        104.74865321944657,
+        16.12167959317201,
+        3514.8006295798837
+      ]
+    },
+    {
+      "file": "tunnel-entry-844x390.png",
+      "s": 5180,
+      "width": 844,
+      "height": 390,
+      "faces": 129786,
+      "instances": 542,
+      "camera": [
+        408.195445512126,
+        -0.3114910075053663,
+        4918.973979077172
+      ]
+    },
+    {
+      "file": "tunnel-exit-844x390.png",
+      "s": 7380,
+      "width": 844,
+      "height": 390,
+      "faces": 131755,
+      "instances": 655,
+      "camera": [
+        300.8610768287772,
+        3.3151733484757555,
+        6989.109293396578
+      ]
+    },
+    {
+      "file": "control-844x390.png",
+      "s": 7800,
+      "width": 844,
+      "height": 390,
+      "faces": 134334,
+      "instances": 827,
+      "camera": [
+        470.7616874250769,
+        3.0668668484923822,
+        7372.352609176868
+      ]
+    },
+    {
+      "file": "swagistan-844x390.png",
+      "s": 11610,
+      "width": 844,
+      "height": 390,
+      "faces": 137215,
+      "instances": 637,
+      "camera": [
+        400.9707583230055,
+        6.8996999159755426,
+        11004.583565003932
+      ]
+    }
+  ],
+  "images": "Produced in scratch for inspection; regenerate with node course/tools/render-world-cpu.mjs <output>. Not WebGL screenshots."
+}

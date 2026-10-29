@@ -1,6 +1,6 @@
 import * as T from './vendor/three.module.min.js';
-import {LENGTH,sample} from './track.js?v=fld-design-001';
-import {softTexture} from './materials.js?v=fld-design-001';
+import {LENGTH,sample} from './track.js?v=fld-world-002';
+import {softTexture} from './materials.js?v=fld-world-002';
 const smooth=x=>{x=T.MathUtils.clamp(x,0,1);return x*x*(3-2*x);};
 const rand=n=>{n=Math.imul(n^(n>>>16),0x45d9f3b);return ((n^(n>>>16))>>>0)/4294967296;};
 const IMPACT=4.7,PALETTE=['#31f6ec','#ff31b5','#dfff31','#fff6e3'];

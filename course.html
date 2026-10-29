@@ -7,14 +7,15 @@
 <meta name="description" content="Treize kilomètres jusqu’au Swagistan. Une voiture FLD. Rien à déclarer aux poursuivants. Course arcade 3D indépendante.">
 <title>FUITE DOUANIÈRE — SWAGISTAN MOTOR CLUB</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="./course/style.css?v=fld-design-001">
-<link rel="stylesheet" href="./course/design-system.css?v=fld-design-001">
-<script type="module" src="./course/boot.js?v=oculaire-004"></script>
+<link rel="stylesheet" href="./course/style.css?v=fld-world-002">
+<link rel="stylesheet" href="./course/design-system.css?v=fld-world-002">
+<link rel="stylesheet" href="./course/atlas-shell.css?v=fld-world-002">
+<script type="module" src="./course/boot.js?v=fld-world-002"></script>
 </head>
 <body>
 <canvas id="world" aria-label="Circuit 3D nocturne vers le Swagistan"></canvas>
 <div class="vignette" aria-hidden="true"></div>
-<header class="topbar"><a class="brand" href="./index.html" aria-label="Retour au protocole FLD">fld<sup>®</sup><span>MOTOR CLUB<br>SWAGISTAN / 89</span></a><div class="tools"><button id="sound" aria-pressed="false">SON OFF</button><button id="settings" aria-label="Régler le son, la direction et les graphismes">⚙</button><button id="help" aria-label="Consulter les commandes">?</button><button id="pause" aria-label="Mettre en pause" disabled>Ⅱ</button></div></header>
+<header class="topbar"><a class="brand" href="./index.html" aria-label="Retour au protocole FLD">fld<sup>®</sup><span>MOTOR CLUB<br>SWAGISTAN / 89</span></a><div class="tools"><button id="sound" aria-pressed="false">SON OFF</button><button id="settings" aria-label="Régler le son, la direction et les graphismes">⚙</button><button id="help" aria-label="Consulter les commandes">?</button><button id="map" aria-label="Voir la carte du parcours">MAP</button><button id="pause" aria-label="Mettre en pause" disabled>Ⅱ</button></div></header>
 <section id="hud" class="hud" hidden aria-label="Tableau de bord">
 <div class="route"><span id="sector">01 / BUREAU DES ORIGINES DOUTEUSES</span><strong id="time">0:00.00</strong><div class="route-track" id="routeTrack"><i id="progress"></i></div><small id="remaining">SWAGISTAN / 13,0 KM</small></div>
 <div class="telemetry"><div class="speed"><strong id="speed">000</strong><span>KM/H</span></div><div class="meters"><label for="nitro">NITRO <b id="nitroValue">100</b></label><meter id="nitro" min="0" max="100" value="100"></meter><label for="health">RÉSISTANCE <b id="healthValue">100</b></label><meter id="health" min="0" max="100" value="100"></meter></div></div>
@@ -31,7 +32,8 @@
 <p class="short-help">Deux pouces. Cinq étapes. Une origine.<br>Patrouilles et douanes banalisées. Gardez de la nitro.</p>
 <button id="start" class="primary" disabled>PRENDRE LA ROUTE <span>↗</span></button>
 <button id="menuHelp" class="text-button">VOIR LES COMMANDES</button>
-<a class="credits-link" href="./course/garage.html?v=fld-design-001">PERSONNALISER / 6 LIVRÉES 3D ↗</a>
+<button id="menuMap" class="text-button">EXPLORER LE PARCOURS / 13 KM ↗</button>
+<a class="credits-link" href="./course/garage.html?v=fld-world-002">PERSONNALISER / 6 LIVRÉES 3D ↗</a>
 <div id="recordMenu" class="record"></div>
 <a class="credits-link" href="./course/credits.html" target="_blank" rel="noopener">SOURCES & MUSIQUE ↗</a>
 </section>
@@ -54,6 +56,7 @@
  <div class="steering-zone"><div data-steering-pad role="group" aria-label="Direction analogique : glissez le pouce à gauche ou à droite" class="steering-pad"><span class="pad-line"></span><i class="stick"></i><span class="pad-label">← GLISSER →</span></div><div class="steering-buttons"><button data-control="left" aria-label="Tourner à gauche">←</button><button data-control="right" aria-label="Tourner à droite">→</button></div></div>
  <div class="actions"><button data-control="brake" class="brake">FREIN</button><button data-control="drift" class="drift">DRIFT</button><button data-control="nitro" class="nitro">NITRO ↗</button></div>
 </div>
+<dialog id="routeAtlas" aria-labelledby="atlasTitle"><form method="dialog" class="atlas-close"><span id="atlasTitle">ATLAS 89 / LE PARCOURS</span><button aria-label="Fermer la carte">FERMER ×</button></form><iframe id="atlasFrame" title="Carte complète du parcours vers le Swagistan"></iframe></dialog>
 <dialog id="instructions" aria-labelledby="instructionsTitle"><form method="dialog"><button class="close" aria-label="Fermer les commandes">FERMER ×</button><div class="eyebrow">AVANT DE DISPARAÎTRE</div><h2 id="instructionsTitle">PRENEZ<br>LE VOLANT.</h2><p>L’accélération est automatique après le décompte. Évitez les véhicules et passez par l’ouverture de chaque barrage. Le signal annonce au moins trois secondes de trajectoire et indique le côté ouvert à l’écran.</p><table><thead><tr><th>Action</th><th>Clavier</th><th>Tactile</th></tr></thead><tbody><tr><td>Direction</td><td>← → / A D</td><td>Pouce gauche / boutons</td></tr><tr><td>Frein</td><td>↓ / S</td><td>FREIN</td></tr><tr><td>Drift</td><td>Espace + direction</td><td>DRIFT + pouce gauche</td></tr><tr><td>Nitro</td><td>Majuscule</td><td>NITRO</td></tr><tr><td>Pause</td><td>P / Échap</td><td>Ⅱ</td></tr></tbody></table><p>Le drift conserve votre glisse et recharge la nitro. Relâchez-le pour reprendre l’adhérence. Gardez une réserve pour décrocher les poursuivants. Les véhicules banalisés roulent parmi les civils : leurs feux bleus révèlent la douane et font monter la pression. Leurs attaques commencent après une phase d’approche.</p><p>Résistance à zéro : véhicule saisi. Immobilisé sous 3 m/s avec deux douaniers proches : quatre secondes pour repartir. Une collision seule ne vous arrête pas. Une victoire donne un rang C à S selon le score et la résistance ; les passages au ras, échappées et drifts propres rapportent des points, avec des bonus plafonnés.</p><p>Deux contacts suffisent : direction à gauche, une action à droite. RÉGLAGES permet les boutons et la sensibilité, ainsi que la coupure du moteur sans retirer musique, sirènes et autres bruitages. Le portrait reste jouable. Activez le son explicitement ; quitter l’onglet met en pause et exige une reprise.</p><button class="primary">COMPRIS ↗</button></form></dialog>
 <dialog id="preferences" aria-labelledby="preferencesTitle"><form method="dialog"><button class="close" aria-label="Fermer les réglages">FERMER ×</button><div class="eyebrow">SWAGISTAN NETWORK / RÉCEPTEUR</div><h2 id="preferencesTitle">À VOTRE<br>MESURE.</h2>
  <p id="audioStatus">Le son reste silencieux jusqu’à votre activation avec SON.</p>

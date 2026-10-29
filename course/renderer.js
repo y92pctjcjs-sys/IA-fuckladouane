@@ -1,19 +1,21 @@
 import * as T from './vendor/three.module.min.js';
-import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-design-001';
-import {createVehicle,animateVehicle} from './models.js?v=fld-design-001';
-import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-design-001';
-import {createDrivingEffects} from './effects.js?v=fld-design-001';
-import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=fld-design-001';
-import {createDigitalSky} from './sky.js?v=fld-design-001';
-import {createQuality} from './quality.js?v=fld-design-001';
-import {addRoadPosters} from './posters.js?v=fld-design-001';
-import {patrolSkin} from './vehicle-skins.js?v=fld-design-001';
-import {setVehicleDetail} from './vehicle-detail.js?v=fld-design-001';
-import {resetRoadPrototype} from './road-vehicles.js?v=fld-design-001';
-import {industrialPrototype} from './design-scenery.js?v=fld-design-001';
-import {createOculaire} from './oculaire.js?v=oculaire-004';
+import {sample, LENGTH, BLOCKADES, STAGES, stageAt, sectorAt} from './track.js?v=fld-world-002';
+import {createVehicle,animateVehicle} from './models.js?v=fld-world-002';
+import {asphaltMaterial,industrialMaterial,facadeMaterial,surface,environmentTexture,softTexture} from './materials.js?v=fld-world-002';
+import {createDrivingEffects} from './effects.js?v=fld-world-002';
+import {industrialDetail,tunnelDetail,lightPool,borderDetail,openDetail,controlDetail} from './scenery.js?v=fld-world-002';
+import {createDigitalSky} from './sky.js?v=fld-world-002';
+import {createQuality} from './quality.js?v=fld-world-002';
+import {addRoadPosters} from './posters.js?v=fld-world-002';
+import {patrolSkin} from './vehicle-skins.js?v=fld-world-002';
+import {setVehicleDetail} from './vehicle-detail.js?v=fld-world-002';
+import {resetRoadPrototype} from './road-vehicles.js?v=fld-world-002';
+import {industrialPrototype} from './design-scenery.js?v=fld-world-002';
+import {createOculaire} from './oculaire.js?v=fld-world-002';
+import {landscapeChunk,setLandscapeDetail,curvedRails} from './world-landscape.js?v=fld-world-002';
+import {addWorldLandmarks} from './world-landmarks.js?v=fld-world-002';
 const box = new T.BoxGeometry(1, 1, 1);
-const planeGeometry=new T.PlaneGeometry(1,1),treeGeometry=new T.ConeGeometry(1,1,5);
+const planeGeometry=new T.PlaneGeometry(1,1);
 const mats = new Map();
 function material(color, glow = false) {
   const key = color + ':' + glow;
@@ -77,7 +79,7 @@ function ribbon(start, end, l, r, height, color) {
   for (let s = start; s <= end + .01; s += 4) {
     const a = sample(s, l), b = sample(s, r);
     vertices.push(a.x, a.y + height, a.z, b.x, b.y + height, b.z);
-    uvs.push(0,s/11,(r-l)/6,s/11);
+    uvs.push(0,s/3,(r-l)/3,s/3);
     if (i) indices.push(i - 2, i, i - 1, i - 1, i, i + 1);
     i += 2;
   }
@@ -125,17 +127,16 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
   }
   function fillChunk(chunk,s){
     releaseChunk(chunk.g);chunk.s=s;const g=chunk.g;
-    g.add(ribbon(s, s + 80, -45, 45, -.22, '#171624'));
+    g.add(ribbon(s, s + 80, -120, 120, -.22, '#171624'));
     g.add(ribbon(s, s + 80, -8.1, 8.1, 0, asphaltMaterial()));
     g.add(ribbon(s, s + 80, -7.9, -7.65, .035, '#c7b5d1'));
     g.add(ribbon(s, s + 80, 7.65, 7.9, .035, '#c7b5d1'));
     for (let d = s; d < s + 80; d += 12) {
       for (const lateral of [-2.65, 2.65]) { const mark = new T.Group(); g.add(mark); positionOn(mark, d, lateral, .045); cube(mark, 0, 0, 0, .14, .025, 4, '#a8a7ad'); }
     }
+    curvedRails(g,s);
     for (const side of [-1, 1]) {
       if (side === 1 && s >= LENGTH) continue; // Open station access beyond the border.
-      const rail = new T.Group(); g.add(rail); positionOn(rail, s + 40, side * 9.6);
-      for(let offset=5;offset<80;offset+=10){const strip=new T.Group();g.add(strip);positionOn(strip,s+offset,side*9.6);cube(strip,0,.55,0,.2,.45,10.15,'#71687e');}
       for (let d = 0; d < 80; d += 20) {
         const p = new T.Group(); g.add(p); positionOn(p, s + d, side * 9.3);
         cube(p, 0, .75, 0, .15, 1.5, .2, '#393346'); cube(p, 0, 1.35, 0, .16, .19, .3, side < 0 ? '#b88fff' : '#d0f46b', true);
@@ -143,12 +144,16 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
     }
     const stage=stageAt(Math.min(LENGTH-1,s+40));
     const tunnel=stage.kind==='tunnel';
+    // The final OMERTA boundary is inside an 80 m chunk: keep its actual 7.4 km end.
+    const tunnelStage=STAGES.find(x=>x.kind==='tunnel'),tunnelFrom=Math.max(s,tunnelStage.start),tunnelTo=Math.min(s+80,tunnelStage.end);
+    if(tunnelFrom<tunnelTo){
+      g.add(wallRibbon(tunnelFrom,tunnelTo,-10.1,.1,8.3,industrialMaterial('concrete')));
+      g.add(wallRibbon(tunnelFrom,tunnelTo,10.1,.1,8.3,industrialMaterial('concrete')));
+      const roof=ribbon(tunnelFrom,tunnelTo,-10.3,10.3,8.3,industrialMaterial('concrete'));roof.name='OMERTA / TOIT';g.add(roof);
+    }
     if (tunnel) {
       const arch = new T.Group(); g.add(arch); positionOn(arch, s + 40);
       tunnelDetail(arch,cube);
-      g.add(wallRibbon(s,s+80,-10.1,.1,8.3,industrialMaterial('concrete')));
-      g.add(wallRibbon(s,s+80,10.1,.1,8.3,industrialMaterial('concrete')));
-      g.add(ribbon(s,s+80,-10.3,10.3,8.3,industrialMaterial('concrete')));
       for (const dz of [-30, -10, 10, 30]) {
         cube(arch, 0, 7.7, dz, 19.7, .08, .16, '#b97cff', true);
         cube(arch, -9.6, 2.2, dz, .08, .16, 11, '#b97cff', true); cube(arch, 9.6, 2.2, dz, .08, .16, 11, '#b97cff', true);
@@ -158,9 +163,11 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
       if(stage.kind==='control')controlDetail(g,s,cube,positionOn);
       for (const side of [-1, 1]) {
         const p = new T.Group(); g.add(p); positionOn(p, s + 35, side * 13);
-        cube(p, 0, 5.5, 0, .23, 11, .23, '#666076'); cube(p, -side * 1.7, 11, 0, 3.5, .2, .35, '#827a91');
-        cube(p, -side * 3, 10.8, 0, 1.4, .08, .6, '#f0e9b9', true);
-        const pool=lightPool(p,side<0?'#af7aff':'#cfd5ac',12,22);pool.position.x=-side*8;
+        if(stage.kind!=='open'||s%320===0){
+         cube(p, 0, 5.5, 0, .23, 11, .23, '#666076'); cube(p, -side * 1.7, 11, 0, 3.5, .2, .35, '#827a91');
+         cube(p, -side * 3, 10.8, 0, 1.4, .08, .6, '#f0e9b9', true);
+         const pool=lightPool(p,stage.kind==='open'?(side<0?'#a7b8ce':'#d7d0a1'):(side<0?'#af7aff':'#cfd5ac'),12,22);pool.position.x=-side*8;
+        }
         if (stage.kind==='industrial') {
          if(s===0&&side===-1){industrialPrototype(p,side);}else{
           industrialDetail(p,s,side,cube);
@@ -170,14 +177,11 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
           for (let k = 0; k < 4; k++) cube(p, side * 17 + (k - 1.5) * 4, 3.8, -7.05, 2, 1, .05, '#b99e58', true);
           for (let k = 0; k < 2; k++) cube(p, side * 7, 1.6 + k * 3.1, -10, 6, 3, 12, k ? '#5a365d' : '#354757').material=industrialMaterial(k?'purple':'steel');
          }
-        } else {
-          for (let k = 0; k < 3; k++) {
-            const tree = new T.Mesh(treeGeometry, material(stage.kind==='frontier'?'#34413d':'#202b35'));tree.scale.set(3+k,10+k*2,3+k);
-            tree.position.set(side * (12 + k * 8), 4, k * 16 - 15); p.add(tree);
-          }
         }
       }
     }
+    landscapeChunk(g,s);
+    addWorldLandmarks(g,s);
     const inscriptions={0:'SWAGISTAN NETWORK',8:'SAV / 6 H À 6 H 20',19:'BUREAU DES ORIGINES DOUTEUSES',36:'FROM ELSEWHERE',64:'OMERTA',77:'RIEN À DÉCLARER',108:'CONTRÔLE DU SWAG',142:'MADE IN SWAGISTAN'};
     const text=inscriptions[s/80];
     if(text){const sign=new T.Group();g.add(sign);positionOn(sign,s+30,stage.kind==='tunnel'?-9.55:-18,stage.kind==='tunnel'?3.5:5);const p=plate(sign,text,0,0,0,stage.kind==='tunnel'?5:12,1.4);p.rotation.y=Math.PI;}
@@ -287,7 +291,7 @@ export function createRenderer(canvas, reduced = false, makeRenderer = options =
         m.userData.blue.visible = c.active&&(reduced || Math.sin(r.time * 6 + i) > 0); m.userData.red.visible = c.active&&(reduced || !m.userData.blue.visible);
       }
       for (let i = 0; i < traffic.length; i++) { const t = r.traffic[i]; traffic[i].visible = t.s > r.s - 70 && t.s < r.s + 300 && !ending; positionOn(traffic[i], t.s, t.x);animateVehicle(traffic[i],{...r,speed:t.speed,steer:t.steer,boosting:false},r.state==='RACE'?Math.min(elapsed,.05):0);if(traffic[i].visible&&traffic[i].userData.prototype)setVehicleDetail(traffic[i],Math.abs(t.s-r.s)>(quality.level===0?55:85)); }
-      for (const {s:start,g} of chunks)g.visible=start>s-160&&start<s+(quality.level===0?300:380);
+      for (const {s:start,g} of chunks){g.visible=start>s-160&&start<s+(quality.level===0?300:380);if(g.visible)setLandscapeDetail(g,start,s,quality.level===0);}
       barriers.forEach(g => { g.visible = Math.abs(g.userData.s-s)<(quality.level===0?300:450) && !ending; });
       const chaseDistance=10.5+Math.min(2,r.speed/34)+(r.boosting?1:0);
       const behind = sample(Math.max(0, s-chaseDistance), lateral*.62);

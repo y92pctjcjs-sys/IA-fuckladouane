@@ -45,15 +45,13 @@ test('score image uses the exact result and grades never turn a defeat into a vi
  assert.ok(texts.includes('SWAGISTAN.'));assert.ok(texts.includes(result.score.toLocaleString('fr-FR')));assert.ok(texts.includes('4:17.31'));assert.ok(texts.includes('82 %'));assert.ok(texts.includes('9'));assert.ok(texts.includes('4'));
  assert.equal(formatTime(59.999),'1:00.00');assert.equal(formatTime(0),'0:00.00');assert.equal(formatTime(240),'4:00.00');
 });
-test('the published entry and changed modules use a fresh cache version while stable modules retain theirs',()=>{
- const html=readFileSync(new URL('../../course.html',import.meta.url),'utf8');assert.match(html,/course\/boot\.js\?v=oculaire-004/);assert.match(html,/course\/style\.css\?v=fld-design-001/);
- const changed=new Set(['boot.js','main.js','renderer.js','oculaire.js','oculaire-finale.js','oculaire-hair.js']);
+test('the published entry and local module graph share one cache version',()=>{
+ const html=readFileSync(new URL('../../course.html',import.meta.url),'utf8');assert.match(html,/course\/boot\.js\?v=fld-world-002/);assert.match(html,/course\/style\.css\?v=fld-world-002/);
  const seen=new Set(),visit=path=>{
   if(seen.has(path))return;seen.add(path);const source=readFileSync(new URL('../'+path,import.meta.url),'utf8');
   for(const match of source.matchAll(/'\.\/([^']+\.js(?:\?[^']+)?)'/g)){
    if(match[1].startsWith('vendor/')||match[1].startsWith('assets/'))continue;
-   const name=match[1].split('?')[0],version=changed.has(name)?'oculaire-004':'fld-design-001';
-   assert.ok(match[1].endsWith('?v='+version),`${path} must not request a stale ${match[1]}`);visit(name);
+   assert.ok(match[1].endsWith('?v=fld-world-002'),`${path} must not request a stale ${match[1]}`);visit(match[1].split('?')[0]);
   }
  };
  visit('boot.js');assert.ok(seen.has('pursuit.js')&&seen.has('posters.js')&&seen.has('results.js'));

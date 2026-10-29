@@ -1,5 +1,5 @@
-import {sectorAt,stageAt} from './track.js?v=fld-design-001';
-import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-design-001';
+import {sectorAt,stageAt} from './track.js?v=fld-world-002';
+import {BPM,STEP_SECONDS,scoreEvents,frequency} from './score.js?v=fld-world-002';
 export {BPM};
 export function engineTone(speed,previousGear=1){
  const limits=[0,10,21,33,46,61,76];let gear=Math.max(1,Math.min(6,previousGear));

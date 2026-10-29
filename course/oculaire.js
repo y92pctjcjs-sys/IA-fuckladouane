@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.min.js';
-import {sample,LENGTH,STAGES,sectorAt,blockadeAhead,beatAt} from './track.js?v=fld-design-001';
-import {createOculaireFinale} from './oculaire-finale.js?v=oculaire-004';
-import {adaptOculaireHair} from './oculaire-hair.js?v=oculaire-004';
+import {sample,LENGTH,STAGES,sectorAt,blockadeAhead,beatAt} from './track.js?v=fld-world-002';
+import {createOculaireFinale} from './oculaire-finale.js?v=fld-world-002';
+import {adaptOculaireHair} from './oculaire-hair.js?v=fld-world-002';
 
 export const WORDS=Object.freeze([
  'Tu conduis depuis l’intérieur de mes paupières.',
@@ -66,7 +66,7 @@ export function createPursuitMotion(){
 }
 
 // Reuses the approved surfaces as a bounded game asset. The source file stays intact.
-export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-design-001'),report=()=>{}}={}){
+export function createOculaire(scene,{loadModel=()=>import('./assets/oculaire/portrait-data.js?v=fld-world-002'),report=()=>{}}={}){
  const root=new T.Group();root.name='OCULAIRE';root.visible=false;scene.add(root);
  const face=new T.Group();root.add(face);
  const eyes=[],mouths=[],resources=new Set(),whispers=createWhispers(),pursuitMotion=createPursuitMotion();
